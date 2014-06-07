@@ -49,6 +49,9 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'south',
     'eagletrack',
+    'attendance',
+    'pt',
+    'gear',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -72,7 +75,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', 
         'NAME': 'eagletrack',
-        'USER': 'rotc',
+        'USER': 'eagletrack',
         'PASSWORD': 'mm7m0rr1s',
         'HOST': 'eagletrack.cnkdqqk3dlt2.us-west-2.rds.amazonaws.com',   # Or an IP Address that your DB is hosted on
         'PORT': '3306',

@@ -1,3 +1,14 @@
 from django.contrib import admin
 
-# Register your models here.
+from django.contrib import admin
+
+from capman.models import Cadet, Cadre
+
+
+class CadetAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(Cadet, CadetAdmin)
+
+class CadreAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(Cadre, CadreAdmin)

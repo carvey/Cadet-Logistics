@@ -26,6 +26,7 @@ class Company(models.Model):
         (DELTA, 'delta')             
         )
     name = models.CharField(max_length = 2, choices = COMPANY_NAMES, default = ALPHA)
+    #platoons = models.OneToManyField(Platoon)
     
     class Meta:
         db_table='Company'
@@ -63,3 +64,5 @@ class Cadre(Users):
 
 class Platoon(models.Model):
     pass
+
+Company.co = models.OneToOneField(Cadet.objects.filter(is_company_staff=True))

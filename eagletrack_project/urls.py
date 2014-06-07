@@ -4,13 +4,11 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'capman_project.views.home', name='home'),
-    # url(r'^blog/', include('blog.urls')),
     
-    url(r'^$', include('capman.urls')),
+    
+    url(r'^$', include('eagletrack.urls')),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^capman/', include('capman.urls')),
+    url(r'^eagletrack/', include('eagletrack.urls')),
 )
 if settings.DEBUG:
     urlpatterns += patterns (

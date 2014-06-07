@@ -1,5 +1,5 @@
 """
-Django settings for capman_project project.
+Django settings for eagletrack_project project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/1.6/topics/settings/
@@ -48,7 +48,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'south',
-    'capman',
+    'eagletrack',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -60,9 +60,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'capman_project.urls'
+ROOT_URLCONF = 'eagletrack_project.urls'
 
-WSGI_APPLICATION = 'capman_project.wsgi.application'
+WSGI_APPLICATION = 'eagletrack_project.wsgi.application'
 
 
 # Database
@@ -71,10 +71,10 @@ WSGI_APPLICATION = 'capman_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', 
-        'NAME': 'capman',
-        'USER': 'carvey',
-        'PASSWORD': 'passwd',
-        'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
+        'NAME': 'eagletrack',
+        'USER': 'rotc',
+        'PASSWORD': 'mm7m0rr1s',
+        'HOST': 'eagletrack.cnkdqqk3dlt2.us-west-2.rds.amazonaws.com',   # Or an IP Address that your DB is hosted on
         'PORT': '3306',
     }
 }

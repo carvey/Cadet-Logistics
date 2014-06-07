@@ -17,7 +17,7 @@ class Migration(SchemaMigration):
             ('is_staff', self.gf('django.db.models.fields.BooleanField')(default=False)),
             ('is_company_staff', self.gf('django.db.models.fields.BooleanField')(default=False)),
         ))
-        db.send_create_signal(u'capman', ['cadet'])
+        db.send_create_signal(u'eagletrack', ['cadet'])
 
         # Adding model 'cadre'
         db.create_table('cadre', (
@@ -27,7 +27,7 @@ class Migration(SchemaMigration):
             ('rank', self.gf('django.db.models.fields.CharField')(max_length=25)),
             ('position', self.gf('django.db.models.fields.CharField')(max_length=75)),
         ))
-        db.send_create_signal(u'capman', ['cadre'])
+        db.send_create_signal(u'eagletrack', ['cadre'])
 
 
     def backwards(self, orm):
@@ -39,7 +39,7 @@ class Migration(SchemaMigration):
 
 
     models = {
-        u'capman.cadet': {
+        u'eagletrack.cadet': {
             'Meta': {'object_name': 'cadet', 'db_table': "'cadet'"},
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '25'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
@@ -48,7 +48,7 @@ class Migration(SchemaMigration):
             'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30'}),
             'ms_level': ('django.db.models.fields.CharField', [], {'default': "'one'", 'max_length': '4'})
         },
-        u'capman.cadre': {
+        u'eagletrack.cadre': {
             'Meta': {'object_name': 'cadre', 'db_table': "'cadre'"},
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '25'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
@@ -58,4 +58,4 @@ class Migration(SchemaMigration):
         }
     }
 
-    complete_apps = ['capman']
+    complete_apps = ['eagletrack']

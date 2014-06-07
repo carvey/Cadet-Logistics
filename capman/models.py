@@ -2,10 +2,18 @@ from django.db import models
 from django.contrib.auth.models import User
 
 # Create your models here.
-
-class cadet(models.Model):
+class Users(models.Model):
     first_name = models.CharField(max_length = 25)
     last_name = models.CharField(max_length = 30)
+    age = models.IntegerField()
+    
+    def __str__(self):
+        return (self.last_name + ", " + self.first_name)
+    
+    class Meta:
+        abstract = True
+    
+class Cadet(Users):
     one = 'one'
     two = 'two'
     three = 'three'
@@ -21,21 +29,13 @@ class cadet(models.Model):
                                 default = one)
     is_staff = models.BooleanField(default = False)
     is_company_staff = models.BooleanField(default = False)
-    
-    def __str__(self):
-        return (self.last_name + ", " + self.first_name)
 
     class Meta:
-        db_table='cadet'
+        db_table='Cadet'
         
-class cadre(models.Model):
-    first_name = models.CharField(max_length = 25)
-    last_name = models.CharField(max_length = 30)
+class Cadre(Users):
     rank = models.CharField(max_length = 25)
     position = models.CharField(max_length = 75)
-    
-    def __str__(self):
-        return (self.last_name + ", " + self.first_name)
-    
+
     class Meta:
-        db_table='cadre'
+        db_table='Cadre'

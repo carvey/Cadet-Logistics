@@ -12,6 +12,26 @@ class Users(models.Model):
     
     class Meta:
         abstract = True
+        
+class Company(models.Model):
+    ALPHA = 'alpha'
+    BRAVO = 'bravo'
+    CHARLIE = 'charlie'
+    DELTA = 'delta'
+    
+    COMPANY_NAMES = (
+        (ALPHA, 'alpha'),
+        (BRAVO, 'bravo'),
+        (CHARLIE, 'charlie'),
+        (DELTA, 'delta')             
+        )
+    name = models.CharField(max_length = 2, choices = COMPANY_NAMES, default = ALPHA)
+    
+    class Meta:
+        db_table='Company'
+    
+    def __str__(self):
+        return self.name
     
 class Cadet(Users):
     one = 'one'
@@ -24,6 +44,7 @@ class Cadet(Users):
                 (three, 'MS3'),
                 (four, 'MS4'),
                 )
+    company = models.ForeignKey(Company)
     ms_level = models.CharField(max_length = 4,
                                 choices = ms_level_choices,
                                 default = one)
@@ -39,3 +60,6 @@ class Cadre(Users):
 
     class Meta:
         db_table='Cadre'
+
+class Platoon(models.Model):
+    pass

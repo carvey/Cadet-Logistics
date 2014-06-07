@@ -1,11 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-# Create your models here.
+'''Users is the base class for Cadet and Cadre'''
 class Users(models.Model):
     first_name = models.CharField(max_length = 25)
     last_name = models.CharField(max_length = 30)
-    age = models.IntegerField()
+    age = models.PositiveIntegerField()
     
     def __str__(self):
         return (self.last_name + ", " + self.first_name)
@@ -26,7 +26,8 @@ class Company(models.Model):
         (DELTA, 'delta')             
         )
     name = models.CharField(max_length = 2, choices = COMPANY_NAMES, default = ALPHA)
-    #platoons = models.OneToManyField(Platoon)
+    co = models.OneToOneField('Cadet', related_name='Company')
+    platoons = models.OneToManyField('Platoon', related_name='Company')
     
     class Meta:
         db_table='Company'
@@ -35,6 +36,8 @@ class Company(models.Model):
         return self.name
     
 class Cadet(Users):
+    def __init__(self):
+        pass
     one = 'one'
     two = 'two'
     three = 'three'
@@ -45,13 +48,14 @@ class Cadet(Users):
                 (three, 'MS3'),
                 (four, 'MS4'),
                 )
-    company = models.ForeignKey(Company)
+    company = models.OneToOneField(Company)
     ms_level = models.CharField(max_length = 4,
                                 choices = ms_level_choices,
                                 default = one)
+    gpa = models.IntegerField()
+    ms_grade = models.IntegerField()
     is_staff = models.BooleanField(default = False)
     is_company_staff = models.BooleanField(default = False)
-
     class Meta:
         db_table='Cadet'
         
@@ -64,5 +68,3 @@ class Cadre(Users):
 
 class Platoon(models.Model):
     pass
-
-Company.co = models.OneToOneField(Cadet.objects.filter(is_company_staff=True))

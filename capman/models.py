@@ -25,6 +25,9 @@ class cadet(models.Model):
     def __str__(self):
         return (self.last_name + ", " + self.first_name)
 
+    class Meta:
+        db_table='cadet'
+        
 class cadre(models.Model):
     first_name = models.CharField(max_length = 25)
     last_name = models.CharField(max_length = 30)
@@ -33,3 +36,6 @@ class cadre(models.Model):
     
     def __str__(self):
         return (self.last_name + ", " + self.first_name)
+    
+    class Meta:
+        db_table='cadre'

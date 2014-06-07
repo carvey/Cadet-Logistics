@@ -26,8 +26,8 @@ class Company(models.Model):
         (DELTA, 'delta')             
         )
     name = models.CharField(max_length = 2, choices = COMPANY_NAMES, default = ALPHA)
-    co = models.OneToOneField('Cadet', related_name='Company')
-    platoons = models.ForeignKey('Platoon', related_name='Company')
+    co = models.OneToOneField('Cadet', db_index=False, related_name='company_cadet', limit_choices_to={'is_company_staff':True})
+    platoons = models.ForeignKey('Platoon', db_index=False, related_name='company_platoons')
     
     class Meta:
         db_table='Company'
@@ -52,8 +52,8 @@ class Cadet(Users):
     ms_level = models.CharField(max_length = 4,
                                 choices = ms_level_choices,
                                 default = one)
-    gpa = models.IntegerField()
-    ms_grade = models.IntegerField()
+    gpa = models.IntegerField(default=4.0)
+    ms_grade = models.IntegerField(default=100)
     is_staff = models.BooleanField(default = False)
     is_company_staff = models.BooleanField(default = False)
     class Meta:
@@ -62,9 +62,8 @@ class Cadet(Users):
 class Cadre(Users):
     rank = models.CharField(max_length = 25)
     position = models.CharField(max_length = 75)
-
     class Meta:
         db_table='Cadre'
 
-class Platoon(models.Model):
+class Platoon(Company):
     pass

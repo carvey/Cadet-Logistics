@@ -27,7 +27,7 @@ class Company(models.Model):
         )
     name = models.CharField(max_length = 2, choices = COMPANY_NAMES, default = ALPHA)
     co = models.OneToOneField('Cadet', related_name='Company')
-    platoons = models.OneToManyField('Platoon', related_name='Company')
+    platoons = models.ForeignKey('Platoon', related_name='Company')
     
     class Meta:
         db_table='Company'

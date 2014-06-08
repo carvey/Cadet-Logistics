@@ -40,6 +40,7 @@ class Company(models.Model):
 """Cadet is the model for cadets in the batallion. This model extends the Users abstract model. Each cadet should ideally be assigned to a company"""
 class Cadet(Users):
     company = models.ForeignKey(Company, blank=True, null=True)
+    platoon = models.ForeignKey('Platoon', blank=True, null=True)
     ms_level = models.CharField(max_length = 4,
                                 choices = MS_LEVEL_CHOICES,
                                 default = ONE)
@@ -64,6 +65,8 @@ class Platoon(models.Model):
     
     class Meta:
         db_table='Platoon'
-        
+    
+    def __unicode__(self):
+        return self.name
         
 

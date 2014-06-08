@@ -50,7 +50,7 @@ class Cadet(Users):
     class Meta:
         db_table='Cadet'
 
-"""The Cadre class is the model for cadre in the batallion"""
+"""The Cadre class is the model for cadre in the batallion. It extends the Users model"""
 class Cadre(Users):
     rank = models.CharField(max_length = 25)
     position = models.CharField(max_length = 75)
@@ -59,6 +59,7 @@ class Cadre(Users):
         
 """Each Platoon can only belong to one company."""
 class Platoon(models.Model):
+    name = models.CharField(max_length=15, default ="1st Platoon")
     company = models.ForeignKey(Company, db_index=False, related_name='company', blank=True, null=True)
     
     class Meta:

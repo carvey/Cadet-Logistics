@@ -75,9 +75,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', 
         'NAME': 'eagletrack',
-        'USER': 'eagletrack',
-        'PASSWORD': 'mm7m0rr1s',
-        'HOST': 'eagletrack.cnkdqqk3dlt2.us-west-2.rds.amazonaws.com',   # Or an IP Address that your DB is hosted on
+        'USER': 'root',
+       # 'PASSWORD': '',
+        'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
         'PORT': '3306',
     }
 }

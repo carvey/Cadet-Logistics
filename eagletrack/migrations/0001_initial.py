@@ -11,9 +11,9 @@ class Migration(SchemaMigration):
         # Adding model 'Company'
         db.create_table('Company', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(default='alpha', max_length=2)),
-            ('co', self.gf('django.db.models.fields.related.OneToOneField')(db_index=False, related_name='company_cadet', unique=True, to=orm['eagletrack.Cadet'])),
-            ('platoons', self.gf('django.db.models.fields.related.ForeignKey')(related_name='company_platoons', db_index=False, to=orm['eagletrack.Platoon'])),
+            ('name', self.gf('django.db.models.fields.CharField')(default='', max_length=10)),
+            ('commanding_officer', self.gf('django.db.models.fields.related.OneToOneField')(related_name='company_co', null=True, to=orm['eagletrack.Cadet'], blank=True, unique=True, db_index=False)),
+            ('first_sergeant', self.gf('django.db.models.fields.related.OneToOneField')(related_name='company_firstsgt', null=True, to=orm['eagletrack.Cadet'], blank=True, unique=True, db_index=False)),
         ))
         db.send_create_signal(u'eagletrack', ['Company'])
 
@@ -23,9 +23,9 @@ class Migration(SchemaMigration):
             ('first_name', self.gf('django.db.models.fields.CharField')(max_length=25)),
             ('last_name', self.gf('django.db.models.fields.CharField')(max_length=30)),
             ('age', self.gf('django.db.models.fields.PositiveIntegerField')()),
-            ('company', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['eagletrack.Company'], unique=True)),
+            ('company', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['eagletrack.Company'], null=True, blank=True)),
             ('ms_level', self.gf('django.db.models.fields.CharField')(default='one', max_length=4)),
-            ('gpa', self.gf('django.db.models.fields.IntegerField')(default=4.0)),
+            ('gpa', self.gf('django.db.models.fields.DecimalField')(default=4.0, max_digits=3, decimal_places=2)),
             ('ms_grade', self.gf('django.db.models.fields.IntegerField')(default=100)),
             ('is_staff', self.gf('django.db.models.fields.BooleanField')(default=False)),
             ('is_company_staff', self.gf('django.db.models.fields.BooleanField')(default=False)),
@@ -44,8 +44,9 @@ class Migration(SchemaMigration):
         db.send_create_signal(u'eagletrack', ['Cadre'])
 
         # Adding model 'Platoon'
-        db.create_table(u'eagletrack_platoon', (
-            (u'company_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['eagletrack.Company'], unique=True, primary_key=True)),
+        db.create_table('Platoon', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('company', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='company', null=True, db_index=False, to=orm['eagletrack.Company'])),
         ))
         db.send_create_signal(u'eagletrack', ['Platoon'])
 
@@ -61,16 +62,16 @@ class Migration(SchemaMigration):
         db.delete_table('Cadre')
 
         # Deleting model 'Platoon'
-        db.delete_table(u'eagletrack_platoon')
+        db.delete_table('Platoon')
 
 
     models = {
         u'eagletrack.cadet': {
             'Meta': {'object_name': 'Cadet', 'db_table': "'Cadet'"},
             'age': ('django.db.models.fields.PositiveIntegerField', [], {}),
-            'company': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['eagletrack.Company']", 'unique': 'True'}),
+            'company': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['eagletrack.Company']", 'null': 'True', 'blank': 'True'}),
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '25'}),
-            'gpa': ('django.db.models.fields.IntegerField', [], {'default': '4.0'}),
+            'gpa': ('django.db.models.fields.DecimalField', [], {'default': '4.0', 'max_digits': '3', 'decimal_places': '2'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'is_company_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
@@ -89,14 +90,15 @@ class Migration(SchemaMigration):
         },
         u'eagletrack.company': {
             'Meta': {'object_name': 'Company', 'db_table': "'Company'"},
-            'co': ('django.db.models.fields.related.OneToOneField', [], {'db_index': 'False', 'related_name': "'company_cadet'", 'unique': 'True', 'to': u"orm['eagletrack.Cadet']"}),
+            'commanding_officer': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'company_co'", 'null': 'True', 'to': u"orm['eagletrack.Cadet']", 'blank': 'True', 'unique': 'True', 'db_index': 'False'}),
+            'first_sergeant': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'company_firstsgt'", 'null': 'True', 'to': u"orm['eagletrack.Cadet']", 'blank': 'True', 'unique': 'True', 'db_index': 'False'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'default': "'alpha'", 'max_length': '2'}),
-            'platoons': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'company_platoons'", 'db_index': 'False', 'to': u"orm['eagletrack.Platoon']"})
+            'name': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '10'})
         },
         u'eagletrack.platoon': {
-            'Meta': {'object_name': 'Platoon', '_ormbases': [u'eagletrack.Company']},
-            u'company_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['eagletrack.Company']", 'unique': 'True', 'primary_key': 'True'})
+            'Meta': {'object_name': 'Platoon', 'db_table': "'Platoon'"},
+            'company': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'company'", 'null': 'True', 'db_index': 'False', 'to': u"orm['eagletrack.Company']"}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
         }
     }
 

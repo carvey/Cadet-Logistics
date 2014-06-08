@@ -57,8 +57,12 @@ class Cadre(Users):
     class Meta:
         db_table='Cadre'
         
-'''Each Platoon can only belong to one company.'''
-class Platoon(Company):
-     company = models.ForeignKey(Company, db_index=False, related_name='company', blank=True, null=True)
-     class Meta:
-         db_table='Platoon'
+"""Each Platoon can only belong to one company."""
+class Platoon(models.Model):
+    company = models.ForeignKey(Company, db_index=False, related_name='company', blank=True, null=True)
+    
+    class Meta:
+        db_table='Platoon'
+        
+        
+

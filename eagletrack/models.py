@@ -41,9 +41,7 @@ class Company(models.Model):
 class Cadet(Users):
     company = models.ForeignKey(Company, blank=True, null=True)
     platoon = models.ForeignKey('Platoon', blank=True, null=True)
-    ms_level = models.CharField(max_length = 4,
-                                choices = MS_LEVEL_CHOICES,
-                                default = ONE)
+    ms_level = models.ForeignKey('MsLevel', blank=False, null=False)
     gpa = models.DecimalField(default=4.0, max_digits=3, decimal_places=2)
     ms_grade = models.IntegerField(default=100)
     is_staff = models.BooleanField(default = False)
@@ -69,4 +67,11 @@ class Platoon(models.Model):
     def __unicode__(self):
         return self.name
         
-
+class MsLevel(models.Model):
+    name = models.CharField(max_length=3,choices=MS_LEVEL_CHOICES, blank=False)
+    
+    def __unicode__(self):
+        return self.name
+    
+    class Meta:
+        db_table='MsLevel'

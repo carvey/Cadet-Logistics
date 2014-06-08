@@ -44,11 +44,20 @@ class PtEvent(Event):
 class LabEvent(Event):
     def __unicode__(self):
         return 'LabEvent date: %s' % self.date
+    
     class Meta:
         db_table='LabEvent'
         
 class ClassEvent(Event):
     def __unicode__(self):
         return 'ClassEvent date: %s' % self.date
+    
     class Meta:
         db_table='ClassEvent'
+        
+class FtxEvent(Event):
+    def __unicode__(self):
+        return 'FtxEvent date: %s' % self.date
+    
+    class Meta:
+        db_table='FtxEvent'

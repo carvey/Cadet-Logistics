@@ -1,3 +1,5 @@
+from pt.models import PtScore
+
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -46,6 +48,8 @@ class Cadet(Users):
     ms_grade = models.IntegerField(default=100)
     is_staff = models.BooleanField(default = False)
     is_company_staff = models.BooleanField(default = False)
+    '''@TODO Need to find a solution to filter the pt scores to show only those associated with the user'''
+    #pt_scores = models.ForeignKey(PtScore, blank=True)
     class Meta:
         db_table='Cadet'
 

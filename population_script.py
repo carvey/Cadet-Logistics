@@ -1,4 +1,4 @@
-#from django.test import TestCase
+from django.test import TestCase
 from eagletrack.models import *
 import os
 import sys
@@ -90,7 +90,7 @@ def add_platoon(name, company):
     platoon = Platoon.objects.get_or_create(name=name, company=company)
     return platoon
 
-def add_cadet(first_name, last_name, age, ms_level, company, platoon, gpa=4.0, ms_grade=100, is_staff=False, is_company_staff=False):
+def add_cadet(first_name, last_name, age, ms_level, company, platoon=None, gpa=4.0, ms_grade=100, is_staff=False, is_company_staff=False):
     c = Cadet.objects.get_or_create(first_name=first_name, last_name=last_name, age=age, ms_level=ms_level, company=company, platoon=platoon,  gpa=gpa)[0]
     return c
 
@@ -104,3 +104,6 @@ if __name__ == '__main__':
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'eagletrack_project.settings')
     from eagletrack.models import Cadet, Company, Platoon, MsLevel
     populate()
+    print "Population script has ran successfully"
+    
+    

@@ -21,7 +21,7 @@ class Users(models.Model):
     last_name = models.CharField(max_length = 30)
     age = models.PositiveIntegerField()
     
-    def __str__(self):
+    def __unicode__(self):
         return (self.last_name + ", " + self.first_name)
     
     class Meta:
@@ -36,7 +36,7 @@ class Company(models.Model):
     class Meta:
         db_table='Company'
     
-    def __str__(self):
+    def __unicode__(self):
         return self.name
 
 """Cadet is the model for cadets in the batallion. This model extends the Users abstract model. Each cadet should ideally be assigned to a company"""
@@ -57,8 +57,10 @@ class Cadet(Users):
 class Cadre(Users):
     rank = models.CharField(max_length = 25)
     position = models.CharField(max_length = 75)
+    
     class Meta:
         db_table='Cadre'
+        
         
 """Each Platoon can only belong to one company."""
 class Platoon(models.Model):
@@ -69,7 +71,10 @@ class Platoon(models.Model):
         db_table='Platoon'
     
     def __unicode__(self):
-        return self.name
+        if self.company:
+            return self.company + ": " + self.name
+        else:
+            return self.name
         
 class MsLevel(models.Model):
     name = models.CharField(max_length=3,choices=MS_LEVEL_CHOICES, blank=False)

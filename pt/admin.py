@@ -1,3 +1,11 @@
 from django.contrib import admin
 
-# Register your models here.
+from pt.models import PtTest, PtScore
+
+class PtTestAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(PtTest, PtTestAdmin)
+
+class PtScoreAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(PtScore, PtScoreAdmin)

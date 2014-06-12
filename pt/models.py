@@ -21,7 +21,7 @@ class PtScore(models.Model):
     two_mile=models.TimeField(blank=True, null=True)
     
     def __unicode__(self):  
-        return 'PtScore %s for cadet: %s' % (self.pt_test.date, self.cadet)
+        return 'PT Score %s for cadet: %s' % (self.pt_test.date, self.cadet)
     
     class Meta:
         db_table='PtScore'

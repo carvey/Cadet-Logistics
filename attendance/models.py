@@ -1,4 +1,4 @@
-from eagletrack.models import User, Company, MsLevel
+from eagletrack.models import Company, MsLevel
 
 from django.db import models
 from datetime import datetime
@@ -17,7 +17,7 @@ MS_LEVEL_CHOICES = (
 
 class Event(models.Model):
     date = models.DateTimeField(null=False, default=datetime.today())
-    attended_list = models.ManyToManyField(User, default='', null=False)
+    attended_list = models.ManyToManyField('eagletrack.Cadet', default='', null=False)
     required_companies = models.ManyToManyField(Company, default='')
     required_ms_levels = models.ManyToManyField(MsLevel, default='')
     is_required = models.BooleanField(default=True)

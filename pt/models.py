@@ -16,8 +16,12 @@ class PtScore(models.Model):
     pt_test = models.ForeignKey(PtTest, default='', blank=False, null=False)
     cadet = models.ForeignKey('eagletrack.Cadet', related_name="score_to_cadet", blank=False)
     
-    def __unicode__(self):
-        return 'PtScore for cadet: %s' % self.cadet
+    pushups = models.PositiveIntegerField(default=0)
+    situps = models.PositiveIntegerField(default=0)
+    two_mile=models.TimeField(blank=True, null=True)
+    
+    def __unicode__(self):  
+        return 'PtScore %s for cadet: %s' % (self.pt_test.date, self.cadet)
     
     class Meta:
         db_table='PtScore'

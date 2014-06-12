@@ -24,7 +24,8 @@ class Migration(SchemaMigration):
             ('last_name', self.gf('django.db.models.fields.CharField')(max_length=30)),
             ('age', self.gf('django.db.models.fields.PositiveIntegerField')()),
             ('company', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['eagletrack.Company'], null=True, blank=True)),
-            ('ms_level', self.gf('django.db.models.fields.CharField')(default='one', max_length=4)),
+            ('platoon', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['eagletrack.Platoon'], null=True, blank=True)),
+            ('ms_level', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['eagletrack.MsLevel'])),
             ('gpa', self.gf('django.db.models.fields.DecimalField')(default=4.0, max_digits=3, decimal_places=2)),
             ('ms_grade', self.gf('django.db.models.fields.IntegerField')(default=100)),
             ('is_staff', self.gf('django.db.models.fields.BooleanField')(default=False)),
@@ -46,9 +47,17 @@ class Migration(SchemaMigration):
         # Adding model 'Platoon'
         db.create_table('Platoon', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(default='1st Platoon', max_length=15)),
             ('company', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='company', null=True, db_index=False, to=orm['eagletrack.Company'])),
         ))
         db.send_create_signal(u'eagletrack', ['Platoon'])
+
+        # Adding model 'MsLevel'
+        db.create_table('MsLevel', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=3)),
+        ))
+        db.send_create_signal(u'eagletrack', ['MsLevel'])
 
 
     def backwards(self, orm):
@@ -64,6 +73,9 @@ class Migration(SchemaMigration):
         # Deleting model 'Platoon'
         db.delete_table('Platoon')
 
+        # Deleting model 'MsLevel'
+        db.delete_table('MsLevel')
+
 
     models = {
         u'eagletrack.cadet': {
@@ -77,7 +89,8 @@ class Migration(SchemaMigration):
             'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30'}),
             'ms_grade': ('django.db.models.fields.IntegerField', [], {'default': '100'}),
-            'ms_level': ('django.db.models.fields.CharField', [], {'default': "'one'", 'max_length': '4'})
+            'ms_level': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['eagletrack.MsLevel']"}),
+            'platoon': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['eagletrack.Platoon']", 'null': 'True', 'blank': 'True'})
         },
         u'eagletrack.cadre': {
             'Meta': {'object_name': 'Cadre', 'db_table': "'Cadre'"},
@@ -95,10 +108,16 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '10'})
         },
+        u'eagletrack.mslevel': {
+            'Meta': {'object_name': 'MsLevel', 'db_table': "'MsLevel'"},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '3'})
+        },
         u'eagletrack.platoon': {
             'Meta': {'object_name': 'Platoon', 'db_table': "'Platoon'"},
             'company': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'company'", 'null': 'True', 'db_index': 'False', 'to': u"orm['eagletrack.Company']"}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'default': "'1st Platoon'", 'max_length': '15'})
         }
     }
 

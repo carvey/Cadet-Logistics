@@ -1,4 +1,4 @@
-from pt.models import PtScore
+
 
 from django.db import models
 from django.contrib.auth.models import User

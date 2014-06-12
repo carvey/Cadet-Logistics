@@ -1,10 +1,17 @@
 from django.contrib import admin
 
 from eagletrack.models import Cadet, Cadre, Company, Platoon
+from pt.models import PtScore
 
+
+class PtScoreInlineAdmin(admin.TabularInline):
+    model = PtScore
 
 class CadetAdmin(admin.ModelAdmin):
-    pass
+    list_display=('__unicode__', 'company', 'ms_level', 'gpa')
+    inlines = [
+               PtScoreInlineAdmin,
+               ]
 admin.site.register(Cadet, CadetAdmin)
 
 class CadreAdmin(admin.ModelAdmin):

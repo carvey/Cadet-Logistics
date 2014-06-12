@@ -30,8 +30,8 @@ class Users(models.Model):
 """Company is the model for the companies in the batallion"""
 class Company(models.Model):
     name = models.CharField(max_length = 10, default = "", help_text="Enter Name of the new company here")
-    commanding_officer = models.OneToOneField('Cadet', db_index=False, related_name='company_co', limit_choices_to={'is_company_staff':True}, blank=True, null=True, help_text="Enter the Name of the Commander Officer")
-    first_sergeant = models.OneToOneField('Cadet', db_index=False, related_name="company_firstsgt", limit_choices_to={'is_company_staff':True}, blank=True, null=True, help_text="Enter the First Sergeant for this Company")
+    company_commander = models.OneToOneField('Cadet', db_index=False, related_name='ccs', limit_choices_to={'is_company_staff':True}, blank=True, null=True, help_text="Enter the Name of the Commander Officer")
+    first_sergeant = models.OneToOneField('Cadet', db_index=False, related_name="first_sgts", limit_choices_to={'is_company_staff':True}, blank=True, null=True, help_text="Enter the First Sergeant for this Company")
     
     class Meta:
         db_table='Company'

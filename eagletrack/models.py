@@ -48,10 +48,12 @@ class Cadet(Users):
     ms_grade = models.IntegerField(default=100)
     is_staff = models.BooleanField(default = False)
     is_company_staff = models.BooleanField(default = False)
-    '''@TODO Need to find a solution to filter the pt scores to show only those associated with the user'''
-    #pt_scores = models.ForeignKey('pt.PtScore', related_name="eagletrack_to_pt", null=True, blank=True)
-    #foreign key going back and forth = same as many to many? Don't know if we need this key
-    #we may be able to use what we have. Use views to relate the two models
+    at_risk = models.BooleanField(default=False)
+    contracted = models.BooleanField(default=False)
+    smp = models.BooleanField(default=False)
+    dropped = models.BooleanField(default=False)
+    commissioned = models.BooleanField(default=False)
+    
     class Meta:
         db_table='Cadet'
 

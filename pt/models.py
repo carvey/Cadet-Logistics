@@ -1,5 +1,4 @@
-#from eagletrack.models import Cadet
-
+from eagletrack.models import Cadet
 from django.db import models
 from datetime import datetime
 
@@ -15,7 +14,7 @@ class PtTest(models.Model):
         
 class PtScore(models.Model):
     pt_test = models.ForeignKey(PtTest, default='', blank=False, null=False)
-#    cadet = models.OneToOneField('Cadet', blank=False, default='')
+    cadet = models.ForeignKey(Cadet, blank=False)
     
     def __unicode__(self):
         return 'PtScore for cadet: %s' % cadet.name

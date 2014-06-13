@@ -1,22 +1,10 @@
 from django.contrib import admin
-from attendance.models import GenericEvent, ClassEvent, PtEvent, LabEvent, FtxEvent
+from attendance.models import Attended, Event
 
-class PtEventAdmin(admin.ModelAdmin):
+class AttendedAdmin(admin.ModelAdmin):
     pass
-admin.site.register(PtEvent, PtEventAdmin)
+admin.site.register(Attended, AttendedAdmin)
 
-class ClassEventAdmin(admin.ModelAdmin):
+class EventAdmin(admin.ModelAdmin):
     pass
-admin.site.register(ClassEvent, ClassEventAdmin)
-
-class GenericEventAdmin(admin.ModelAdmin):
-    pass
-admin.site.register(GenericEvent, GenericEventAdmin)
-
-class LabEventAdmin(admin.ModelAdmin):
-    pass
-admin.site.register(LabEvent, LabEventAdmin)
-
-class FtxEventAdmin(admin.ModelAdmin):
-    pass
-admin.site.register(FtxEvent, FtxEventAdmin)
+admin.site.register(Event, EventAdmin)

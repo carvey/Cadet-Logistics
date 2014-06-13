@@ -15,49 +15,34 @@ MS_LEVEL_CHOICES = (
             (FOUR, 'MS4'),
             )
 
-class Event(models.Model):
-    date = models.DateTimeField(null=False, default=datetime.today())
+generic_event='generic_event'
+pt_event = 'pt_event'
+lab_event = 'lab_event'
+class_event = 'class_event'
+ftx_event = 'ftx_event'
+EVENT_TYPES = (
+              (pt_event, 'PT'),
+              (class_event, 'Class'),
+              (lab_event, 'Lab'),
+              (generic_event, 'Generic Event'),
+              (ftx_event, 'FTX'),
+              )
+
+class Attended(models.Model):
     attended_list = models.ManyToManyField('eagletrack.Cadet', default='', null=False)
+    event = models.OneToOneField('Event', blank=False, null=True)
+    
+    def __unicode__(self):
+        return "Attendance: " + str(self.event)
+
+class Event(models.Model):
+    event_type = models.CharField(max_length = 15, choices=EVENT_TYPES, blank=False)
+    date = models.DateTimeField(null=False, default=datetime.today())
     required_companies = models.ManyToManyField(Company, default='')
     required_ms_levels = models.ManyToManyField(MsLevel, default='')
     is_required = models.BooleanField(default=True)
     
-    class Meta:
-        abstract = True
-        
-class GenericEvent(Event):
-    name = models.CharField(max_length=50,default='')
-    
     def __unicode__(self):
-        return 'GenericEvent: %s, date: %s' % self.name, self.date
+        format = self.date.strftime('%d %b, %Y')
+        return "%s: %s" % (self.event_type, format)
     
-    class Meta:
-        db_table='GenericEvent'
-        
-class PtEvent(Event):
-    def __unicode__(self):
-        return 'PtEvent date: %s' % self.date
-    
-    class Meta:
-        db_table='PtEvent'
-
-class LabEvent(Event):
-    def __unicode__(self):
-        return 'LabEvent date: %s' % self.date
-    
-    class Meta:
-        db_table='LabEvent'
-        
-class ClassEvent(Event):
-    def __unicode__(self):
-        return 'ClassEvent date: %s' % self.date
-    
-    class Meta:
-        db_table='ClassEvent'
-        
-class FtxEvent(Event):
-    def __unicode__(self):
-        return 'FtxEvent date: %s' % self.date
-    
-    class Meta:
-        db_table='FtxEvent'

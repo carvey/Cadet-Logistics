@@ -1,5 +1,5 @@
 
-
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -48,7 +48,14 @@ class Cadet(Users):
     ms_grade = models.IntegerField(default=100)
     is_staff = models.BooleanField(default = False)
     is_company_staff = models.BooleanField(default = False)
+    ##
+    events_missed = models.PositiveIntegerField(default=0)
+    class_events_missed = models.PositiveIntegerField(default=0)
+    lab_events_missed = models.PositiveIntegerField(default=0)
+    pt_missed = models.PositiveIntegerField(default=0)
+    attendance_rate=models.PositiveIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)]) #logic for true and false attended is 100 and 0
     at_risk = models.BooleanField(default=False)
+    ##
     contracted = models.BooleanField(default=False)
     smp = models.BooleanField(default=False)
     dropped = models.BooleanField(default=False)

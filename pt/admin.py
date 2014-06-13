@@ -4,6 +4,8 @@ from pt.models import PtTest, PtScore, Time
 
 class TimeInlineAdmin(admin.TabularInline):
     model = Time
+    extra = 1
+    max_num = 1
 
 class TimeAdmin(admin.ModelAdmin):
     pass

@@ -35,3 +35,5 @@ class Time(models.Model):
     
     class Meta:
         db_table='Time'
+        verbose_name="Two Mile time"
+        verbose_name_plural="Two Mile time"

@@ -1,7 +1,8 @@
 from django.test import TestCase
 from eagletrack.models import *
-import os
-import sys
+from pt.models import *
+from attendance.models import *
+import sys, datetime, os
 sys.path.append(os.path.dirname(__file__))
 
 # Create your tests here.
@@ -80,10 +81,13 @@ def populate():
     add_cadet(first_name="Jane", last_name="West", age=18, ms_level=ms1, company=delta)
     add_cadet(first_name="Anne", last_name="Key", age=18, ms_level=ms1, company=delta)
     
+    add_pt_test(date=datetime.datetime.today() + datetime.timedelta(days=2), ms_lvl_4=False)
+    add_pt_test(date=datetime.datetime.today() + datetime.timedelta(days=5), ms_lvl_4=False)
+    add_pt_test(date=datetime.datetime.today() + datetime.timedelta(days=7), ms_lvl_4=True)
     
 
 def add_company(name, co=None, fs=None):
-    company= Company.objects.get_or_create(name=name, commanding_officer=co, first_sergeant=fs)[0]
+    company= Company.objects.get_or_create(name=name, company_commander=co, first_sergeant=fs)[0]
     return company
 
 def add_platoon(name, company):
@@ -98,10 +102,12 @@ def add_mslevel(name):
     ms = MsLevel.objects.get_or_create(name=name)
     return ms
 
+def add_pt_test(date, ms_lvl_4):
+    return PtTest.objects.get_or_create(date=date,MsLevelFour=ms_lvl_4)
 
 if __name__ == '__main__':
     print "Starting Eagletrack Population script..."
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'eagletrack_project.settings')
+    os.environ['DJANGO_SETTINGS_MODULE'] = 'eagletrack_project.settings'
     from eagletrack.models import Cadet, Company, Platoon, MsLevel
     populate()
     print "Population script has ran successfully"

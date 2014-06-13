@@ -2,6 +2,7 @@ from django.contrib import admin
 
 from eagletrack.models import Cadet, Cadre, Company, Platoon
 from pt.models import PtScore
+import attendance.models
 
 
 class PtScoreInlineAdmin(admin.TabularInline):

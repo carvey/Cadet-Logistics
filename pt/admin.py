@@ -1,11 +1,20 @@
 from django.contrib import admin
 
-from pt.models import PtTest, PtScore
+from pt.models import PtTest, PtScore, Time
+
+class TimeInlineAdmin(admin.TabularInline):
+    model = Time
+
+class TimeAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(Time, TimeAdmin)
 
 class PtTestAdmin(admin.ModelAdmin):
     pass
 admin.site.register(PtTest, PtTestAdmin)
 
 class PtScoreAdmin(admin.ModelAdmin):
-    pass
+    inlines = [
+               TimeInlineAdmin,
+               ]
 admin.site.register(PtScore, PtScoreAdmin)

@@ -49,17 +49,26 @@ class Cadet(Users):
     is_staff = models.BooleanField(default = False)
     is_company_staff = models.BooleanField(default = False)
     ##
-    events_missed = models.PositiveIntegerField(default=0)
-    class_events_missed = models.PositiveIntegerField(default=0)
-    lab_events_missed = models.PositiveIntegerField(default=0)
-    pt_missed = models.PositiveIntegerField(default=0)
-    attendance_rate=models.PositiveIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)]) #logic for true and false attended is 100 and 0
+    cell_number = models.CharField(max_length=14, blank=True)
+    email = models.EmailField(blank=True)
+    volunteer_hours_completed = models.BooleanField(default=False)
+    turned_in_104r = models.BooleanField(default=False)
+    ##
+    on_profile=models.BooleanField(default=False)
+    profile_reason=models.CharField(max_length=250, blank=True)
+    events_missed = models.PositiveIntegerField(default=0, blank=True)
+    class_events_missed = models.PositiveIntegerField(default=0, blank=True)
+    lab_events_missed = models.PositiveIntegerField(default=0, blank=True)
+    pt_missed = models.PositiveIntegerField(default=0, blank=True)
+    attendance_rate=models.PositiveIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)], blank=True) #logic for true and false attended is 100 and 0
     at_risk = models.BooleanField(default=False)
     ##
     contracted = models.BooleanField(default=False)
     smp = models.BooleanField(default=False)
     dropped = models.BooleanField(default=False)
     commissioned = models.BooleanField(default=False)
+    ##
+    comments = models.TextField(max_length=1000, blank=True)
     
     class Meta:
         db_table='Cadet'

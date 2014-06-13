@@ -41,6 +41,7 @@ class Company(models.Model):
 
 """Cadet is the model for cadets in the batallion. This model extends the Users abstract model. Each cadet should ideally be assigned to a company"""
 class Cadet(Users):
+    eagle_id = models.CharField(max_length=10, blank=False, null=True) #can easily be converted to an int if we need
     company = models.ForeignKey(Company, blank=True, null=True)
     platoon = models.ForeignKey('Platoon', blank=True, null=True)
     ms_level = models.ForeignKey('MsLevel', blank=False, null=False)
@@ -78,8 +79,6 @@ class Cadre(Users):
     rank = models.CharField(max_length = 25)
     position = models.CharField(max_length = 75)
     
-    def __unicode__(self):
-        return self.name
     
     class Meta:
         db_table='Cadre'

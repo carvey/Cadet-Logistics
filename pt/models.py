@@ -3,7 +3,8 @@ from datetime import datetime
 
 class PtTest(models.Model):
     date = models.DateField(default=datetime.today(), blank=False)
-    MsLevelFour = models.BooleanField(default=False, help_text='Check this box if this test is only for MS4.')
+    MsLevelFour = models.BooleanField(default=False, help_text='Check this box if this test is only for MS4s.')
+    MSLevelThree = models.BooleanField(default=False, help_text='Check this box if this test is only for MS3s')
     
     def __unicode__(self):
         format_date = self.date.strftime('%d %b, %Y')

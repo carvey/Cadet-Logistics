@@ -4,11 +4,10 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    
-    
     url(r'^$', include('eagletrack.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^eagletrack/', include('eagletrack.urls')),
+    url(r'^pt/', include('pt.urls')),
 )
 if settings.DEBUG:
     urlpatterns += patterns (

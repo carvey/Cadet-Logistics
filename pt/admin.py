@@ -1,7 +1,8 @@
 from django.contrib import admin
 
-from pt.models import PtTest, PtScore, Time
+from pt.models import PtTest, PtScore#, Time
 
+"""
 class TimeInlineAdmin(admin.TabularInline):
     model = Time
     extra = 1
@@ -10,13 +11,12 @@ class TimeInlineAdmin(admin.TabularInline):
 class TimeAdmin(admin.ModelAdmin):
     pass
 admin.site.register(Time, TimeAdmin)
+"""
 
 class PtTestAdmin(admin.ModelAdmin):
     pass
 admin.site.register(PtTest, PtTestAdmin)
 
 class PtScoreAdmin(admin.ModelAdmin):
-    inlines = [
-               TimeInlineAdmin,
-               ]
+    pass
 admin.site.register(PtScore, PtScoreAdmin)

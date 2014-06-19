@@ -1,5 +1,5 @@
 
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator, validate_email
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -26,6 +26,7 @@ class Users(models.Model):
     first_name = models.CharField(max_length = 25)
     last_name = models.CharField(max_length = 30)
     age = models.PositiveIntegerField()
+    email = models.EmailField(blank=True, validators=[validate_email])
     
     def __unicode__(self):
         return (self.last_name + ", " + self.first_name)
@@ -58,7 +59,6 @@ class Cadet(Users):
     is_company_staff = models.BooleanField(default = False)
     ##
     cell_number = models.CharField(max_length=14, blank=True)
-    email = models.EmailField(blank=True)
     volunteer_hours_completed = models.BooleanField(default=False)
     turned_in_104r = models.BooleanField(default=False)
     ##

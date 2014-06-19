@@ -6,8 +6,10 @@ from django.core.validators import RegexValidator
 #This class handles the pt test itself, identified by a date
 class PtTest(models.Model):
     date = models.DateField(default=datetime.today(), blank=False)
-    MsLevelFour = models.BooleanField(default=False, help_text='Check this box if this test is only for MS4s.')
-    MSLevelThree = models.BooleanField(default=False, help_text='Check this box if this test is only for MS3s')
+    MsLevelFour = models.BooleanField(default=False, help_text='Check this box if the MS4 class will be taking this test')
+    MSLevelThree = models.BooleanField(default=True, help_text='Check this box if the MS3 class will be taking this test')
+    MsLevelTwo= models.BooleanField(default=True, help_text='Check this box is the MS2 class will be taking this test')
+    MsLevelOne = models.BooleanField(default=True, help_text='Check this box if the MS1 class will be taking this test')
     
     def __unicode__(self):
         format_date = self.date.strftime('%d %b, %Y')
@@ -17,15 +19,9 @@ class PtTest(models.Model):
         db_table='PtTest'
         
         
-#This function gets the MsLevel objects themselves for use in limiting the choices of the grader field in PtScore
-def get_ms_level(ms):
-    if ms is 'MS4':
-        return MsLevel.objects.get(name='MS4')
-    elif ms is 'MS3':
-        return MsLevel.objects.get(name='MS3')
-    
-ms4 = get_ms_level('MS4')
-ms3 = get_ms_level('MS3')   
+#These variables get the MsLevel objects themselves for use in limiting the choices of the grader field in PtScore
+ms4 = MsLevel.objects.get(name='MS4')
+ms3 = MsLevel.objects.get(name='MS3')   
 
 #The PTscore information for each cadet. Indentified by a foreign key linking to a specific cadet
 class PtScore(models.Model):
@@ -61,19 +57,3 @@ class PtScore(models.Model):
     class Meta:
         db_table='PtScore'
         
-        
-        
-"""
-class Time(models.Model):
-    pt_score = models.ForeignKey(PtScore, related_name='pt_score', default='', blank=False)
-    minutes = models.PositiveIntegerField(default=0)
-    seconds = models.PositiveIntegerField(default=0)
-    
-    def __unicode__(self):
-        return 'Time - %s:%s' % (self.minutes, self.seconds)
-    
-    class Meta:
-        db_table='Time'
-        verbose_name="Two Mile time"
-        verbose_name_plural="Two Mile time"
-"""

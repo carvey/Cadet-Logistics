@@ -7,6 +7,7 @@ import attendance.models
 
 class PtScoreInlineAdmin(admin.TabularInline):
     model = PtScore
+    fk_name='cadet'
 
 class CadetAdmin(admin.ModelAdmin):
     list_display=('__unicode__', 'company', 'ms_level', 'gpa')

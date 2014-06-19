@@ -14,6 +14,12 @@ MS_LEVEL_CHOICES = (
             (THREE, 'MS3'),
             (FOUR, 'MS4'),
             )
+male='Male'
+female='Female'
+GENDER_CHOICES =(
+                 (male, 'Male'),
+                 (female, 'Female')
+                 )
 
 """Users is the base class for Cadet and Cadre"""
 class Users(models.Model):
@@ -42,10 +48,11 @@ class Company(models.Model):
 """Cadet is the model for cadets in the batallion. This model extends the Users abstract model. Each cadet should ideally be assigned to a company"""
 class Cadet(Users):
     eagle_id = models.CharField(max_length=10, blank=False, null=True) #can easily be converted to an int if we need
+    gender = models.CharField(max_length=6, choices=GENDER_CHOICES, blank=False, null=True)
     company = models.ForeignKey(Company, blank=True, null=True)
     platoon = models.ForeignKey('Platoon', blank=True, null=True)
     ms_level = models.ForeignKey('MsLevel', blank=False, null=False)
-    gpa = models.DecimalField(default=4.0, max_digits=3, decimal_places=2)
+    gpa = models.DecimalField(default=4.0, max_digits=3, decimal_places=2, blank=True)
     ms_grade = models.IntegerField(default=100)
     is_staff = models.BooleanField(default = False)
     is_company_staff = models.BooleanField(default = False)

@@ -11,32 +11,32 @@ class index(View):
         return render(request, self.template_name, {})
     
 class CPview(View):
-    
+    template_name = "eagletrack/control_panel.html"
     def get(self, request):
-        return HttpResponse("CPview")
+        return render (request, self.template_name, {})
 
 class Dashboard(View):
-    
+    template_name = "eagletrack/dashboard.html"
     def get(self, request):
-        return HttpResponse("Dashboard")
+        return render (request, self.template_name, {})
 
 class CadetListing(View):
-    
+    template_name = 'eagletrack/cadet_listing.html'
     def get(self, request):
-        return HttpResponse("Cadet Listing")
+        return render (request, self.template_name, {})
 
 class CadetStats(View):
-    
+    template_name = 'eagletrack/cadet_stats.html'
     def get(self, request):
-        return HttpResponse("Cadet stats")
+        return render (request, self.template_name, {})
 
 class CompanyStats(View):
-    
+    template_name = 'eagletrack/company_stats.html'
     def get(self, request):
-        return HttpResponse("Company Stats")
+        return render (request, self.template_name, {})
 
 class MSlevelStats(View):
-    
+    template_name = 'eagletrack/ms_stats.html'
     def get(self, request):
-        return HttpResponse("MSlevel stats")
+        return render (request, self.template_name, {})
     

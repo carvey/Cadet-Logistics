@@ -16,17 +16,21 @@ class PtTest(models.Model):
         return '%s PT test' % format_date
     
     class Meta:
-        db_table='PtTest'
-        
-        
-#These variables get the MsLevel objects themselves for use in limiting the choices of the grader field in PtScore
-ms4 = MsLevel.objects.get(name='MS4')
-ms3 = MsLevel.objects.get(name='MS3')   
+        db_table='PtTest'  
 
 #The PTscore information for each cadet. Indentified by a foreign key linking to a specific cadet
 class PtScore(models.Model):
+    '''These variables get the MsLevel objects themselves for use in limiting the choices of the grader field in PtScore
+    Placed in try except in case MsLevel doesn't exit yet. For example when trying to run syncdb on an empty database it
+    will throw an error without the try except.'''
+    try:
+        ms4 = MsLevel.objects.get(name='MS4')
+        ms3 = MsLevel.objects.get(name='MS3')
+        grader = models.ForeignKey('eagletrack.Cadet', related_name='grader', blank=False, null=True, limit_choices_to={'ms_level':ms4, 'ms_level':ms3})
+    except:
+        pass
+    
     pt_test = models.ForeignKey(PtTest, default='', blank=False, null=False)
-    grader = models.ForeignKey('eagletrack.Cadet', related_name='grader', blank=False, null=True, limit_choices_to={'ms_level':ms4, 'ms_level':ms3})
     cadre_grader=models.ForeignKey('eagletrack.Cadre', blank=True, null=True)
     cadet = models.ForeignKey('eagletrack.Cadet', related_name='cadet_score', blank=False)
     pushups = models.PositiveIntegerField(default=0)

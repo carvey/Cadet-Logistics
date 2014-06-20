@@ -7,7 +7,7 @@ from django.core.validators import RegexValidator
 class PtTest(models.Model):
     date = models.DateField(default=datetime.today(), blank=False)
     MsLevelFour = models.BooleanField(default=False, help_text='Check this box if the MS4 class will be taking this test')
-    MSLevelThree = models.BooleanField(default=True, help_text='Check this box if the MS3 class will be taking this test')
+    MsLevelThree = models.BooleanField(default=True, help_text='Check this box if the MS3 class will be taking this test')
     MsLevelTwo= models.BooleanField(default=True, help_text='Check this box is the MS2 class will be taking this test')
     MsLevelOne = models.BooleanField(default=True, help_text='Check this box if the MS1 class will be taking this test')
     

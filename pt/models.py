@@ -28,8 +28,8 @@ class PtScore(models.Model):
         ms3 = MsLevel.objects.get(name='MS3')
         grader = models.ForeignKey('eagletrack.Cadet', related_name='grader', blank=False, null=True, limit_choices_to={'ms_level':ms4, 'ms_level':ms3})
     except:
-        pass
-    
+        grader = models.ForeignKey('eagletrack.Cadet', related_name='grader', blank=False, null=True)
+        
     pt_test = models.ForeignKey(PtTest, default='', blank=False, null=False)
     cadre_grader=models.ForeignKey('eagletrack.Cadre', blank=True, null=True)
     cadet = models.ForeignKey('eagletrack.Cadet', related_name='cadet_score', blank=False)

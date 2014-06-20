@@ -2,7 +2,7 @@ from django.test import TestCase
 from eagletrack.models import *
 from pt.models import *
 from attendance.models import *
-import sys, datetime, os
+import sys, datetime, os, random
 sys.path.append(os.path.dirname(__file__))
 
 # Create your tests here.
@@ -85,6 +85,7 @@ def populate():
     add_pt_test(date=datetime.datetime.today() + datetime.timedelta(days=5), ms_lvl_4=False)
     add_pt_test(date=datetime.datetime.today() + datetime.timedelta(days=7), ms_lvl_4=True)
     
+    create_pt_scores(20)
 
 def add_company(name, co=None, fs=None):
     company= Company.objects.get_or_create(name=name, company_commander=co, first_sergeant=fs)[0]
@@ -104,6 +105,14 @@ def add_mslevel(name):
 
 def add_pt_test(date, ms_lvl_4):
     return PtTest.objects.get_or_create(date=date,MsLevelFour=ms_lvl_4)
+
+def create_pt_scores(number):
+    grader_list = Cadet.objects.filter(ms_level__name='MS4' and 'MS3')
+    cadets = Cadet.objects.all()
+    pt_tests = PtTest.objects.all()
+    
+    for num in range(1,number):
+        score = PtScore.objects.get_or_create(grader=random.choice(grader_list), pt_test=random.choice(pt_tests), cadet=random.choice(cadets), pushups=random.randint(0,80), situps=random.randint(0,80), two_mile="%s:%s" % (random.randint(0,20), random.randint(0,59)))
 
 if __name__ == '__main__':
     print "Starting Eagletrack Population script..."

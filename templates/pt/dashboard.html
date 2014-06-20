@@ -29,5 +29,34 @@
 			</div>
 		</div>
 	</div>
+	<div class="col-lg-4">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				Average PT Score by Company
+			</div>
+			<div class="panel-body">
+				<table class="table table-striped">
+					<tr>
+						<th>Company</th>
+						<th>Pushup</th>
+						<th>Situps</th>
+						<th>Two-mile time</th>
+					</tr>
+					{% for company, scores in company_scores.items %}
+					<tr>
+						<td>{{company}}</td>
+						{% for name, value in scores.items %}
+							{% if not forloop.last %}
+							<td>{{value|floatformat:'0'}}</td>
+							{% else %}
+								<td>{{value|floatformat:'2'}}</td>
+							{% endif %}
+						{% endfor %}
+					</tr>
+					{% endfor %}
+				</table>
+			</div>
+		</div>
+	</div>
 </div>
 {% endblock %}

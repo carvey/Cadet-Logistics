@@ -58,6 +58,25 @@ class PtScore(models.Model):
         split_time = [int(x) for x in split_time]
         return split_time
     
+    def get_pt_test(self):
+        return self.pt_test
+    
+    def get_pushups(self):
+        return self.pushups
+    
+    def get_situps(self):
+        return self.situps
+    
+    '''
+    Helper method to get the two mile time in minutes for computation. So a time of 15:43 will be returned
+    as 15.72 minutes
+    '''
+    def get_two_mile_min(self):
+        time_list = self.get_run_time()
+        minutes = time_list[0]
+        seconds = time_list[1]
+        return minutes + (seconds/60.0)
+    
     class Meta:
         db_table='PtScore'
         

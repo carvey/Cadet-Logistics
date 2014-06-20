@@ -1,0 +1,8 @@
+{% extends 'eagletrack/base.html' %}
+{% block content %}
+<ul>
+{% for test in tests %}
+	<li>{{test}}</li>
+{% endfor %}
+</ul>
+{% endblock %}

@@ -1,8 +1,28 @@
-{% extends 'eagletrack/base.html' %}
-{% block content %}
-<ul>
-{% for test in tests %}
-	<li>{{test}}</li>
-{% endfor %}
-</ul>
+{% extends 'basic_widget.html' %}
+{% block widget_size %}
+<div class="col-lg-8">
+{% endblock %}
+{% block widget_header %}
+PT Tests
+{% endblock %}
+{% block widget_body %}
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Date</th>
+				<th>MS Level 1</th>
+				<th>MS Level 2</th>
+				<th>MS Level 3</th>
+				<th>MS level 4</th>
+			</tr>
+		{% for test in tests %}
+			<tr>
+				<td>{{test.date}}</td>
+				<td>{{test.MsLevelOne}}</td>
+				<td>{{test.MsLevelTwo}}</td>
+				<td>{{test.MsLevelThree}}</td>
+				<td>{{test.MsLevelFour}}</td>
+			</tr>
+		{% endfor %}
+		</table>
 {% endblock %}

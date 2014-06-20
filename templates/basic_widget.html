@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row">
+	{% block widget_size %}
+	<div class="col-lg-8">
+	{% endblock %}
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				{% block widget_header %}
+				Header
+				{% endblock %}
+			</div>
+			<div class="panel-body">
+				{% block widget_body %}
+				
+				{% endblock %}
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

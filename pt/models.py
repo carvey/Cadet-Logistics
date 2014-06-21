@@ -33,6 +33,7 @@ class PtScore(models.Model):
     pt_test = models.ForeignKey(PtTest, default='', blank=False, null=False)
     cadre_grader=models.ForeignKey('eagletrack.Cadre', blank=True, null=True)
     cadet = models.ForeignKey('eagletrack.Cadet', related_name='cadet_score', blank=False)
+    score = models.PositiveIntegerField(default=0)
     pushups = models.PositiveIntegerField(default=0)
     situps = models.PositiveIntegerField(default=0)
     two_mile = models.CharField(max_length=5, null=True, validators=[

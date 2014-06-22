@@ -20,7 +20,7 @@
 {% block table_data %}
 	{% for cadet in cadets %}
 	   <tr class="odd gradeX">
-	       <td>{{cadet.last_name}}, {{cadet.first_name}}</td>
+	       <td><a href ="/eagletrack/cadets/{{cadet.eagle_id}}">{{cadet.last_name}}, {{cadet.first_name}}</a></td>
 	   </tr>
    {% endfor %}
 {% endblock %}

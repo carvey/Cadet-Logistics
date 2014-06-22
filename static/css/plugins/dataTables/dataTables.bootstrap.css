@@ -23,7 +23,7 @@ div.dataTables_info {
 
 div.dataTables_paginate {
     float: right;
-    margin: 0px;
+    margin: -29px 3px;
 }
 
 div.dataTables_paginate ul.pagination {

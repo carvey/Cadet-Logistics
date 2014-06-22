@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.views.generic import View
 
-from eagletrack.models import Cadet
+from eagletrack.models import Cadet, Company, MsLevel
 
 # Create your views here.
 
@@ -43,8 +43,11 @@ class CompanyStats(View):
     
 class CompanyListing(View):
     template_name='eagletrack/company_listing.html'
+    
+    companies = Company.objects.all()
+    
     def get(self, request):
-        return render(request, self.template_name, {})
+        return render(request, self.template_name, {'companies': self.companies})
 
 class MSlevelStats(View):
     template_name = 'eagletrack/ms_stats.html'
@@ -53,5 +56,13 @@ class MSlevelStats(View):
 
 class MSlevelListing(View):
     template_name='eagletrack/ms_listing.html'
+    
+    ms_classes = MsLevel.objects.all()
+    
     def get(self, request):
-        return render (request, self.template_name, {})
+        return render (request, self.template_name, {'ms_classes': self.ms_classes})
+    
+    
+    
+    
+    

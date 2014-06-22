@@ -86,6 +86,7 @@ def populate():
     add_pt_test(date=datetime.datetime.today() + datetime.timedelta(days=7), ms_lvl_4=True)
     
     create_pt_scores(20)
+    assign_eagle_id()
 
 def add_company(name, co=None, fs=None):
     company= Company.objects.get_or_create(name=name, company_commander=co, first_sergeant=fs)[0]
@@ -113,6 +114,14 @@ def create_pt_scores(number):
     
     for num in range(1,number):
         score = PtScore.objects.get_or_create(grader=random.choice(grader_list), pt_test=random.choice(pt_tests), cadet=random.choice(cadets), pushups=random.randint(0,80), situps=random.randint(0,80), two_mile="%s:%s" % (random.randint(0,20), random.randint(0,59)))
+        
+def assign_eagle_id():
+    cadets = Cadet.objects.all()
+    starting_id = 900000000
+    for cadet in cadets:
+        cadet.eagle_id = starting_id
+        starting_id = starting_id + 1
+        
 
 if __name__ == '__main__':
     print "Starting Eagletrack Population script..."

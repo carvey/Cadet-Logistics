@@ -1,9 +1,21 @@
-{% extends 'base.html' %}
+{% extends 'datatable_base.html' %}
 
 {% block page_header %}
 Military Science Levels Listing
 {% endblock %}
 
-{% block content %}
+{% block table_title %}
+	MS Class Listing - DataTable
+{% endblock %}
 
+{% block columns %}
+	<th>Class</th>
+{% endblock %}
+
+{% block table_data %}
+	{% for class in ms_classes %}
+		<tr class="odd gradeX">
+			<td>{{class.name}} Class</td>
+		</tr>
+	{% endfor %}
 {% endblock %}

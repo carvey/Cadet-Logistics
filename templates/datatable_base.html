@@ -29,8 +29,7 @@
                                         <tr>
                                         	<!-- This block determines the columns in the datatable -->
                                         	{% block columns %}
-	                                            <th>Last Name</th>
-	                                            <th>First Name</th>
+	                                            <th></th> <!-- Column name goes here -->
                                             {% endblock %}
                                         </tr>
                                     </thead>
@@ -38,12 +37,9 @@
                                     	<!-- This block handles putting data into the datatable -->
 										<!-- Each td tag corresponds to its respective column header as listed in the columns block -->
                                     	{% block table_data %}
-	                                    	{% for cadet in cadets %}
 	                                        <tr class="odd gradeX">
-	                                            <td>{{cadet.last_name}}</td>
-	                                            <td>{{cadet.first_name}}</td>
-	                                        </tr>
-	                                        {% endfor %}
+	                                            <td></td>
+	                                        </tr>  
                                         {% endblock %}
                                     </tbody>
                                 </table>

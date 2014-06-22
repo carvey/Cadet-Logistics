@@ -1,9 +1,26 @@
-{% extends 'base.html' %}
+{% extends 'datatable_base.html' %}
 
 {% block page_header %}
 Company Listing
 {% endblock %}
 
-{% block content %}
+{% block table_title %}
+	Company Listing - DataTable
+{% endblock %}
 
+{% block columns %}
+	<th>Companies</th>
+	<th>Commander</th>
+	<th>First Sergeant</th>
+{% endblock %}
+
+
+{% block table_data %}
+	{% for company in companies %}
+		<tr class="odd gradeX">
+			<td>{{company.name}}</td>
+			<td>{{company.company_commander}}</td>
+			<td>{{company.first_sergeant}}</td>
+		</tr>
+	{% endfor %}
 {% endblock %}

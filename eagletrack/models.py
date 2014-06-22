@@ -48,7 +48,7 @@ class Company(models.Model):
 
 """Cadet is the model for cadets in the batallion. This model extends the Users abstract model. Each cadet should ideally be assigned to a company"""
 class Cadet(Users):
-    eagle_id = models.CharField(max_length=10, blank=False, null=True) #can easily be converted to an int if we need
+    eagle_id = models.PositiveIntegerField(default=0, blank=False, null=True)
     gender = models.CharField(max_length=6, choices=GENDER_CHOICES, blank=False, null=True)
     company = models.ForeignKey(Company, blank=True, null=True)
     platoon = models.ForeignKey('Platoon', blank=True, null=True)

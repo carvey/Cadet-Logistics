@@ -12,8 +12,7 @@
 
 <!-- This block determines the columns in the datatable -->
 {% block columns %}
-	 <th>Last Name</th>
-	 <th>First Name</th>
+	 <th>Last, First Name</th>
 {% endblock %}
 
 <!-- This block handles putting data into the datatable -->
@@ -21,8 +20,7 @@
 {% block table_data %}
 	{% for cadet in cadets %}
 	   <tr class="odd gradeX">
-	       <td>{{cadet.last_name}}</td>
-	       <td>{{cadet.first_name}}</td>
+	       <td>{{cadet.last_name}}, {{cadet.first_name}}</td>
 	   </tr>
    {% endfor %}
 {% endblock %}

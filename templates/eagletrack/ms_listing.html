@@ -15,7 +15,7 @@ Military Science Levels Listing
 {% block table_data %}
 	{% for class in ms_classes %}
 		<tr class="odd gradeX">
-			<td>{{class.name}} Class</td>
+			<td><a href = "/eagletrack/mscadets/{{class.name}}">{{class.name}} Class</a></td>
 		</tr>
 	{% endfor %}
 {% endblock %}

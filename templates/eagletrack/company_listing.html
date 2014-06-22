@@ -18,7 +18,7 @@ Company Listing
 {% block table_data %}
 	{% for company in companies %}
 		<tr class="odd gradeX">
-			<td>{{company.name}}</td>
+			<td><a href = "/eagletrack/companycadets/{{company.name}}">{{company.name}}</a></td>
 			<td>{{company.company_commander}}</td>
 			<td>{{company.first_sergeant}}</td>
 		</tr>

@@ -4,7 +4,7 @@ Created on Apr 27, 2014
 @author: carvey
 '''
 from django.conf.urls import patterns, url
-from eagletrack.views import index, CPview, Dashboard, CadetStats, CadetListing, CadetPage, CompanyStats, CompanyListing, MSlevelStats, MSlevelListing
+from eagletrack.views import index, CPview, Dashboard, CadetStats, CadetListing, CadetPage, CompanyStats, CompanyListing, CompanyCadetListing, MSlevelStats, MSlevelListing, MScadetListing
 
 urlpatterns = patterns('',
         url(r'^$', index.as_view(), name='index'),
@@ -17,9 +17,11 @@ urlpatterns = patterns('',
         
         url(r'^companystats', CompanyStats.as_view(), name='companystats'),
         url(r'^companylisting', CompanyListing.as_view(), name='companylisting'),
+        url(r'^companycadets/(?P<company_name>[-A-Za-z0-9_]+)/$', CompanyCadetListing.as_view(), name='cadets_in_company'),
         
         url(r'^msstats$', MSlevelStats.as_view(), name='msstats'),
         url(r'^mslisting', MSlevelListing.as_view(), name='mslisting'),
+        url(r'^mscadets/(?P<ms_class>[-A-Za-z0-9_]+)/$', MScadetListing.as_view(), name='mscadets'),
         
 )
 

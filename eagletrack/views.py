@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.views.generic import View
 
-from eagletrack.models import Cadet, Company, MsLevel
+from eagletrack.models import Cadet, Company, MsLevel, Platoon
 
 # Create your views here.
 
@@ -52,9 +52,18 @@ class CompanyListing(View):
     template_name='eagletrack/company_listing.html'
     
     companies = Company.objects.all()
+    platoons = Platoon.objects.all()
     
     def get(self, request):
-        return render(request, self.template_name, {'companies': self.companies})
+        return render(request, self.template_name, {'companies': self.companies, 'platoons': self.platoons})
+    
+class CompanyCadetListing(View):
+    template_name = 'eagletrack/company_cadet_listing.html'
+    
+    def get(self, request, company_name):
+        company = Company.objects.get(name = company_name)
+        cadets = Cadet.objects.filter(company = company)
+        return render(request, self.template_name, {'company': company, 'cadets': cadets})
 
 class MSlevelStats(View):
     template_name = 'eagletrack/ms_stats.html'
@@ -70,6 +79,12 @@ class MSlevelListing(View):
         return render (request, self.template_name, {'ms_classes': self.ms_classes})
     
     
+class MScadetListing(View):
+    template_name = 'eagletrack/ms_cadet_listing.html'
     
+    def get(self, request, ms_class):
+        ms_class = MsLevel.objects.get(name=ms_class)
+        cadets = Cadet.objects.filter(ms_level = ms_class)
+        return render (request, self.template_name, {'ms_class': ms_class, 'cadets': cadets})
     
     

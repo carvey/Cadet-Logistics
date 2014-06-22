@@ -1,0 +1,21 @@
+{% extends 'datatable_base.html' %}
+
+{% block page_header %}
+	{{company.name}} Company
+{% endblock %}
+
+{% block table_title %}
+	Listing of Cadets
+{% endblock %}
+
+{% block columns %}
+	<th>Last, First Name</th>
+{% endblock %}
+
+{% block table_data %}
+	{% for cadet in cadets %}
+		<tr class = "odd gradeX">
+			<td><a href = "/eagletrack/cadets/{{cadet.eagle_id}}">{{cadet.last_name}}, {{cadet.first_name}}</a></td>
+		</tr>
+	{% endfor %}
+{% endblock %}

@@ -75,11 +75,11 @@ def populate():
     add_cadet(first_name="Julia", last_name="Anderson", age=18, ms_level=ms1, company=charlie)
 
     
-    add_cadet(first_name="Joe", last_name="Shmo", age=18, ms_level=ms1, company=delta)
+    add_cadet(first_name="Joe", last_name="Taylor", age=18, ms_level=ms1, company=delta)
     add_cadet(first_name="Jim", last_name="Bob", age=18, ms_level=ms1, company=delta)
     add_cadet(first_name="Alan", last_name="Smith", age=18, ms_level=ms1, company=delta)
     add_cadet(first_name="Jane", last_name="West", age=18, ms_level=ms1, company=delta)
-    add_cadet(first_name="Anne", last_name="Key", age=18, ms_level=ms1, company=delta)
+    add_cadet(first_name="Anne", last_name="Locke", age=18, ms_level=ms1, company=delta)
     
     add_pt_test(date=datetime.datetime.today() + datetime.timedelta(days=2), ms_lvl_4=False)
     add_pt_test(date=datetime.datetime.today() + datetime.timedelta(days=5), ms_lvl_4=False)

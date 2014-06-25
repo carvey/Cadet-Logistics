@@ -5,6 +5,34 @@ from django.views.generic import View
 from pt.models import PtTest, PtScore
 from eagletrack.models import Company
 
+'''
+Returns a dictionary containing the average values of situps, pushups and two mile run times
+for the given Company object.
+Ex.
+    To access the average situp value from the returned dictionary, you would do <dict_name>['situps']
+'''    
+def get_avg_scores_by_company(company):
+    try:
+        scores = PtScore.objects.filter(cadet__company=company)
+        avg_score = {}
+        
+        situps = [score.get_situps() for score in scores]
+        avg_situps = sum(situps)/float(len(situps))
+        
+        pushups = [score.get_pushups() for score in scores]
+        avg_pushups = sum(pushups)/float(len(pushups))
+        
+        two_mile = [score.get_two_mile_min() for score in scores]
+        avg_two_mile = sum(two_mile)/float(len(two_mile))
+    
+        return {
+                'situps':avg_situps,
+                'pushups':avg_pushups,
+                'two_mile':avg_two_mile
+                }
+    except:
+        pass
+    
 class Dashboard(View):
     '''
     Creates a dictionary of all the pt scores for each company. Accessed using company name.
@@ -13,14 +41,7 @@ class Dashboard(View):
         companies = Company.objects.all()
         scores_by_company = {}
         for company in companies:
-            scores = PtScore.objects.filter(cadet__company=company)
-            avg_score = {}
-            
-            avg_score['situps'] = sum([score.get_situps() for score in scores]) / (len([score.get_situps() for score in scores]))
-            avg_score['pushups'] = sum([score.get_pushups() for score in scores]) / float(len([score.get_pushups() for score in scores]))
-            avg_score['two_mile'] = sum([score.get_two_mile_min() for score in scores]) / float(len([score.get_two_mile_min() for score in scores]))
-            
-            scores_by_company[company.name] = avg_score
+            scores_by_company[company.name] = get_avg_scores_by_company(company)
         
         print scores_by_company
         return scores_by_company
@@ -40,9 +61,6 @@ class Dashboard(View):
     
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name, self.context)
-        
-    def avg_company_scores(self):
-        pass
 
 class CpView(View):
     template_name = 'pt/control_panel.html'
@@ -51,16 +69,40 @@ class CpView(View):
         return HttpResponse("PT CP")
     
 class TestView(View):
-    emplate_name = 'pt/tests.html'
+    template_name = 'pt/tests.html'
     
     def get(self, request, *args, **kwargs):
         return HttpResponse("PT Tests")
+    
+class TestStatView(View):
+    template_name = 'pt/test_stats.html'
+    
+    def get(self, request, *args, **kwargs):
+        return HttpResponse("PT test statistics view")
+    
+class TestListingView(View):
+    template_name = 'pt/test_listing.html'
+    
+    def get(self, request, *args, **kwargs):
+        return HttpResponse("PT listing view")
 
 class CadetsView(View):
     template_name = 'pt/cadets.html'
     
     def get(self, request, *args, **kwargs):
         return HttpResponse("PT Cadets page.")
+    
+class CadetsStatView(View):
+    template_name = 'pt/cadets_stats.html'
+    
+    def get(self, request, *args, **kwargs):
+        return HttpResponse("Cadets PT Statistics page.")
+
+class CadetsListingView(View):
+    template_name = 'pt/cadets_listing.html'
+    
+    def get(self, request, *args, **kwargs):
+        return HttpResponse("Cadets PT listing page.")
 
 class CompanyView(View):
     template_name = 'pt/company.html'

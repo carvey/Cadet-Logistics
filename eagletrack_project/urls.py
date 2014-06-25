@@ -4,9 +4,9 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    url(r'^$', include('eagletrack.urls')),
+    url(r'^$', include('personnel.urls')),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^eagletrack/', include('eagletrack.urls')),
+    url(r'^personnel/', include('personnel.urls')),
     url(r'^pt/', include('pt.urls')),
 )
 if settings.DEBUG:

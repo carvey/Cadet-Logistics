@@ -50,7 +50,7 @@ INSTALLED_APPS = (
     'debug_toolbar',
     'south',
     'pt',
-    'eagletrack',
+    'personnel',
     'attendance',
     'gear',
 )

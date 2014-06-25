@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.views.generic import View
 
 from pt.models import PtTest, PtScore
-from eagletrack.models import Company
+from personnel.models import Company
 
 '''
 Returns a dictionary containing the average values of situps, pushups and two mile run times
@@ -44,6 +44,15 @@ class Dashboard(View):
             scores_by_company[company.name] = get_avg_scores_by_company(company)
     
         return scores_by_company
+        try:
+            companies = Company.objects.all()
+            scores_by_company = {}
+            for company in companies:
+                scores_by_company[company.name] = get_avg_scores_by_company(company)
+            
+            return scores_by_company
+        except:
+            return None
     
     template_name = 'pt/dashboard.html'
     

@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.views.generic import View
 
-from eagletrack.models import Cadet, Company, MsLevel, Platoon
+from personnel.models import Cadet, Company, MsLevel, Platoon
 
 # Create your views here.
 
@@ -14,22 +14,22 @@ class index(View):
     
     
 class CPview(View):
-    template_name = "eagletrack/control_panel.html"
+    template_name = "personnel/control_panel.html"
     def get(self, request):
         return render (request, self.template_name, {})
 
 class Dashboard(View):
-    template_name = "eagletrack/dashboard.html"
+    template_name = "personnel/dashboard.html"
     def get(self, request):
         return render (request, self.template_name, {})
     
 class CadetStats(View):
-    template_name = 'eagletrack/cadet_stats.html'
+    template_name = 'personnel/cadet_stats.html'
     def get(self, request):
         return render (request, self.template_name, {})
 
 class CadetListing(View):
-    template_name='eagletrack/cadet_listing.html'
+    template_name='personnel/cadet_listing.html'
     
     cadets = Cadet.objects.all()
     
@@ -37,19 +37,19 @@ class CadetListing(View):
         return render (request, self.template_name, {'cadets': self.cadets})
     
 class CadetPage(View):
-    template_name='eagletrack/cadet_page.html'
+    template_name='personnel/cadet_page.html'
     
-    def get(self, request, eagle_id):
-        cadet = Cadet.objects.get(eagle_id = eagle_id)
+    def get(self, request, cadet_id):
+        cadet = Cadet.objects.get(id = cadet_id)
         return render(request, self.template_name, {'cadet': cadet})
 
 class CompanyStats(View):
-    template_name = 'eagletrack/company_stats.html'
+    template_name = 'personnel/company_stats.html'
     def get(self, request):
         return render (request, self.template_name, {})
     
 class CompanyListing(View):
-    template_name='eagletrack/company_listing.html'
+    template_name='personnel/company_listing.html'
     
     companies = Company.objects.all()
     platoons = Platoon.objects.all()
@@ -58,7 +58,7 @@ class CompanyListing(View):
         return render(request, self.template_name, {'companies': self.companies, 'platoons': self.platoons})
     
 class CompanyCadetListing(View):
-    template_name = 'eagletrack/company_cadet_listing.html'
+    template_name = 'personnel/company_cadet_listing.html'
     
     def get(self, request, company_name):
         company = Company.objects.get(name = company_name)
@@ -66,12 +66,12 @@ class CompanyCadetListing(View):
         return render(request, self.template_name, {'company': company, 'cadets': cadets})
 
 class MSlevelStats(View):
-    template_name = 'eagletrack/ms_stats.html'
+    template_name = 'personnel/ms_stats.html'
     def get(self, request):
         return render (request, self.template_name, {})
 
 class MSlevelListing(View):
-    template_name='eagletrack/ms_listing.html'
+    template_name='personnel/ms_listing.html'
     
     ms_classes = MsLevel.objects.all()
     
@@ -80,7 +80,7 @@ class MSlevelListing(View):
     
     
 class MScadetListing(View):
-    template_name = 'eagletrack/ms_cadet_listing.html'
+    template_name = 'personnel/ms_cadet_listing.html'
     
     def get(self, request, ms_class):
         ms_class = MsLevel.objects.get(name=ms_class)

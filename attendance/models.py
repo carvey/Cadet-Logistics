@@ -1,4 +1,4 @@
-from eagletrack.models import Company, MsLevel
+from personnel.models import Company, MsLevel
 
 from django.db import models
 from datetime import datetime
@@ -29,7 +29,7 @@ EVENT_TYPES = (
               )
 
 class Attended(models.Model):
-    attended_list = models.ManyToManyField('eagletrack.Cadet', default='', null=False)
+    attended_list = models.ManyToManyField('personnel.Cadet', default='', null=False)
     event = models.OneToOneField('Event', blank=False, null=True)
     
     def __unicode__(self):

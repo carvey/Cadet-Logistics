@@ -1,5 +1,5 @@
 from django.test import TestCase
-from eagletrack.models import *
+from personnel.models import *
 from pt.models import *
 from attendance.models import *
 import sys, datetime, os, random
@@ -121,12 +121,13 @@ def assign_eagle_id():
     for cadet in cadets:
         cadet.eagle_id = starting_id
         starting_id = starting_id + 1
+        cadet.save()
         
 
 if __name__ == '__main__':
     print "Starting Eagletrack Population script..."
     os.environ['DJANGO_SETTINGS_MODULE'] = 'eagletrack_project.settings'
-    from eagletrack.models import Cadet, Company, Platoon, MsLevel
+    from personnel.models import Cadet, Company, Platoon, MsLevel
     populate()
     print "Population script has ran successfully"
     

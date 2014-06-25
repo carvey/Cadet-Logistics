@@ -1,8 +1,7 @@
 {% extends 'datatable_base.html' %}
 
-
 {% block page_header %}
-	{{ms_class.name}} Class
+	{{company.name}} Company
 {% endblock %}
 
 {% block table_title %}
@@ -16,7 +15,7 @@
 {% block table_data %}
 	{% for cadet in cadets %}
 		<tr class = "odd gradeX">
-			<td><a href="/eagletrack/cadets/{{cadet.eagle_id}}">{{cadet.last_name}}, {{cadet.first_name}}</a></td>
+			<td><a href = "/personnel/cadets/{{cadet.id}}">{{cadet.last_name}}, {{cadet.first_name}}</a></td>
 		</tr>
 	{% endfor %}
 {% endblock %}

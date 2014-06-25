@@ -21,8 +21,8 @@
 {% block table_data %}
 	{% for cadet in cadets %}
 	   <tr class="odd gradeX">
-	       <td><a href = "/eagletrack/cadets/{{cadet.id}}">{{cadet.last_name}}, {{cadet.first_name}}</a></td>
-	       <td><a href = "/eagletrack/companycadets/{{cadet.company}}">{{cadet.company}}</a></td>
+	       <td><a href = "/personnel/cadets/{{cadet.id}}">{{cadet.last_name}}, {{cadet.first_name}}</a></td>
+	       <td><a href = "/personnel/companycadets/{{cadet.company}}">{{cadet.company}}</a></td>
 	   </tr>
    {% endfor %}
 {% endblock %}

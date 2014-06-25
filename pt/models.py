@@ -1,6 +1,6 @@
 from django.db import models
 from datetime import datetime
-from eagletrack.models import MsLevel
+from personnel.models import MsLevel
 from django.core.validators import RegexValidator
 
 #This class handles the pt test itself, identified by a date
@@ -20,10 +20,10 @@ class PtTest(models.Model):
 
 #The PTscore information for each cadet. Indentified by a foreign key linking to a specific cadet
 class PtScore(models.Model):
-    grader = models.ForeignKey('eagletrack.Cadet', related_name='grader', blank=False, null=True) 
+    grader = models.ForeignKey('personnel.Cadet', related_name='grader', blank=False, null=True) 
     pt_test = models.ForeignKey(PtTest, default='', blank=False, null=False)
-    cadre_grader=models.ForeignKey('eagletrack.Cadre', blank=True, null=True)
-    cadet = models.ForeignKey('eagletrack.Cadet', related_name='cadet_score', blank=False)
+    cadre_grader=models.ForeignKey('personnel.Cadre', blank=True, null=True)
+    cadet = models.ForeignKey('personnel.Cadet', related_name='cadet_score', blank=False)
     score = models.PositiveIntegerField(default=0)
     pushups = models.PositiveIntegerField(default=0)
     situps = models.PositiveIntegerField(default=0)

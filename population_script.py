@@ -121,6 +121,7 @@ def assign_eagle_id():
     for cadet in cadets:
         cadet.eagle_id = starting_id
         starting_id = starting_id + 1
+        cadet.save()
         
 
 if __name__ == '__main__':

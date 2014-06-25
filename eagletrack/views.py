@@ -39,8 +39,8 @@ class CadetListing(View):
 class CadetPage(View):
     template_name='eagletrack/cadet_page.html'
     
-    def get(self, request, eagle_id):
-        cadet = Cadet.objects.get(eagle_id = eagle_id)
+    def get(self, request, cadet_id):
+        cadet = Cadet.objects.get(id = cadet_id)
         return render(request, self.template_name, {'cadet': cadet})
 
 class CompanyStats(View):

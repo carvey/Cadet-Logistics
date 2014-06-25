@@ -42,76 +42,126 @@ class Dashboard(View):
         scores_by_company = {}
         for company in companies:
             scores_by_company[company.name] = get_avg_scores_by_company(company)
-        
-        print scores_by_company
+    
         return scores_by_company
     
     template_name = 'pt/dashboard.html'
     
-    pt_tests = PtTest.objects.all()
-    pt_scores = PtScore.objects.all()
-    scores_by_company = company_pt_scores()
-    companies = Company.objects.all()
-
-    context = {
-               'tests':pt_tests,
-               'companies':companies,
-               'company_scores':scores_by_company,
-               }
-    
     def get(self, request, *args, **kwargs):
-        return render(request, self.template_name, self.context)
+        pt_tests = PtTest.objects.all()
+        pt_scores = PtScore.objects.all()
+        scores_by_company = company_pt_scores()
+        companies = Company.objects.all()
+    
+        context = {
+                   'tests':pt_tests,
+                   'companies':companies,
+                   'company_scores':scores_by_company,
+                   }
+    
+        return render(request, self.template_name, context)
 
 class CpView(View):
     template_name = 'pt/control_panel.html'
     
     def get(self, request, *args, **kwargs):
-        return HttpResponse("PT CP")
+        context = {
+                  }
+        return render(request, self.template_name, context)
     
 class TestView(View):
     template_name = 'pt/tests.html'
     
     def get(self, request, *args, **kwargs):
-        return HttpResponse("PT Tests")
+        context = {
+                   }
+        return render(request, self.template_name, context)
     
 class TestStatView(View):
     template_name = 'pt/test_stats.html'
     
     def get(self, request, *args, **kwargs):
-        return HttpResponse("PT test statistics view")
+        context = {
+                   }
+        return render(request, self.template_name, context)
     
 class TestListingView(View):
     template_name = 'pt/test_listing.html'
     
     def get(self, request, *args, **kwargs):
-        return HttpResponse("PT listing view")
+        context = {
+                   }
+        return render(request, self.template_name, context)
 
 class CadetsView(View):
     template_name = 'pt/cadets.html'
     
     def get(self, request, *args, **kwargs):
-        return HttpResponse("PT Cadets page.")
+        context = {
+                   }
+        return render(request, self.template_name, context)
     
 class CadetsStatView(View):
     template_name = 'pt/cadets_stats.html'
     
     def get(self, request, *args, **kwargs):
-        return HttpResponse("Cadets PT Statistics page.")
+        context = {
+                   }
+        return render(request, self.template_name, context)
 
 class CadetsListingView(View):
     template_name = 'pt/cadets_listing.html'
     
     def get(self, request, *args, **kwargs):
-        return HttpResponse("Cadets PT listing page.")
+        
+        context = {
+                   }
+        return render(request, self.template_name, context)
 
 class CompanyView(View):
     template_name = 'pt/company.html'
     
     def get(self, request, *args, **kwargs):
-        return HttpResponse("PT company page")
+        context = {
+                   }
+        return render(request, self.template_name, context)
+
+class CompanyStatView(View):
+    template_name = 'pt/company_stats.html'
     
+    def get(self, request, *args, **kwargs):
+        context = {
+                   }
+        return render(request, self.template_name, context)
+    
+class CompanyListingView(View):
+    template_name = 'pt/company_listing.html'
+    
+    def get(self, request, *args, **kwargs):
+        context = {
+                   }
+        return render(request, self.template_name, context)
+    
+class MsLevelStatView(View):
+    template_name = 'pt/ms_stats.html'
+    
+    def get(self, request, *args, **kwargs):
+        context = {
+                   }
+        return render(request, self.template_name, context)
+    
+class MsLevelListingView(View):
+    template_name = 'pt/ms_listing.html'
+    
+    def get(self, request, *args, **kwargs):
+        context = {
+                   }
+        return render(request, self.template_name, context)
+
 class MsLevelView(View):
     template_name = 'pt/ms_level.html'
     
     def get(self, request, *args, **kwargs):
-        return HttpResponse("PT mslevel page")
+        context = {
+               }
+        return render(request, self.template_name, context)

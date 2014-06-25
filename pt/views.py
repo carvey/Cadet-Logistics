@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.views.generic import View
 
 from pt.models import PtTest, PtScore
-from personnel.models import Company
+from personnel.models import Company, Cadet
 
 '''
 Returns a dictionary containing the average values of situps, pushups and two mile run times
@@ -56,7 +56,7 @@ class Dashboard(View):
     
     template_name = 'pt/dashboard.html'
     
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         pt_tests = PtTest.objects.all()
         pt_scores = PtScore.objects.all()
         scores_by_company = company_pt_scores()
@@ -73,7 +73,7 @@ class Dashboard(View):
 class CpView(View):
     template_name = 'pt/control_panel.html'
     
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         context = {
                   }
         return render(request, self.template_name, context)
@@ -81,7 +81,7 @@ class CpView(View):
 class TestView(View):
     template_name = 'pt/tests.html'
     
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         context = {
                    }
         return render(request, self.template_name, context)
@@ -89,7 +89,7 @@ class TestView(View):
 class TestStatView(View):
     template_name = 'pt/test_stats.html'
     
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         context = {
                    }
         return render(request, self.template_name, context)
@@ -97,15 +97,29 @@ class TestStatView(View):
 class TestListingView(View):
     template_name = 'pt/test_listing.html'
     
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
+        pt_scores = PtScore.objects.all()
         context = {
+                   'scores':pt_scores,
+                   }
+        return render(request, self.template_name, context)
+    
+class CadetDetailView(View):
+    template_name = 'pt/cadet_detail.html'
+    
+    def get(self, request, cadet_id):
+        scores = PtScore.objects.filter(cadet__id=cadet_id)
+        cadet = Cadet.objects.filter(id=cadet_id)
+        context = {
+                   'cadet':cadet[0],
+                   'scores':scores
                    }
         return render(request, self.template_name, context)
 
 class CadetsView(View):
     template_name = 'pt/cadets.html'
     
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         context = {
                    }
         return render(request, self.template_name, context)
@@ -113,7 +127,7 @@ class CadetsView(View):
 class CadetsStatView(View):
     template_name = 'pt/cadets_stats.html'
     
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         context = {
                    }
         return render(request, self.template_name, context)
@@ -121,16 +135,17 @@ class CadetsStatView(View):
 class CadetsListingView(View):
     template_name = 'pt/cadets_listing.html'
     
-    def get(self, request, *args, **kwargs):
-        
+    def get(self, request):
+        cadets = Cadet.objects.all()
         context = {
+                   'cadets':cadets
                    }
         return render(request, self.template_name, context)
 
 class CompanyView(View):
     template_name = 'pt/company.html'
     
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         context = {
                    }
         return render(request, self.template_name, context)
@@ -138,7 +153,7 @@ class CompanyView(View):
 class CompanyStatView(View):
     template_name = 'pt/company_stats.html'
     
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         context = {
                    }
         return render(request, self.template_name, context)
@@ -146,7 +161,7 @@ class CompanyStatView(View):
 class CompanyListingView(View):
     template_name = 'pt/company_listing.html'
     
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         context = {
                    }
         return render(request, self.template_name, context)
@@ -154,7 +169,7 @@ class CompanyListingView(View):
 class MsLevelStatView(View):
     template_name = 'pt/ms_stats.html'
     
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         context = {
                    }
         return render(request, self.template_name, context)
@@ -162,7 +177,7 @@ class MsLevelStatView(View):
 class MsLevelListingView(View):
     template_name = 'pt/ms_listing.html'
     
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         context = {
                    }
         return render(request, self.template_name, context)
@@ -170,7 +185,7 @@ class MsLevelListingView(View):
 class MsLevelView(View):
     template_name = 'pt/ms_level.html'
     
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         context = {
                }
         return render(request, self.template_name, context)

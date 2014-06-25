@@ -50,6 +50,10 @@ class PtScore(models.Model):
         split_time = [int(x) for x in split_time]
         return split_time
     
+    def get_run_time_str(self):
+        time = self.get_run_time()
+        return '%d:%02d' % (time[0], time[1])
+    
     def get_pt_test(self):
         return self.pt_test
     

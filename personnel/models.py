@@ -78,6 +78,9 @@ class Cadet(Users):
     ##
     comments = models.TextField(max_length=1000, blank=True)
     
+    def get_name(self):
+        return '%s %s' % (self.first_name, self.last_name)
+    
     class Meta:
         db_table='Cadet'
 

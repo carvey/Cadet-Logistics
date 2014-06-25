@@ -1,15 +1,14 @@
 {% extends 'datatable_base.html' %}
 {% block page_header %}
-PT Test Listing Page
+{{cadet.get_name}}'s PT Details
 {% endblock %}
 
 {% block table_title %}
-PT Tests
+{{cadet.get_name}}'s PT Scores
 {% endblock %}
 
 {% block columns%}
 	<th>PT Test</th>
-	<th>Cadet</th>
 	<th>Pushups</th>
 	<th>Situps</th>
 	<th>Two Mile time</th>
@@ -19,7 +18,6 @@ PT Tests
 	{% for score in scores %}
 	<tr class="odd gradeX">
 		<td>{{score.pt_test}}</td>
-		<td><a href="/pt/cadet/{{score.cadet.id}}">{{score.cadet}}</a></td>
 		<td>{{score.get_pushups}}</td>
 		<td>{{score.get_situps}}</td>
 		<td>{{score.get_run_time_str}}</td>

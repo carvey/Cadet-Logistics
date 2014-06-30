@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'datatable_base.html' %}
 {% block page_header %}
 Cadet PT Listing Page
 {% endblock %}
@@ -8,5 +8,17 @@ Cadets Listing
 {% endblock %}
 
 {% block columns %}
+	<th>Name</th>
+	<th>Eagle ID</th>
+	<th>Gender</th>
+{% endblock %}
 
+{% block table_data %}
+	{% for cadet in cadets %}
+	<tr>
+		<td><a href="/pt/cadet/{{cadet.id}}">{{cadet.get_name}}</a></td>
+		<td>{{cadet.eagle_id}}</td>
+		<td>{{cadet.gender}}</td>
+	</tr>
+	{% endfor %}
 {% endblock %}

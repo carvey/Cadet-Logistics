@@ -34,10 +34,12 @@ def get_avg_scores_by_company(company):
         pass
     
 class Dashboard(View):
+    template_name = 'pt/dashboard.html'
+    
     '''
     Creates a dictionary of all the pt scores for each company. Accessed using company name.
     '''
-    def company_pt_scores():
+    def company_pt_scores(self):
         companies = Company.objects.all()
         scores_by_company = {}
         for company in companies:
@@ -54,12 +56,10 @@ class Dashboard(View):
         except:
             return None
     
-    template_name = 'pt/dashboard.html'
-    
     def get(self, request):
         pt_tests = PtTest.objects.all()
         pt_scores = PtScore.objects.all()
-        scores_by_company = company_pt_scores()
+        scores_by_company = self.company_pt_scores()
         companies = Company.objects.all()
     
         context = {
@@ -138,7 +138,7 @@ class CadetsListingView(View):
     def get(self, request):
         cadets = Cadet.objects.all()
         context = {
-                   'cadets':cadets
+                   'cadets':cadets,
                    }
         return render(request, self.template_name, context)
 

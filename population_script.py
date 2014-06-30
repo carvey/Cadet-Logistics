@@ -6,6 +6,7 @@ import sys, datetime, os, random
 sys.path.append(os.path.dirname(__file__))
 
 # Create your tests here.
+cadets = Cadet.objects.all()
 
 def populate():
     add_company(name="Alpha")
@@ -87,6 +88,10 @@ def populate():
     
     create_pt_scores(20)
     assign_eagle_id()
+    assign_cell_num()
+    assign_gpa()
+    assign_ms_grade()
+    assign_contract_smp()
 
 def add_company(name, co=None, fs=None):
     company= Company.objects.get_or_create(name=name, company_commander=co, first_sergeant=fs)[0]
@@ -96,8 +101,8 @@ def add_platoon(name, company):
     platoon = Platoon.objects.get_or_create(name=name, company=company)
     return platoon
 
-def add_cadet(first_name, last_name, age, ms_level, company, platoon=None, gpa=4.0, ms_grade=100, is_staff=False, is_company_staff=False):
-    c = Cadet.objects.get_or_create(first_name=first_name, last_name=last_name, age=age, ms_level=ms_level, company=company, platoon=platoon,  gpa=gpa)[0]
+def add_cadet(first_name, last_name, age, ms_level, company, platoon=None, ms_grade=100, is_staff=False, is_company_staff=False):
+    c = Cadet.objects.get_or_create(first_name=first_name, last_name=last_name, age=age, ms_level=ms_level, company=company, platoon=platoon)[0]
     return c
 
 def add_mslevel(name):
@@ -109,20 +114,43 @@ def add_pt_test(date, ms_lvl_4):
 
 def create_pt_scores(number):
     grader_list = Cadet.objects.filter(ms_level__name='MS4' and 'MS3')
-    cadets = Cadet.objects.all()
     pt_tests = PtTest.objects.all()
     
     for num in range(1,number):
         score = PtScore.objects.get_or_create(grader=random.choice(grader_list), pt_test=random.choice(pt_tests), cadet=random.choice(cadets), pushups=random.randint(0,80), situps=random.randint(0,80), two_mile="%s:%s" % (random.randint(0,20), random.randint(0,59)))
         
 def assign_eagle_id():
-    cadets = Cadet.objects.all()
     starting_id = 900000000
     for cadet in cadets:
         cadet.eagle_id = starting_id
         starting_id = starting_id + 1
         cadet.save()
+
+def assign_cell_num():
+    starting_num = 7702501639
+    for cadet in cadets:
+        cadet.cell_number = starting_num
+        starting_num = starting_num + 4
+        cadet.save()
         
+def assign_gpa():
+    for cadet in cadets:
+        cadet.gpa = random.random()*4
+        cadet.save()
+
+def assign_ms_grade():
+    for cadet in cadets:
+        cadet.ms_grade = random.randint(50, 100)
+        cadet.save()
+        
+def assign_contract_smp():
+    for cadet in cadets:
+        rand = random.randint(0,20)
+        if rand%6 == 0:
+            cadet.contracted = True
+        if rand%4 == 0:
+            cadet.smp = True
+        cadet.save()
 
 if __name__ == '__main__':
     print "Starting Eagletrack Population script..."

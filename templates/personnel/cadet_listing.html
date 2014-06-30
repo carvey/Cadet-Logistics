@@ -14,6 +14,12 @@
 {% block columns %}
 	 <th>Last, First Name</th>
 	 <th>Company</th>
+	 <th>MS Class</th>
+	 <th>Contracted</th>
+	 <th>SMP</th>
+	 <th>Cell Number</th>
+	 <th>MS Grade</th>
+	 
 {% endblock %}
 
 <!-- This block handles putting data into the datatable -->
@@ -23,6 +29,11 @@
 	   <tr class="odd gradeX">
 	       <td><a href = "/personnel/cadets/{{cadet.id}}">{{cadet.last_name}}, {{cadet.first_name}}</a></td>
 	       <td><a href = "/personnel/companycadets/{{cadet.company}}">{{cadet.company}}</a></td>
+	       <td><a href = "/personnel/mscadets/{{cadet.ms_level}}">{{cadet.ms_level}}</a></td>
+	       <td>{{cadet.contracted}}</td>
+	       <td>{{cadet.smp}}</td>
+	       <td>({{cadet.cell_number|slice:":3"}})-{{cadet.cell_number|slice:"3:6"}}-{{cadet.cell_number|slice:"6:10"}}</td>
+	       <td>{{cadet.ms_grade}}</td>
 	   </tr>
    {% endfor %}
 {% endblock %}
@@ -30,7 +41,7 @@
 <!-- A column index is all that is needed for this block to hide a column index. Use Commas to separate ints -->
 {% block hide_column_index %} 
 <!--0, 1--> <!-- This would hide the first two columns by default -->
-
+3,4,5,6
 {% endblock %}
 
 

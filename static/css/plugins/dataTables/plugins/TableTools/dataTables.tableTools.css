@@ -30,7 +30,7 @@ div.DTTT_container {
 	position: relative;
 	float: right;
 	margin-bottom: 1em;
-	margin: -4px 15px;
+	margin: -5px 15px;
 }
 
 @media screen and (max-width: 640px) {

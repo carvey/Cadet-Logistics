@@ -86,7 +86,7 @@ def populate():
     add_pt_test(date=datetime.datetime.today() + datetime.timedelta(days=5), ms_lvl_4=False)
     add_pt_test(date=datetime.datetime.today() + datetime.timedelta(days=7), ms_lvl_4=True)
     
-    create_pt_scores(20)
+    create_pt_scores()
     assign_eagle_id()
     assign_cell_num()
     assign_gpa()
@@ -112,12 +112,14 @@ def add_mslevel(name):
 def add_pt_test(date, ms_lvl_4):
     return PtTest.objects.get_or_create(date=date,MsLevelFour=ms_lvl_4)
 
-def create_pt_scores(number):
+def create_pt_scores():
     grader_list = Cadet.objects.filter(ms_level__name='MS4' and 'MS3')
     pt_tests = PtTest.objects.all()
-    
-    for num in range(1,number):
-        score = PtScore.objects.get_or_create(grader=random.choice(grader_list), pt_test=random.choice(pt_tests), cadet=random.choice(cadets), pushups=random.randint(0,80), situps=random.randint(0,80), two_mile="%s:%s" % (random.randint(0,20), random.randint(0,59)))
+    cadets = Cadet.objects.all()
+    for test in pt_tests:
+        for cadet in cadets:
+            print "Creating pt test for %s" % (cadet)
+            score = PtScore.objects.get_or_create(grader=random.choice(grader_list), pt_test=test, cadet=cadet, pushups=random.randint(0,80), situps=random.randint(0,80), score=random.randint(100,300), two_mile="%s:%s" % (random.randint(0,20), random.randint(0,59)))
         
 def assign_eagle_id():
     starting_id = 900000000

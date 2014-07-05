@@ -9,20 +9,12 @@ PT Tests
 
 {% block columns%}
 	<th>PT Test</th>
-	<th>Cadet</th>
-	<th>Pushups</th>
-	<th>Situps</th>
-	<th>Two Mile time</th>
 {% endblock %}
 
 {% block table_data %}
-	{% for score in scores %}
+	{% for test in tests %}
 	<tr class="odd gradeX">
-		<td>{{score.pt_test}}</td>
-		<td><a href="/pt/cadet/{{score.cadet.id}}">{{score.cadet}}</a></td>
-		<td>{{score.get_pushups}}</td>
-		<td>{{score.get_situps}}</td>
-		<td>{{score.get_run_time_str}}</td>
+		<td><a href="/pt/tests/scores/{{test.id}}">{{test}}</a></td>
 	</tr>
 	{% endfor %}
 {% endblock %}

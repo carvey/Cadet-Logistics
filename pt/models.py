@@ -13,7 +13,7 @@ class PtTest(models.Model):
     
     def __unicode__(self):
         format_date = self.date.strftime('%d %b, %Y')
-        return '%s PT test' % format_date
+        return '%s PT Test' % format_date
     
     class Meta:
         db_table='PtTest'  

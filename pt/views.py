@@ -98,11 +98,25 @@ class TestListingView(View):
     template_name = 'pt/test_listing.html'
     
     def get(self, request):
-        pt_scores = PtScore.objects.all()
+        pt_tests = PtTest.objects.all()
         context = {
-                   'scores':pt_scores,
+                   'tests':pt_tests,
                    }
         return render(request, self.template_name, context)
+    
+class TestScoresView(View):
+    template_name="pt/scores_by_test.html"
+    
+    def get(self, request, test_id):
+        cadets = Cadet.objects.all()
+        test = PtTest.objects.get(id = test_id)
+        scores = PtScore.objects.filter(pt_test = test)
+        context = {
+                   'scores':scores,
+                   'cadets':cadets,
+                   }
+        return render(request, self.template_name, context)
+    
     
 class CadetDetailView(View):
     template_name = 'pt/cadet_detail.html'

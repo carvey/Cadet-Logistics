@@ -12,6 +12,8 @@ urlpatterns = patterns('',
         
         url(r'^tests/listing/?$', TestListingView.as_view(), name='pt-tests-listing'),
         
+        url(r'^tests/scores/(?P<test_id>\d+)/?$', TestScoresView.as_view(), name='scores-by-test'),
+        
         url(r'^tests/?$', TestListingView.as_view(), name='pt-tests-index'),
         
         url(r'^cadet/(?P<cadet_id>\d+)/?$', CadetDetailView.as_view(), name='cadet-detail-view'),

@@ -25,7 +25,7 @@ GENDER_CHOICES =(
 class Users(models.Model):
     first_name = models.CharField(max_length = 25)
     last_name = models.CharField(max_length = 30)
-    age = models.PositiveIntegerField()
+    age = models.PositiveIntegerField(blank=False)
     email = models.EmailField(blank=True, validators=[validate_email])
     
     def __unicode__(self):

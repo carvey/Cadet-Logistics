@@ -1,8 +1,11 @@
+import os
+os.environ['DJANGO_SETTINGS_MODULE'] = 'eagletrack_project.settings'
+
 from django.test import TestCase
 from personnel.models import *
 from pt.models import *
 from attendance.models import *
-import sys, datetime, os, random
+import sys, datetime, random
 sys.path.append(os.path.dirname(__file__))
 
 # Create your tests here.
@@ -162,7 +165,6 @@ def assign_gender_to_males():
 
 if __name__ == '__main__':
     print "Starting Eagletrack Population script..."
-    os.environ['DJANGO_SETTINGS_MODULE'] = 'eagletrack_project.settings'
     from personnel.models import Cadet, Company, Platoon, MsLevel
     populate()
     print "Population script has ran successfully"

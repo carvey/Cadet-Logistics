@@ -17,11 +17,11 @@
 
 {% block content %}
 <ul class='nav nav-tabs'>
-	<li class="active"><a href="#overview" data-toggle="tab">Overview</a></li>
-	<li><a href="#pt" data-toggle="tab">PT Details</a></li>
+	<li {% if tab == "overview" %}class="active"{% endif %}><a href="#overview" data-toggle="tab">Overview</a></li>
+	<li {% if tab == "pt" %}class="active"{% endif %}><a href="#pt" data-toggle="tab">PT Details</a></li>
 </ul>
 <div class="tab-content">
-	<div class='tab-pane fade in active' id='overview'>
+	<div class='tab-pane fade{% if tab == "overview" %} in active{% endif %}' id='overview'>
 		<div class='row'>
 			<div class='col-lg-8'>
 				<div class='panel panel-default'>
@@ -130,7 +130,7 @@
 			</div>
 		</div>
 	</div>
-	<div class='tab-pane fade' id='pt'>
+	<div class='tab-pane fade{% if tab == "pt" %} in active{% endif %} ' id='pt'>
 		<div class="row">
 			<div class="col-lg-12">
 				<div class="panel panel-default">

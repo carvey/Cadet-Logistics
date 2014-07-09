@@ -14,6 +14,7 @@ urlpatterns = patterns('',
         url(r'^cadetstats', CadetStats.as_view(), name='cadetstats'),
         url(r'^cadetlisting', CadetListing.as_view(), name='cadetlisting'),
         url(r'^cadets/(?P<cadet_id>[0-9]+)/$', CadetPage.as_view(), name='cadetpage'),
+        url(r'^cadets/(?P<cadet_id>[0-9]+)/(?P<tab>\w+)/$', CadetPage.as_view(), name='cadetpage'),
         
         url(r'^companystats', CompanyStats.as_view(), name='companystats'),
         url(r'^companylisting', CompanyListing.as_view(), name='companylisting'),

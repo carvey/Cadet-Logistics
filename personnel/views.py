@@ -40,12 +40,13 @@ class CadetListing(View):
 class CadetPage(View):
     template_name='personnel/cadet_page.html'
     
-    def get(self, request, cadet_id):
+    def get(self, request, cadet_id, tab):
         cadet = Cadet.objects.get(id = cadet_id)
         scores = PtScore.objects.filter(cadet = cadet_id)
         context = {
                    'cadet':cadet,
-                   'scores':scores
+                   'scores':scores,
+                   'tab':tab,
                    }
         return render(request, self.template_name, context)
 

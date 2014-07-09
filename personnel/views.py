@@ -4,6 +4,7 @@ from django.template import RequestContext
 from django.views.generic import View
 
 from personnel.models import Cadet, Company, MsLevel, Platoon
+from pt.models import PtScore
 
 # Create your views here.
 
@@ -41,7 +42,12 @@ class CadetPage(View):
     
     def get(self, request, cadet_id):
         cadet = Cadet.objects.get(id = cadet_id)
-        return render(request, self.template_name, {'cadet': cadet})
+        scores = PtScore.objects.filter(cadet = cadet_id)
+        context = {
+                   'cadet':cadet,
+                   'scores':scores
+                   }
+        return render(request, self.template_name, context)
 
 class CompanyStats(View):
     template_name = 'personnel/company_stats.html'

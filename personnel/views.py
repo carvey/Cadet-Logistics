@@ -40,7 +40,7 @@ class CadetListing(View):
 class CadetPage(View):
     template_name='personnel/cadet_page.html'
     
-    def get(self, request, cadet_id, tab):
+    def get(self, request, cadet_id, tab='overview'):
         cadet = Cadet.objects.get(id = cadet_id)
         scores = PtScore.objects.filter(cadet = cadet_id)
         context = {

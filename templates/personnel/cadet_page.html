@@ -53,7 +53,7 @@
 						<p>Staff: {{cadet.is_staff|interpret_bool}}</p>
 						<p>Company Staff: {{cadet.is_company_staff|interpret_bool}}</p>
 						{% with commissioned=cadet.commissioned %}
-							<p>Active Cadet: 
+							<p>Cadet Status: 
 								<span style="color: {{cadet.dropped|active_color:commissioned}}">
 									{{cadet.dropped|active_cadet:commissioned}}
 								</span>
@@ -146,15 +146,17 @@
 										<th>Pushups</th>
 										<th>Situps</th>
 										<th>Two Mile time</th>
+										<th>Score</th>
 									</tr>
 								</thead>
 								<tbody>
 									{% for score in scores %}
 									<tr class="odd gradeX">
-										<td>{{score.pt_test}}</td>
+										<td>{{score.pt_test.date}}</td>
 										<td>{{score.get_pushups}}</td>
 										<td>{{score.get_situps}}</td>
 										<td>{{score.get_run_time_str}}</td>
+										<td>{{score.score}}</td>
 									</tr>
 									{% endfor %}
 								</tbody>

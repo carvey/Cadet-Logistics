@@ -42,7 +42,7 @@ class CadetPage(View):
     
     def get(self, request, cadet_id, tab='overview'):
         cadet = Cadet.objects.get(id = cadet_id)
-        scores = PtScore.objects.filter(cadet = cadet_id)
+        scores = PtScore.objects.filter(cadet = cadet_id).order_by('-pt_test')[:3]
         context = {
                    'cadet':cadet,
                    'scores':scores,

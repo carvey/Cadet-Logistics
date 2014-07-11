@@ -126,7 +126,13 @@ def create_pt_scores():
     cadets = Cadet.objects.all()
     for test in pt_tests:
         for cadet in cadets:
-            score = PtScore.objects.get_or_create(grader=random.choice(grader_list), pt_test=test, cadet=cadet, pushups=random.randint(0,80), situps=random.randint(0,80), score=random.randint(100,300), two_mile="%s:%s" % (random.randint(0,20), random.randint(0,59)))
+            cadet_score = None
+            try:
+                cadet_score = PtScore.objects.get(cadet=cadet, pt_test=test) #checks to see whether a ptscore has already been created for this test and cadet
+            except:
+                pass
+            if cadet_score == None:
+                score = PtScore.objects.get_or_create(grader=random.choice(grader_list), pt_test=test, cadet=cadet, pushups=random.randint(0,80), situps=random.randint(0,80), score=random.randint(100,300), two_mile="%s:%s" % (random.randint(0,20), random.randint(0,59)))
         
 def assign_eagle_id():
     starting_id = 900000000

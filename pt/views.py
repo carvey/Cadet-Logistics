@@ -32,7 +32,9 @@ def get_avg_scores_by_company(company):
                 }
     except:
         pass
-    
+"""
+Might be useful for in the future
+---------
 class Dashboard(View):
     template_name = 'pt/dashboard.html'
     
@@ -69,14 +71,7 @@ class Dashboard(View):
                    }
     
         return render(request, self.template_name, context)
-
-class CpView(View):
-    template_name = 'pt/control_panel.html'
-    
-    def get(self, request):
-        context = {
-                  }
-        return render(request, self.template_name, context)
+"""
     
 class TestView(View):
     template_name = 'pt/tests.html'

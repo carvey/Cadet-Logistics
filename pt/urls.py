@@ -2,11 +2,6 @@ from django.conf.urls import patterns, url
 from pt.views import *
 
 urlpatterns = patterns('',
-        url(r'^$', Dashboard.as_view(), name='pt-index'),
-        
-        url(r'^dash/?$', Dashboard.as_view(), name='pt-dashboard'),
-        
-        url(r'^cp', CpView.as_view(), name='pt-cp'),
         
         url(r'^tests/stats/?$', TestStatView.as_view(), name='pt-tests-stats'),
         

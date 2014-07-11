@@ -4,6 +4,7 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'eagletrack_project.settings'
 from django.test import TestCase
 from personnel.models import *
 from pt.models import *
+from pt.constants import *
 from attendance.models import *
 import sys, datetime, random
 sys.path.append(os.path.dirname(__file__))
@@ -96,6 +97,8 @@ def populate():
     assign_ms_grade()
     assign_contract_smp()
     assign_gender_to_males()
+    
+    create_graders()
 
 def add_company(name, co=None, fs=None):
     company= Company.objects.get_or_create(name=name, company_commander=co, first_sergeant=fs)[0]
@@ -162,6 +165,21 @@ def assign_gender_to_males():
     for cadet in cadets:
         if cadet.gender != "Female":
             cadet.gender = "Male"
+            
+def create_graders():
+    grader1 = Grader.objects.get_or_create(gender="Male", activity="Pushups", age_group="17-21", score_table=RUBRIC_MALE_17_21_PUSHUPS)
+    
+    grader2 = Grader.objects.get_or_create(gender="Male", activity="Two-mile run", age_group="17-21", score_table=RUBRIC_MALE_17_21_RUNNING)
+    grader3 = Grader.objects.get_or_create(gender="Male", activity="Two-mile run", age_group="22-26", score_table=RUBRIC_MALE_22_26_RUNNING)
+    grader4 = Grader.objects.get_or_create(gender="Male", activity="Two-mile run", age_group="27-31", score_table=RUBRIC_MALE_27_31_RUNNING)
+    grader5 = Grader.objects.get_or_create(gender="Male", activity="Two-mile run", age_group="32-36", score_table=RUBRIC_MALE_32_36_RUNNING)
+    grader6 = Grader.objects.get_or_create(gender="Male", activity="Two-mile run", age_group="37-41", score_table=RUBRIC_MALE_37_41_RUNNING)
+    
+    grader7 = Grader.objects.get_or_create(gender="Female", activity="Two-mile run", age_group="17-21", score_table=RUBRIC_FEMALE_17_21_RUNNING)
+    grader8 = Grader.objects.get_or_create(gender="Female", activity="Two-mile run", age_group="22-26", score_table=RUBRIC_FEMALE_22_26_RUNNING)
+    grader9 = Grader.objects.get_or_create(gender="Female", activity="Two-mile run", age_group="27-31", score_table=RUBRIC_FEMALE_27_31_RUNNING)
+    grader10 = Grader.objects.get_or_create(gender="Female", activity="Two-mile run", age_group="32-36", score_table=RUBRIC_FEMALE_32_36_RUNNING)
+    grader11 = Grader.objects.get_or_create(gender="Female", activity="Two-mile run", age_group="37-41", score_table=RUBRIC_FEMALE_37_41_RUNNING)
 
 if __name__ == '__main__':
     print "Starting Eagletrack Population script..."

@@ -1,7 +1,43 @@
+import ast, collections
+
 from django.db import models
 from datetime import datetime
 from personnel.models import MsLevel
 from django.core.validators import RegexValidator
+
+male='Male'
+female='Female'
+GENDER_CHOICES =(
+                 (male, 'Male'),
+                 (female, 'Female')
+                 )
+group_1='17-21'
+group_2='22-26'
+group_3='27-31'
+group_4='32-36'
+group_5='37-41'
+group_6='42-46'
+group_7='47-51'
+group_8='52-56'
+
+AGE_GROUPS=(
+            (group_1, '17-21'),
+            (group_2, '22-26'),
+            (group_3, '27-31'),
+            (group_4, '32-36'),
+            (group_5, '37-41'),
+            (group_6, '42-46'),
+            (group_7, '47-51'),
+            (group_8, '52-56')
+            )
+pushups='Pushups'
+situps='Situps'
+two_mile='Two-mile run'
+ACTIVITY_CHOICES=(
+                  (pushups, 'Pushups'),
+                  (situps, 'Situps'),
+                  (two_mile, 'Two-mile run')
+                  )
 
 #This class handles the pt test itself, identified by a date
 class PtTest(models.Model):
@@ -50,6 +86,12 @@ class PtScore(models.Model):
         split_time = [int(x) for x in split_time]
         return split_time
     
+    '''
+    Helper method to return the run time with 
+    a zero place holder if the minutes has 
+    only one number. So a time of 15:4 will 
+    be returned as 15:04.
+    '''
     def get_run_time_str(self):
         time = self.get_run_time()
         return '%d:%02d' % (time[0], time[1])
@@ -64,8 +106,9 @@ class PtScore(models.Model):
         return self.situps
     
     '''
-    Helper method to get the two mile time in minutes for computation. So a time of 15:43 will be returned
-    as 15.72 minutes
+    Helper method to get the two mile time 
+    in minutes for computation. So a time of 
+    15:43 will be returned as 15.72 minutes
     '''
     def get_two_mile_min(self):
         time_list = self.get_run_time()
@@ -76,3 +119,22 @@ class PtScore(models.Model):
     class Meta:
         db_table='PtScore'
         
+class Grader(models.Model):
+    gender = models.CharField(max_length=6, choices=GENDER_CHOICES, blank=False, null=True)
+    activity = models.CharField(max_length=15,choices=ACTIVITY_CHOICES, blank=False, null=True)
+    age_group = models.CharField(max_length=5, choices=AGE_GROUPS, blank=False, null=True)
+    score_table = models.TextField(default="'number pushups or situps/time' : 'grade', \
+        'number pushups or situps/time' : 'grade'", blank=False)
+    
+    def __unicode__(self):
+        return '%s grader for %s (%s)' % (self.activity, self.gender, self.age_group)
+    def get_score_dict(self):
+        return ast.literal_eval("{%s}" % self.score_table)
+    def get_ordered_dict(self):
+        return collections.OrderedDict(sorted(self.get_score_dict().items()))
+    def get_first(self):
+        ordered_dict = self.get_ordered_dict()
+        return next(ordered_dict.iterkeys())
+    def get_last(self):
+        ordered_dict = self.get_ordered_dict()
+        return next(reversed(ordered_dict))

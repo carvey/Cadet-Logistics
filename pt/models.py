@@ -94,7 +94,7 @@ class PtScore(models.Model):
     '''
     def get_run_time_str(self):
         time = self.get_run_time()
-        return '%d:%02d' % (time[0], time[1])
+        return '%02d:%02d' % (time[0], time[1])
     
     def get_pt_test(self):
         return self.pt_test

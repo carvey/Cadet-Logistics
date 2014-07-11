@@ -14,16 +14,6 @@ class index(View):
         return render(request, self.template_name, {})
     
     
-class CPview(View):
-    template_name = "personnel/control_panel.html"
-    def get(self, request):
-        return render (request, self.template_name, {})
-
-class Dashboard(View):
-    template_name = "personnel/dashboard.html"
-    def get(self, request):
-        return render (request, self.template_name, {})
-    
 class CadetStats(View):
     template_name = 'personnel/cadet_stats.html'
     def get(self, request):

@@ -115,6 +115,7 @@ class PtScore(models.Model):
         minutes = time_list[0]
         seconds = time_list[1]
         return minutes + (seconds/60.0)
+        
 
     class Meta:
         db_table='PtScore'

@@ -99,7 +99,7 @@
 			<div class='col-lg-8'>
 				<div class='panel panel-default'>
 					<div class='panel-heading'>
-						PT	
+						PT - Three Most Recent Tests	
 					</div>
 					<div class='panel-body'>
 						<table class="table">
@@ -137,34 +137,58 @@
 					<div class="panel-heading" id="panel_header">
 						<h3>PT Scores</h3>
 					</div>
-					<div class="panel-body">
-						<div class="table-responsive">
-							<table class="table table-striped table-bordered table-hover">
-								<thead>
-									<tr>
-										<th>PT Test</th>
-										<th>Pushups</th>
-										<th>Situps</th>
-										<th>Two Mile time</th>
-										<th>Score</th>
-									</tr>
-								</thead>
-								<tbody>
-									{% for score in scores %}
-									<tr class="odd gradeX">
-										<td>{{score.pt_test.date}}</td>
-										<td>{{score.get_pushups}}</td>
-										<td>{{score.get_situps}}</td>
-										<td>{{score.get_run_time_str}}</td>
-										<td>{{score.score}}</td>
-									</tr>
-									{% endfor %}
-								</tbody>
-							</table>
-						</div>
-					</div>
+					
+						<div class="panel-body">
+							<div class="table-responsive">
+								<table class="table table-striped table-bordered table-hover">
+									<thead>
+										<tr>
+											<th>PT Test</th>
+											<th>Pushups</th>
+											<th>Situps</th>
+											<th>Two Mile time</th>
+											<th>Score</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for score in scores %}
+										<tr class="odd gradeX">
+											<td>{{score.pt_test.date}}</td>
+											<td>{{score.get_pushups}}</td>
+											<td>{{score.get_situps}}</td>
+											<td>{{score.get_run_time_str}}</td>
+											<td>{{score.score}}</td>
+										</tr>
+										
+										{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						</div>			
+					
 				</div>
 			</div>
+			
+		</div>
+		<div class = 'row'>
+			<div class='col-lg-4'>
+				<div class='well'>
+					<p>Max Score: {{max_score}}</p>
+					<p>Weakest Event: {{weakest_event}}</p>
+					<p>Strongest Event: {{strongest_event}}</p>
+				</div>
+			</div>
+			
+			
+			<div class = 'col-lg-4'>
+				<div class = 'well'>
+					<p>Average Score: {{avg_score}}</p>
+					<p>Average Pushup Score: {{avg_pushup_score}}</p>
+					<p>Average Situp Score: {{avg_situp_score}}</p>
+					<p>Average Two Mile Score: {{avg_two_mile_score}}</p>
+				</div>
+			</div>
+			
 		</div>
 	</div>
 </div>

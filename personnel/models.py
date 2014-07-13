@@ -83,6 +83,119 @@ class Cadet(Users):
     
     class Meta:
         db_table='Cadet'
+    
+    """
+    The cadet model is used for these PT related functions as the cadet page view is not dealing with a specific PtScore we can call on
+    This could, and possibly should(??) if feasible, be moved to the Grader model
+    """
+        
+    def get_max_score(self, scores):
+        max_score = 0
+        for score in scores:
+            if score.score > max_score:
+                max_score = score.score
+        return max_score
+    
+    #this function finds the highest grader key & value above a given value. meant for use with the two mile stat
+    #may need some optimizing and error checking
+    def lower_key_value(self, value, score_value_dict):
+        try:
+            return score_value_dict[value] #in case the value matches a key perfectly (usual case for pushups and situps)
+        except KeyError:
+            #to account for scores going over what we have in the dict keys
+            if value < score_value_dict[min(score_value_dict)]:
+                return '100'
+            
+            #where two mile score is calculated
+            value_dict_stripped = score_value_dict
+            value_dict_stripped = [x.replace(':', '') for x in score_value_dict]
+            
+            value = value.replace(':', '')
+            for i in value_dict_stripped:
+                if int(value) >= int(i):
+                    if int(value) <= int(i) + 6:
+                        i = i[:2] + ":" + i[2:]
+                        return score_value_dict[i] #how to get this to return the next i value?
+            return 0
+            
+                
+    def get_score_value(self, value, score_value_dict):
+        try:
+            return score_value_dict[str(value)]
+        #a key error is raised when a the function is asked to handle a two-mile score value format
+        except KeyError:
+            return self.lower_key_value(value, score_value_dict)
+              
+    #The two mile event part of this needs to be fixed
+    def average_total_score(self, scores, event='scores'):
+        avg_score = 0
+        num_scores = len(scores)
+        sum_scores = 0
+        if event == 'scores':
+            for score in scores:
+                sum_scores = sum_scores + score.score
+        if event == 'pushups':
+            for score in scores:
+                sum_scores = sum_scores + score.pushups
+        if event == 'situps':
+            for score in scores:
+                sum_scores = sum_scores + score.situps
+        if event == 'Two-mile run':
+            for score in scores:
+                concat_score = score.get_run_time_str().replace(':','')
+                sum_scores = sum_scores + int(concat_score)
+            avg_score = sum_scores/num_scores
+            avg_score_time = str(avg_score)[:2] + ':' + str(avg_score)[2:]
+            return avg_score_time
+        avg_score = sum_scores/num_scores
+        return avg_score
+    
+    #needs to be fixed to get two mile to round up instead of down
+    def avg_event(self, scores, event_score_values, event='scores'):
+        score_sum = 0
+        if event == 'scores':
+            for score in scores:
+                score_sum = score_sum + self.get_score_value(score.score, event_score_values)
+        if event == 'pushups':
+            for score in scores:
+                score_sum = score_sum + int(self.get_score_value(score.pushups, event_score_values))
+        if event == 'situps':
+            for score in scores:
+                score_sum = score_sum + int(self.get_score_value(score.situps, event_score_values))
+        if event == 'Two-mile run':
+            for score in scores:
+                score_sum = score_sum + int(self.get_score_value(score.get_run_time_str(), event_score_values))
+        average = score_sum/len(scores)
+        return average
+        
+    #needs to be modified to use avg_event instead of avg_total_scores
+    def strongest_weakest_event(self, scores, pushup_score_values, situp_score_values, two_mile_score_values, strong_weak):
+        print strong_weak
+        min_or_max = "None"
+        avg_pushups = self.average_total_score(scores, event='pushups')
+        pushup_value = self.get_score_value(avg_pushups, pushup_score_values)
+        
+        avg_situps = self.average_total_score(scores, event='situps')
+        situp_value = situp_score_values[str(avg_situps)]
+        print situp_value
+        
+        avg_two_mile = self.average_total_score(scores, event='Two-mile run')
+        two_mile_value = self.get_score_value(avg_two_mile, two_mile_score_values)
+        print two_mile_value
+        
+        if strong_weak == "weak":
+            min_or_max = min(pushup_value, situp_value, two_mile_value)
+        elif strong_weak == 'strong':
+            min_or_max = max(pushup_value, situp_value, two_mile_value)
+        print "min max %s"%min_or_max
+        if min_or_max == two_mile_value:
+            return "Two Mile"
+        elif min_or_max == pushup_value:
+            return 'Pushups'
+        elif min_or_max == situp_value:
+            return 'Situps'
+
+
 
 """The Cadre class is the model for cadre in the batallion. It extends the Users model"""
 class Cadre(Users):

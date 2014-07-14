@@ -99,6 +99,7 @@ def populate():
     assign_gender_to_males()
     
     create_graders()
+    generate_pt_score_value()
 
 def add_company(name, co=None, fs=None):
     company= Company.objects.get_or_create(name=name, company_commander=co, first_sergeant=fs)[0]
@@ -123,7 +124,6 @@ def add_pt_test(date, ms_lvl_4):
 def create_pt_scores():
     grader_list = Cadet.objects.filter(ms_level__name='MS4' and 'MS3')
     pt_tests = PtTest.objects.all()
-    cadets = Cadet.objects.all()
     for test in pt_tests:
         for cadet in cadets:
             cadet_score = None
@@ -132,8 +132,25 @@ def create_pt_scores():
             except:
                 pass
             if cadet_score == None:
-                score = PtScore.objects.get_or_create(grader=random.choice(grader_list), pt_test=test, cadet=cadet, pushups=random.randint(0,80), situps=random.randint(0,80), score=random.randint(100,300), two_mile="%s:%s" % (random.randint(12,20), random.randint(0,59)))
-        
+                score = PtScore.objects.get_or_create(grader=random.choice(grader_list), pt_test=test, cadet=cadet, pushups=random.randint(0,80), situps=random.randint(0,80), score=0, two_mile="%s:%s" % (random.randint(12,20), random.randint(0,59)))
+                
+def generate_pt_score_value():
+    pt_tests = PtTest.objects.all()
+    score_values = Grader.objects.all()
+    for test in pt_tests:
+        pt_scores = PtScore.objects.filter(pt_test = test)
+        for score in pt_scores:
+            age = score.cadet.get_score_value_age_group(score.cadet, score_values)
+            pushup_score_values = Grader.objects.get(gender=score.cadet.gender, activity='pushups', age_group=age).get_ordered_dict()
+            situp_score_values = Grader.objects.get(gender=score.cadet.gender, activity='situps', age_group=age).get_ordered_dict() 
+            two_mile_score_values = Grader.objects.get(gender=score.cadet.gender, activity='Two-mile run', age_group=age).get_ordered_dict()
+            
+            pushup_score = score.cadet.get_score_value(score.pushups, pushup_score_values)
+            situp_score = score.cadet.get_score_value(score.situps, situp_score_values)
+            two_mile_score = score.cadet.get_score_value(score.two_mile, two_mile_score_values)
+            score.score = int(pushup_score) + int(situp_score) + int(two_mile_score)
+            score.save()
+    
 def assign_eagle_id():
     starting_id = 900000000
     for cadet in cadets:

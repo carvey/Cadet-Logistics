@@ -96,35 +96,53 @@ class Cadet(Users):
                 max_score = score.score
         return max_score
     
+    #gets the age range that a cadet is a part of. Used for getting the correct Grader (score value) object
+    def get_score_value_age_group(self, cadet, score_values):
+        cadet_age = cadet.age
+        for score_value in score_values:
+            value = score_value.age_group.split('-')
+            if cadet_age >= int(value[0]) and cadet_age <= int(value[1]):
+                return score_value.age_group
+    
     #this function finds the highest grader key & value above a given value. meant for use with the two mile stat
     #may need some optimizing and error checking
     def lower_key_value(self, value, score_value_dict):
-        try:
-            return score_value_dict[value] #in case the value matches a key perfectly (usual case for pushups and situps)
-        except KeyError:
-            #to account for scores going over what we have in the dict keys
-            if value < score_value_dict[min(score_value_dict)]:
-                return '100'
-            
-            #where two mile score is calculated
-            value_dict_stripped = score_value_dict
-            value_dict_stripped = [x.replace(':', '') for x in score_value_dict]
-            
-            value = value.replace(':', '')
-            for i in value_dict_stripped:
-                if int(value) >= int(i):
-                    if int(value) <= int(i) + 6:
-                        i = i[:2] + ":" + i[2:]
-                        return score_value_dict[i] #how to get this to return the next i value?
-            return 0
+        #to account for scores going over what we have in the dict keys
+        if value < score_value_dict[min(score_value_dict)]: #finds min value. should find min key
+            return '100'
+        
+        #where two mile score is calculated
+        value_dict_stripped = score_value_dict
+        value_dict_stripped = [x.replace(':', '') for x in score_value_dict]
+        
+        value = value.replace(':', '')
+        for i in value_dict_stripped:
+            if int(value) <= int(i):
+                if int(value) >= int(i) - 6:
+                    i = i[:2] + ":" + i[2:]
+                    return score_value_dict[i] #how to get this to return the next i value?
+        return 0
             
                 
-    def get_score_value(self, value, score_value_dict):
-        try:
-            return score_value_dict[str(value)]
-        #a key error is raised when a the function is asked to handle a two-mile score value format
-        except KeyError:
-            return self.lower_key_value(value, score_value_dict)
+    def get_score_value(self, value, score_value_dict, event='default'):
+        if event == 'pushups' or event == 'situps':
+            try:
+                return score_value_dict[str(value)]
+            except KeyError:
+                if value < max(score_value_dict):
+                    return '100'
+                return '0'
+            
+        elif event == 'Two-mile run':
+            try:
+                return score_value_dict(str(value))
+            except:  
+                return self.lower_key_value(value, score_value_dict)      
+        if event == 'default':
+            try:
+                return score_value_dict(str(value))
+            except:
+                print "Error!!!"
               
     #The two mile event part of this needs to be fixed
     def average_total_score(self, scores, event='scores'):
@@ -137,10 +155,10 @@ class Cadet(Users):
         if event == 'pushups':
             for score in scores:
                 sum_scores = sum_scores + score.pushups
-        if event == 'situps':
+        elif event == 'situps':
             for score in scores:
                 sum_scores = sum_scores + score.situps
-        if event == 'Two-mile run':
+        elif event == 'Two-mile run':
             for score in scores:
                 concat_score = score.get_run_time_str().replace(':','')
                 sum_scores = sum_scores + int(concat_score)
@@ -151,43 +169,49 @@ class Cadet(Users):
         return avg_score
     
     #needs to be fixed to get two mile to round up instead of down
-    def avg_event(self, scores, event_score_values, event='scores'):
+    def avg_event_score_value(self, scores, event_score_values, event='scores'):
         score_sum = 0
         if event == 'scores':
             for score in scores:
-                score_sum = score_sum + self.get_score_value(score.score, event_score_values)
+                score_sum = score_sum + score.score
         if event == 'pushups':
             for score in scores:
-                score_sum = score_sum + int(self.get_score_value(score.pushups, event_score_values))
+                score_sum = score_sum + int(self.get_score_value(score.pushups, event_score_values, event=event))
         if event == 'situps':
             for score in scores:
-                score_sum = score_sum + int(self.get_score_value(score.situps, event_score_values))
+                score_sum = score_sum + int(self.get_score_value(score.situps, event_score_values, event=event))
         if event == 'Two-mile run':
             for score in scores:
-                score_sum = score_sum + int(self.get_score_value(score.get_run_time_str(), event_score_values))
-        average = score_sum/len(scores)
-        return average
+                score_sum = score_sum + int(self.get_score_value(score.two_mile, event_score_values, event=event))
+        average_score_value = score_sum/len(scores)
+        return average_score_value
         
-    #needs to be modified to use avg_event instead of avg_total_scores
+    #needs to be modified to use avg_event_score_value instead of avg_total_scores
     def strongest_weakest_event(self, scores, pushup_score_values, situp_score_values, two_mile_score_values, strong_weak):
-        print strong_weak
         min_or_max = "None"
-        avg_pushups = self.average_total_score(scores, event='pushups')
-        pushup_value = self.get_score_value(avg_pushups, pushup_score_values)
+        avg_pushups = self.avg_event_score_value(scores, pushup_score_values, event='pushups')
+        print avg_pushups
+        pushup_value = self.get_score_value(avg_pushups, pushup_score_values, event='pushups')
+        print 'pushup value: %s'%pushup_value
         
-        avg_situps = self.average_total_score(scores, event='situps')
-        situp_value = situp_score_values[str(avg_situps)]
-        print situp_value
+        avg_situps = self.avg_event_score_value(scores, situp_score_values, event='situps')
+        print avg_situps
+        situp_value = self.get_score_value(avg_situps, situp_score_values, event='situps')
+        print 'situp value: %s'%situp_value
         
-        avg_two_mile = self.average_total_score(scores, event='Two-mile run')
-        two_mile_value = self.get_score_value(avg_two_mile, two_mile_score_values)
-        print two_mile_value
+        avg_two_mile = self.avg_event_score_value(scores, two_mile_score_values, event='Two-mile run')
+        print avg_two_mile
+        two_mile_value = self.get_score_value(avg_two_mile, two_mile_score_values, event='Two-mile run')
+        print 'two mile value: %s'%two_mile_value
         
         if strong_weak == "weak":
             min_or_max = min(pushup_value, situp_value, two_mile_value)
         elif strong_weak == 'strong':
             min_or_max = max(pushup_value, situp_value, two_mile_value)
-        print "min max %s"%min_or_max
+            print 'pushups: %s'%pushup_value
+            print 'situps: %s'%situp_value
+            print 'two mile: %s'%two_mile_value
+            
         if min_or_max == two_mile_value:
             return "Two Mile"
         elif min_or_max == pushup_value:

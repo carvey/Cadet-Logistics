@@ -1,5 +1,7 @@
 import ast, collections
 
+from itertools import cycle
+
 from django.db import models
 from datetime import datetime
 from personnel.models import MsLevel
@@ -65,7 +67,7 @@ class PtScore(models.Model):
     situps = models.PositiveIntegerField(default=0)
     two_mile = models.CharField(max_length=5, null=True, validators=[
                                                           RegexValidator(
-                                                                         regex='^[0-5]?[0-9]:[0-5]?[09]',
+                                                                         regex='^[0-5]?[0-9]:[0-5]?[0-9]',
                                                                          message="Time must be in the mm:ss format",
                                                                          code="Invalid_time_format"
                                                                          ),
@@ -75,6 +77,54 @@ class PtScore(models.Model):
         format_date = self.pt_test.date.strftime('%d %b, %Y')
         return 'PT Score %s for cadet: %s' % (format_date, self.cadet)
     
+    def save(self, *args, **kwargs):
+        age_group = self.get_age_group()
+        # Gets the graders for the cadet
+        pushups_grader = Grader.objects.filter(age_group=age_group, gender=self.cadet.gender, activity='Pushups')[0]
+        situps_grader = Grader.objects.filter(age_group=age_group, gender=self.cadet.gender, activity='Situps')[0]
+        two_mile_grader = Grader.objects.filter(age_group=age_group, gender=self.cadet.gender, activity='Two-mile run')[0]
+        
+        # Sets the score to zero to prevent the score increasing each time the object 
+        # is saved, if there is already a score
+        self.score = 0
+        
+        # Get the score dictionary from the pushups grader object
+        pushups_score_dict = pushups_grader.get_ordered_dict()
+        # Check to see if the number of pushups for the PtScore object is
+        # in the list of keys. If it is then we use the pushups value as the key to get the grade.
+        if str(self.pushups) in pushups_score_dict.keys():
+            self.score = self.score + int(pushups_score_dict[str(self.pushups)])
+        # The value of pushups was not found in the keys so we determine if it was below the lowest
+        # or above the highest pushups value
+        else:
+            if float(self.pushups) < float(pushups_grader.get_first()):
+                self.score = self.score + 0
+            elif float(self.pushups) > float(pushups_grader.get_last()):
+                self.score = self.score + 100
+        print "Score after pushups: %s" % self.score
+        
+        # Get the score dictionary from the situps grader object
+        situps_score_dict = situps_grader.get_ordered_dict()
+        # Check to see if the number of situps for the PtScore object is
+        # in the list of keys. If it is then we use the situps value as the key to get the grade.
+        if str(self.situps) in situps_score_dict.keys():
+            self.score = self.score + int(situps_score_dict[str(self.situps)])
+        # The value of situps was not found in the keys so we determine if it was below the lowest
+        # or above the highest situps value
+        else:
+            if float(self.situps) < float(situps_grader.get_first()):
+                self.score = self.score + 0
+            elif float(self.situps) > float(pushups_grader.get_last()):
+                self.score = self.score + 100
+        print "Score after situps: %s" % self.score
+        
+        # Calculate the two-mile score
+        self.score = self.score + int(self.get_run_score(two_mile_grader))
+        
+        print "Score after two-mile %s" % self.score
+        
+        # Call the actual save method to save the score in the database
+        super(PtScore, self).save(*args, **kwargs)
     
     """
     This method takes the two_mile info (CharField) of the cadet at hand and splits it into a list
@@ -115,8 +165,90 @@ class PtScore(models.Model):
         minutes = time_list[0]
         seconds = time_list[1]
         return minutes + (seconds/60.0)
+    
+    # Converts a given time string in the form of '[mm]:[ss]' into a decimal minutes format
+    # So a time of '13:30' will be returned as 13.5
+    def get_time_mins(self, time):
+        time_list = time.split(':')
+        time_list = [int(t) for t in time_list]
+        minutes = time_list[0]
+        seconds = time_list[1]
+        return minutes + (seconds/60.0)
+    
+    # Converts a given time string from minutes into the form '[mm]:[ss]'.
+    # So a time of '13.5' will be returned as '13:30'
+    def convert_time_mins_secs(self, time):
+        time_split = time.split('.')
+        minutes = float(time_split[0])
+        formatted_seconds = (float(time) - minutes) * 60.0
+        return '%02.0f:%02.0f' % (minutes, formatted_seconds)
+    
+    #gets the age range that a cadet is a part of. Used for getting the correct Grader (score value) object
+    def get_age_group(self):
+        score_values=Grader.objects.all()
         
+        cadet_age = self.cadet.age
+        for score_value in score_values:
+            value = score_value.age_group.split('-')
+            if cadet_age >= int(value[0]) and cadet_age <= int(value[1]):
+                return score_value.age_group      
+            
+    # Used to calculate the score for two-mile run
+    def get_run_score(self,two_mile_grader):
+        # Gets the list of keys in minute format, so a key of '17:30' will be represented
+        # as '17.5'
+        times_in_mins_list = [self.get_time_mins(time) for time in two_mile_grader.get_ordered_dict()]
+        
+        # The two-mile time for this score object, in minute format
+        run_time = self.get_two_mile_min()
+        
+        # Creates a cycle to iterate through the key values
+        times_cycle = cycle(times_in_mins_list)
+        
+        # Store the first time in the list, so that in the for loop we can tell when the cycle
+        # is complete since the next_time will be equal to the first_time
+        first_time = times_in_mins_list[0]
+        
+        # Gets the next time in the list before we begin the loop
+        next_time = times_cycle.next()
+        
+        # Time key defaults to zero
+        time_key = 0
+        
+        # Iterate through the list of keys
+        for time in times_in_mins_list:
+            # Get the current time object in the list, and also the next time object
+            this_time, next_time = time, times_cycle.next()
+            
+            # If this is true we found an exact match, so return the current time value as the key
+            if run_time == this_time:
+                time_key = this_time
+                
+            # Check to see if our two-mile time is between this_time and next_time. Also makes sure
+            # that we aren't at the end of the cycle by checking that next_time is not equal to first_time.
+            # If true we return this_time as the key, since it is the faster of the two times.
+            elif run_time > this_time and run_time < next_time and next_time != first_time:
+                print "between %s and %s" % (this_time, next_time)
+                time_key = this_time
+            # Checks if run_time is less than this_time and if this_time is the first time in the list.
+            # If so it means they had a faster time than the fastest time on the scale, so they make a 100.
+            elif run_time < this_time and this_time == first_time:
+                time_key = 100
+        
+        # If time_key is equal to zero it means that their time was too slow and was not on the scale,
+        # so they make a 0.
+        if time_key == 0:
+            return 0
+        elif time_key == 100:
+            return 100
+        else:
+            # Convert the key from decimal minute format back to mm:ss format
+            score_key = self.convert_time_mins_secs(str(time_key))
+            # Get the grade from the grader dictionary
+            grade = two_mile_grader.get_ordered_dict()[str(score_key)]
 
+            return grade
+        
     class Meta:
         db_table='PtScore'
         

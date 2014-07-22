@@ -154,7 +154,7 @@ class Cadet(Users):
         return avg
         
     #still getting over 60 seconds in some cases. Average isn't quite right
-    def get_avg_two_mile(self, scores):
+    def get_avg_two(self, scores):
         sum_time = 0
         length = len(scores)
         for score in scores:
@@ -168,6 +168,16 @@ class Cadet(Users):
         decimal = str(int(decimal) * 60)
         avg = str(avg).split('.')[0] + ':' + str(decimal)[:2]
         return avg
+    
+    def get_avg_two_mile(self, scores):
+        sum_time = 0
+        length = len(scores)
+        for score in scores:
+            time = score.get_two_mile_min()
+            sum_time = sum_time + time
+        avg = str(sum_time/length)
+        return scores[0].convert_time_mins_secs(avg)
+        
     
     def get_avg_total_score(self, scores):
         sum_time = 0

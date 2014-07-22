@@ -174,15 +174,21 @@
 			<div class='col-lg-4'>
 				<div class='well'>
 					<p>Max Score: {{max_score}}</p>
-					<p>Weakest Event: {{weakest_event}}</p>
-					<p>Strongest Event: {{strongest_event}}</p>
+					<p>Lowest Score: {{min_score}}</p>
+					<p>Average Score: {{avg_score}}</p>
 				</div>
 			</div>
 			
-			
+			<div class='col-lg-4'>
+				<div class='well'>
+					<p>Average Pushup Count: {{avg_pushups}}</p>
+					<p>Average Situp Count: {{avg_situps}}</p>
+					<p>Average Two Mile Run Time: {{avg_two_mile}}</p>
+				</div>
+			</div>
+		
 			<div class = 'col-lg-4'>
 				<div class = 'well'>
-					<p>Average Score: {{avg_score}}</p>
 					<p>Average Pushup Score: {{avg_pushup_score}}</p>
 					<p>Average Situp Score: {{avg_situp_score}}</p>
 					<p>Average Two Mile Score: {{avg_two_mile_score}}</p>
@@ -190,6 +196,7 @@
 			</div>
 			
 		</div>
+		
 	</div>
 </div>
 {% endblock %}

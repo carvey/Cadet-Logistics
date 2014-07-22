@@ -37,33 +37,37 @@ class CadetPage(View):
         score_values = Grader.objects.all()
         
         max_score = cadet.get_max_score(scores)
-        avg_score = cadet.average_total_score(scores)
-                
+        min_score = cadet.get_min_score(scores)
+        avg_score = cadet.get_avg_total_score(scores)
         
         #queries for getting the Grader objects (score values)
-        age = cadet.get_score_value_age_group(cadet, score_values)
+        age = scores[0].get_age_group()
         pushup_score_values = Grader.objects.get(gender=cadet.gender, activity='pushups', age_group=age).get_ordered_dict()
         situp_score_values = Grader.objects.get(gender=cadet.gender, activity='situps', age_group=age).get_ordered_dict() 
         two_mile_score_values = Grader.objects.get(gender=cadet.gender, activity='Two-mile run', age_group=age).get_ordered_dict()
         
-        weakest_event = cadet.strongest_weakest_event(scores, pushup_score_values, situp_score_values, two_mile_score_values, "weak")
-        strongest_event = cadet.strongest_weakest_event(scores, pushup_score_values, situp_score_values, two_mile_score_values, "strong")
-                
-        avg_pushup_score = cadet.avg_event_score_value(scores, pushup_score_values, event='pushups')
-        avg_situp_score = cadet.avg_event_score_value(scores, situp_score_values, event='situps')
-        avg_two_mile_score = cadet.avg_event_score_value(scores, two_mile_score_values, event='Two-mile run')
+        avg_pushups = cadet.get_avg_pushups(scores)
+        avg_situps = cadet.get_avg_situps(scores)
+        avg_two_mile = cadet.get_avg_two_mile(scores)
+        
+        avg_pushup_score = cadet.get_score_value(avg_pushups, pushup_score_values, event='pushups')
+        avg_situp_score = cadet.get_score_value(avg_situps, situp_score_values, event='situps')
+        avg_two_mile_score = cadet.get_score_value(avg_two_mile, two_mile_score_values, event='Two-mile run')
+        
         
         
         context = {
                    'cadet':cadet,
                    'scores':ordered_scores,
                    'max_score':max_score,
+                   'min_score':min_score,
                    'avg_score':avg_score,
+                   'avg_pushups':avg_pushups,
+                   'avg_situps':avg_situps,
+                   'avg_two_mile':avg_two_mile,
                    'avg_pushup_score':avg_pushup_score,
                    'avg_situp_score':avg_situp_score,
                    'avg_two_mile_score':avg_two_mile_score,
-                   'weakest_event':weakest_event,
-                   'strongest_event':strongest_event,
                    'tab':tab,
                    }
         return render(request, self.template_name, context)

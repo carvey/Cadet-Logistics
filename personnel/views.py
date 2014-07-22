@@ -14,10 +14,21 @@ class index(View):
         return render(request, self.template_name, {})
     
     
-class CadetStats(View):
-    template_name = 'personnel/cadet_stats.html'
-    def get(self, request):
-        return render (request, self.template_name, {})
+class Stats(View):
+    template_name = 'personnel/personnel_stats.html'
+    
+    def get(self, request, tab='cadets'):
+        cadets = Cadet.objects.all()
+        current_cadets = cadets.filter(commissioned=False, dropped=False)
+        at_risk_cadets = cadets.filter(at_risk=True)
+        
+        context = {
+                   'tab':tab,
+                   'current_cadets':current_cadets,
+                   'at_risk_cadets':at_risk_cadets,
+                   }
+        
+        return render (request, self.template_name, context)
 
 class CadetListing(View):
     template_name='personnel/cadet_listing.html'

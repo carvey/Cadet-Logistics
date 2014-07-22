@@ -4,12 +4,13 @@ Created on Apr 27, 2014
 @author: carvey
 '''
 from django.conf.urls import patterns, url
-from personnel.views import index, CadetStats, CadetListing, CadetPage, CompanyStats, CompanyListing, CompanyCadetListing, MSlevelStats, MSlevelListing, MScadetListing
+from personnel.views import index, Stats, CadetListing, CadetPage, CompanyStats, CompanyListing, CompanyCadetListing, MSlevelStats, MSlevelListing, MScadetListing
 
 urlpatterns = patterns('',
         url(r'^$', index.as_view(), name='index'),
         
-        url(r'^cadetstats', CadetStats.as_view(), name='cadetstats'),
+        url(r'^stats$', Stats.as_view(), name='cadetstats'),
+        url(r'^stats/(?P<tab>\w+)/$', Stats.as_view(), name='cadetstats'),
         url(r'^cadetlisting', CadetListing.as_view(), name='cadetlisting'),
         url(r'^cadets/(?P<cadet_id>[0-9]+)/$', CadetPage.as_view(), name='cadetpage'),
         url(r'^cadets/(?P<cadet_id>[0-9]+)/(?P<tab>\w+)/$', CadetPage.as_view(), name='cadetpage'),

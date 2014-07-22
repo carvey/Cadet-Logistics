@@ -99,14 +99,6 @@ class Cadet(Users):
                 min_score = score.score
         return min_score
     
-    #gets the age range that a cadet is a part of. Used for getting the correct Grader (score value) object
-    def get_score_value_age_group(self, cadet, score_values):
-        cadet_age = cadet.age
-        for score_value in score_values:
-            value = score_value.age_group.split('-')
-            if cadet_age >= int(value[0]) and cadet_age <= int(value[1]):
-                return score_value.age_group
-    
     #this function finds the highest grader key & value above a given value. meant for use with the two mile stat
     #may need some optimizing and error checking    
             

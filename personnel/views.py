@@ -47,23 +47,28 @@ class CadetPage(View):
         ordered_scores = scores.order_by('-pt_test')[:3]
         score_values = Grader.objects.all()
         
-        max_score = cadet.get_max_score(scores)
-        min_score = cadet.get_min_score(scores)
-        avg_score = cadet.get_avg_total_score(scores)
+        #initializing pt related vars to 0 ahead of time, in case the cadet has no pt tests yet
+        max_score = min_score = avg_score = avg_pushups = avg_situps = avg_two_mile = 0
+        avg_pushup_score = avg_pushup_score = avg_situp_score = avg_two_mile_score = 0
         
-        #queries for getting the Grader objects (score values)
-        age = scores[0].get_age_group()
-        pushup_score_values = Grader.objects.get(gender=cadet.gender, activity='pushups', age_group=age).get_ordered_dict()
-        situp_score_values = Grader.objects.get(gender=cadet.gender, activity='situps', age_group=age).get_ordered_dict() 
-        two_mile_score_values = Grader.objects.get(gender=cadet.gender, activity='Two-mile run', age_group=age).get_ordered_dict()
-        
-        avg_pushups = cadet.get_avg_pushups(scores)
-        avg_situps = cadet.get_avg_situps(scores)
-        avg_two_mile = cadet.get_avg_two_mile(scores)
-        
-        avg_pushup_score = cadet.get_score_value(avg_pushups, pushup_score_values, event='pushups')
-        avg_situp_score = cadet.get_score_value(avg_situps, situp_score_values, event='situps')
-        avg_two_mile_score = cadet.get_score_value(avg_two_mile, two_mile_score_values, event='Two-mile run')
+        if scores:
+            max_score = cadet.get_max_score(scores)
+            min_score = cadet.get_min_score(scores)
+            avg_score = cadet.get_avg_total_score(scores)
+            
+            #queries for getting the Grader objects (score values)
+            age = scores[0].get_age_group()
+            pushup_score_values = Grader.objects.get(gender=cadet.gender, activity='pushups', age_group=age).get_ordered_dict()
+            situp_score_values = Grader.objects.get(gender=cadet.gender, activity='situps', age_group=age).get_ordered_dict() 
+            two_mile_score_values = Grader.objects.get(gender=cadet.gender, activity='Two-mile run', age_group=age).get_ordered_dict()
+            
+            avg_pushups = cadet.get_avg_pushups(scores)
+            avg_situps = cadet.get_avg_situps(scores)
+            avg_two_mile = cadet.get_avg_two_mile(scores)
+            
+            avg_pushup_score = cadet.get_score_value(avg_pushups, pushup_score_values, event='pushups')
+            avg_situp_score = cadet.get_score_value(avg_situps, situp_score_values, event='situps')
+            avg_two_mile_score = cadet.get_score_value(avg_two_mile, two_mile_score_values, event='Two-mile run')
         
         
         

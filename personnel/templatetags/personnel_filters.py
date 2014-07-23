@@ -39,3 +39,8 @@ def active_color(dropped, commissioned=False):
     if dropped == True:
         if commissioned == True:
             return "#FF0000" #red
+        
+@register.filter(name='phone_format')
+def phone_format(number):
+    if len(number) == 10:
+        return '(%s)-%s-%s' % (number[:3], number[3:6], number[6:10])

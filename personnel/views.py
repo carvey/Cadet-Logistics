@@ -21,6 +21,25 @@ class Stats(View):
         cadets = Cadet.objects.all()
         current_cadets = cadets.filter(commissioned=False, dropped=False)
         at_risk_cadets = cadets.filter(at_risk=True)
+        contracted_cadets = cadets.filter(contracted=True)
+        smp_cadets = cadets.filter(contracted=True)
+        
+        male_cadets = cadets.filter(gender='male')
+        female_cadets = cadets.filter(gender='female')
+        
+        #consider moving to utils
+        def get_avg_gpa():
+            sum_gpa = 0
+            cadets_with_gpa = 0
+            for cadet in cadets:
+                if cadet.gpa > 0:
+                    cadets_with_gpa += 1
+                    sum_gpa = sum_gpa + cadet.gpa
+            return sum_gpa/cadets_with_gpa
+         
+        avg_gpa = get_avg_gpa()
+        percent_volunteer_hours_completed = (len(cadets.filter(volunteer_hours_completed = True))) / len(cadets)
+        percent_volunteer_hours_completed *= 100
         
         context = {
                    'tab':tab,

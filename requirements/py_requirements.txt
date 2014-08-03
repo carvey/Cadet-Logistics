@@ -1,0 +1,4 @@
+Django==1.6.5
+MySQL-python==1.2.5
+south==0.8.4
+django-debug-toolbar

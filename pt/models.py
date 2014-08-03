@@ -78,50 +78,53 @@ class PtScore(models.Model):
         return 'PT Score %s for cadet: %s' % (format_date, self.cadet)
     
     def save(self, *args, **kwargs):
-        age_group = self.get_age_group()
-        # Gets the graders for the cadet
-        pushups_grader = Grader.objects.filter(age_group=age_group, gender=self.cadet.gender, activity='Pushups')[0]
-        situps_grader = Grader.objects.filter(age_group=age_group, gender=self.cadet.gender, activity='Situps')[0]
-        two_mile_grader = Grader.objects.filter(age_group=age_group, gender=self.cadet.gender, activity='Two-mile run')[0]
-        
-        # Sets the score to zero to prevent the score increasing each time the object 
-        # is saved, if there is already a score
-        self.score = 0
-        
-        # Get the score dictionary from the pushups grader object
-        pushups_score_dict = pushups_grader.get_ordered_dict()
-        # Check to see if the number of pushups for the PtScore object is
-        # in the list of keys. If it is then we use the pushups value as the key to get the grade.
-        if str(self.pushups) in pushups_score_dict.keys():
-            self.score = self.score + int(pushups_score_dict[str(self.pushups)])
-        # The value of pushups was not found in the keys so we determine if it was below the lowest
-        # or above the highest pushups value
-        else:
-            if float(self.pushups) < float(pushups_grader.get_first()):
-                self.score = self.score + 0
-            elif float(self.pushups) > float(pushups_grader.get_last()):
-                self.score = self.score + 100
-        print "Score after pushups: %s" % self.score
-        
-        # Get the score dictionary from the situps grader object
-        situps_score_dict = situps_grader.get_ordered_dict()
-        # Check to see if the number of situps for the PtScore object is
-        # in the list of keys. If it is then we use the situps value as the key to get the grade.
-        if str(self.situps) in situps_score_dict.keys():
-            self.score = self.score + int(situps_score_dict[str(self.situps)])
-        # The value of situps was not found in the keys so we determine if it was below the lowest
-        # or above the highest situps value
-        else:
-            if float(self.situps) < float(situps_grader.get_first()):
-                self.score = self.score + 0
-            elif float(self.situps) > float(pushups_grader.get_last()):
-                self.score = self.score + 100
-        print "Score after situps: %s" % self.score
-        
-        # Calculate the two-mile score
-        self.score = self.score + int(self.get_run_score(two_mile_grader))
-        
-        print "Score after two-mile %s" % self.score
+        try: #this will catch an index error to avoid errors when running scripted db population
+            age_group = self.get_age_group()
+            # Gets the graders for the cadet
+            pushups_grader = Grader.objects.filter(age_group=age_group, gender=self.cadet.gender, activity='Pushups')[0]
+            situps_grader = Grader.objects.filter(age_group=age_group, gender=self.cadet.gender, activity='Situps')[0]
+            two_mile_grader = Grader.objects.filter(age_group=age_group, gender=self.cadet.gender, activity='Two-mile run')[0]
+
+            # Sets the score to zero to prevent the score increasing each time the object
+            # is saved, if there is already a score
+            self.score = 0
+
+            # Get the score dictionary from the pushups grader object
+            pushups_score_dict = pushups_grader.get_ordered_dict()
+            # Check to see if the number of pushups for the PtScore object is
+            # in the list of keys. If it is then we use the pushups value as the key to get the grade.
+            if str(self.pushups) in pushups_score_dict.keys():
+                self.score = self.score + int(pushups_score_dict[str(self.pushups)])
+            # The value of pushups was not found in the keys so we determine if it was below the lowest
+            # or above the highest pushups value
+            else:
+                if float(self.pushups) < float(pushups_grader.get_first()):
+                    self.score = self.score + 0
+                elif float(self.pushups) > float(pushups_grader.get_last()):
+                    self.score = self.score + 100
+            print "Score after pushups: %s" % self.score
+
+            # Get the score dictionary from the situps grader object
+            situps_score_dict = situps_grader.get_ordered_dict()
+            # Check to see if the number of situps for the PtScore object is
+            # in the list of keys. If it is then we use the situps value as the key to get the grade.
+            if str(self.situps) in situps_score_dict.keys():
+                self.score = self.score + int(situps_score_dict[str(self.situps)])
+            # The value of situps was not found in the keys so we determine if it was below the lowest
+            # or above the highest situps value
+            else:
+                if float(self.situps) < float(situps_grader.get_first()):
+                    self.score = self.score + 0
+                elif float(self.situps) > float(pushups_grader.get_last()):
+                    self.score = self.score + 100
+            print "Score after situps: %s" % self.score
+
+            # Calculate the two-mile score
+            self.score = self.score + int(self.get_run_score(two_mile_grader))
+
+            print "Score after two-mile %s" % self.score
+        except IndexError:
+            pass
         
         # Call the actual save method to save the score in the database
         super(PtScore, self).save(*args, **kwargs)

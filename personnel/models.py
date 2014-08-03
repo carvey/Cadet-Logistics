@@ -1,7 +1,7 @@
 
 from django.core.validators import MaxValueValidator, MinValueValidator, validate_email
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
 
 '''Static variables'''
 ONE = 'one'
@@ -25,11 +25,15 @@ GENDER_CHOICES =(
 class Users(models.Model):
     first_name = models.CharField(max_length = 25)
     last_name = models.CharField(max_length = 30)
+    password = models.CharField(max_length=128) #pass this value to the set_password function get it hashed
     age = models.PositiveIntegerField(blank=False)
     email = models.EmailField(blank=True, validators=[validate_email])
     
     def __unicode__(self):
         return (self.last_name + ", " + self.first_name)
+
+    def set_password(self, raw_passwd):
+        self.password = make_password(raw_passwd)
     
     class Meta:
         abstract = True

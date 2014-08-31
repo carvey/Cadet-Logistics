@@ -45,4 +45,3 @@ class Event(models.Model):
     def __unicode__(self):
         format = self.date.strftime('%d %b, %Y')
         return "%s: %s" % (self.event_type, format)
-    

@@ -10,28 +10,32 @@ Returns a dictionary containing the average values of situps, pushups and two mi
 for the given Company object.
 Ex.
     To access the average situp value from the returned dictionary, you would do <dict_name>['situps']
-'''    
+'''
+
+
 def get_avg_scores_by_company(company):
     try:
         scores = PtScore.objects.filter(cadet__company=company)
         avg_score = {}
-        
+
         situps = [score.get_situps() for score in scores]
-        avg_situps = sum(situps)/float(len(situps))
-        
+        avg_situps = sum(situps) / float(len(situps))
+
         pushups = [score.get_pushups() for score in scores]
-        avg_pushups = sum(pushups)/float(len(pushups))
-        
+        avg_pushups = sum(pushups) / float(len(pushups))
+
         two_mile = [score.get_two_mile_min() for score in scores]
-        avg_two_mile = sum(two_mile)/float(len(two_mile))
-    
+        avg_two_mile = sum(two_mile) / float(len(two_mile))
+
         return {
-                'situps':avg_situps,
-                'pushups':avg_pushups,
-                'two_mile':avg_two_mile
-                }
+            'situps': avg_situps,
+            'pushups': avg_pushups,
+            'two_mile': avg_two_mile
+        }
     except:
         pass
+
+
 """
 Might be useful for in the future
 ---------
@@ -72,129 +76,142 @@ class Dashboard(View):
     
         return render(request, self.template_name, context)
 """
-    
+
+
 class TestView(View):
     template_name = 'pt/tests.html'
-    
+
     def get(self, request):
         context = {
-                   }
+        }
         return render(request, self.template_name, context)
-    
+
+
 class TestStatView(View):
     template_name = 'pt/test_stats.html'
-    
+
     def get(self, request):
         context = {
-                   }
+        }
         return render(request, self.template_name, context)
-    
+
+
 class TestListingView(View):
     template_name = 'pt/test_listing.html'
-    
+
     def get(self, request):
         pt_tests = PtTest.objects.all()
         context = {
-                   'tests':pt_tests,
-                   }
+            'tests': pt_tests,
+        }
         return render(request, self.template_name, context)
-    
+
+
 class TestScoresView(View):
-    template_name="pt/scores_by_test.html"
-    
+    template_name = "pt/scores_by_test.html"
+
     def get(self, request, test_id):
         cadets = Cadet.objects.all()
-        test = PtTest.objects.get(id = test_id)
-        scores = PtScore.objects.filter(pt_test = test)
+        test = PtTest.objects.get(id=test_id)
+        scores = PtScore.objects.filter(pt_test=test)
         context = {
-                   'scores':scores,
-                   'cadets':cadets,
-                   }
+            'scores': scores,
+            'cadets': cadets,
+        }
         return render(request, self.template_name, context)
-    
-    
+
+
 class CadetDetailView(View):
     template_name = 'pt/cadet_detail.html'
-    
+
     def get(self, request, cadet_id):
         scores = PtScore.objects.filter(cadet__id=cadet_id)
         cadet = Cadet.objects.filter(id=cadet_id)
         context = {
-                   'cadet':cadet[0],
-                   'scores':scores
-                   }
+            'cadet': cadet[0],
+            'scores': scores
+        }
         return render(request, self.template_name, context)
+
 
 class CadetsView(View):
     template_name = 'pt/cadets.html'
-    
+
     def get(self, request):
         context = {
-                   }
+        }
         return render(request, self.template_name, context)
-    
+
+
 class CadetsStatView(View):
     template_name = 'pt/cadets_stats.html'
-    
+
     def get(self, request):
         context = {
-                   }
+        }
         return render(request, self.template_name, context)
+
 
 class CadetsListingView(View):
     template_name = 'pt/cadets_listing.html'
-    
+
     def get(self, request):
         cadets = Cadet.objects.all()
         context = {
-                   'cadets':cadets,
-                   }
+            'cadets': cadets,
+        }
         return render(request, self.template_name, context)
+
 
 class CompanyView(View):
     template_name = 'pt/company.html'
-    
+
     def get(self, request):
         context = {
-                   }
+        }
         return render(request, self.template_name, context)
+
 
 class CompanyStatView(View):
     template_name = 'pt/company_stats.html'
-    
+
     def get(self, request):
         context = {
-                   }
+        }
         return render(request, self.template_name, context)
-    
+
+
 class CompanyListingView(View):
     template_name = 'pt/company_listing.html'
-    
+
     def get(self, request):
         context = {
-                   }
+        }
         return render(request, self.template_name, context)
-    
+
+
 class MsLevelStatView(View):
     template_name = 'pt/ms_stats.html'
-    
+
     def get(self, request):
         context = {
-                   }
+        }
         return render(request, self.template_name, context)
-    
+
+
 class MsLevelListingView(View):
     template_name = 'pt/ms_listing.html'
-    
+
     def get(self, request):
         context = {
-                   }
+        }
         return render(request, self.template_name, context)
+
 
 class MsLevelView(View):
     template_name = 'pt/ms_level.html'
-    
+
     def get(self, request):
         context = {
-               }
+        }
         return render(request, self.template_name, context)

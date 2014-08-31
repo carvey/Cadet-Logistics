@@ -45,6 +45,12 @@ class Stats(View):
                    'tab':tab,
                    'current_cadets':current_cadets,
                    'at_risk_cadets':at_risk_cadets,
+                   'contracted_cadets':contracted_cadets,
+                   'smp_cadets':smp_cadets,
+                   'male_cadets':male_cadets,
+                   'female_cadets':female_cadets,
+                   'avg_gpa':avg_gpa,
+                   'percent_volunteer_hours_completed':percent_volunteer_hours_completed,
                    }
         
         return render (request, self.template_name, context)
@@ -107,11 +113,7 @@ class CadetPage(View):
                    }
         return render(request, self.template_name, context)
 
-class CompanyStats(View):
-    template_name = 'personnel/company_stats.html'
-    def get(self, request):
-        return render (request, self.template_name, {})
-    
+
 class CompanyListing(View):
     template_name='personnel/company_listing.html'
     
@@ -129,10 +131,6 @@ class CompanyCadetListing(View):
         cadets = Cadet.objects.filter(company = company)
         return render(request, self.template_name, {'company': company, 'cadets': cadets})
 
-class MSlevelStats(View):
-    template_name = 'personnel/ms_stats.html'
-    def get(self, request):
-        return render (request, self.template_name, {})
 
 class MSlevelListing(View):
     template_name='personnel/ms_listing.html'

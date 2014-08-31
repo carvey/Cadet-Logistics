@@ -25,7 +25,8 @@ class Users(models.Model):
     """Company is the model for the companies in the batallion"""
     first_name = models.CharField(max_length=25)
     last_name = models.CharField(max_length=30)
-    password = models.CharField(max_length=128)  # pass this value to the set_password function get it hashed
+    # pass this value to the set_password function get it hashed
+    password = models.CharField(max_length=128, blank=False, null=True)
     age = models.PositiveIntegerField(blank=False)
     email = models.EmailField(blank=True, validators=[validate_email])
 

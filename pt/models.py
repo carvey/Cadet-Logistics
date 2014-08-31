@@ -91,10 +91,13 @@ class PtScore(models.Model):
 
             # Get the score dictionary from the pushups grader object
             pushups_score_dict = pushups_grader.get_ordered_dict()
+            # Format the value to have a leading 0 if it is a single digit
+            # This is the key used to check if the value is in the dictionary of grades
+            string_pushups = "%02d" % self.pushups
             # Check to see if the number of pushups for the PtScore object is
             # in the list of keys. If it is then we use the pushups value as the key to get the grade.
-            if str(self.pushups) in pushups_score_dict.keys():
-                self.score = self.score + int(pushups_score_dict[str(self.pushups)])
+            if string_pushups in pushups_score_dict.keys():
+                self.score = self.score + int(pushups_score_dict[string_pushups])
             # The value of pushups was not found in the keys so we determine if it was below the lowest
             # or above the highest pushups value
             else:
@@ -105,10 +108,15 @@ class PtScore(models.Model):
 
             # Get the score dictionary from the situps grader object
             situps_score_dict = situps_grader.get_ordered_dict()
+
+            # Format the value to have a leading 0 if it is a single digit
+            # This is the key used to check if the value is in the dictionary of grades
+            string_situps = "%02d" % self.situps
             # Check to see if the number of situps for the PtScore object is
             # in the list of keys. If it is then we use the situps value as the key to get the grade.
-            if str(self.situps) in situps_score_dict.keys():
-                self.score = self.score + int(situps_score_dict[str(self.situps)])
+            if string_situps in situps_score_dict.keys():
+                self.score = self.score + int(situps_score_dict[string_situps])
+
             # The value of situps was not found in the keys so we determine if it was below the lowest
             # or above the highest situps value
             else:
@@ -126,24 +134,24 @@ class PtScore(models.Model):
         
         # Call the actual save method to save the score in the database
         super(PtScore, self).save(*args, **kwargs)
-    
-    """
-    This method takes the two_mile info (CharField) of the cadet at hand and splits it into a list
-    So a time of 15:43 should return a list value of [15, 43]
-    """
+
     def get_run_time(self):
+        """
+         This method takes the two_mile info (CharField) of the cadet at hand and splits it into a list
+         So a time of 15:43 should return a list value of [15, 43]
+        """
         time = str(self.two_mile)
         split_time = time.split(':')
         split_time = [int(x) for x in split_time]
         return split_time
-    
-    '''
-    Helper method to return the run time with 
-    a zero place holder if the minutes has 
-    only one number. So a time of 15:4 will 
-    be returned as 15:04.
-    '''
+
     def get_run_time_str(self):
+        '''
+         Helper method to return the run time with
+         a zero place holder if the minutes has
+         only one number. So a time of 15:4 will
+         be returned as 15:04.
+        '''
         time = self.get_run_time()
         return '%02d:%02d' % (time[0], time[1])
     
@@ -155,43 +163,43 @@ class PtScore(models.Model):
     
     def get_situps(self):
         return self.situps
-    
-    '''
-    Helper method to get the two mile time 
-    in minutes for computation. So a time of 
-    15:43 will be returned as 15.72 minutes
-    '''
+
     def get_two_mile_min(self):
+        '''
+         Helper method to get the two mile time
+         in minutes for computation. So a time of
+         15:43 will be returned as 15.72 minutes
+        '''
         time_list = self.get_run_time()
         minutes = time_list[0]
         seconds = time_list[1]
         return minutes + (seconds/60.0)
-    
-    '''
-     Converts a given time string in the form of '[mm]:[ss]' into a decimal minutes format
-     So a time of '13:30' will be returned as 13.5
-    '''
+
     def get_time_mins(self, time):
+        '''
+         Converts a given time string in the form of '[mm]:[ss]' into a decimal minutes format
+         So a time of '13:30' will be returned as 13.5
+        '''
         time_list = time.split(':')
         time_list = [int(t) for t in time_list]
         minutes = time_list[0]
         seconds = time_list[1]
         return minutes + (seconds/60.0)
-    
-    '''
-     Converts a given time string from minutes into the form '[mm]:[ss]'.
-     So a time of '13.5' will be returned as '13:30'
-    '''
+
     def convert_time_mins_secs(self, time):
+        '''
+         Converts a given time string from minutes into the form '[mm]:[ss]'.
+         So a time of '13.5' will be returned as '13:30'
+        '''
         time_split = time.split('.')
         minutes = float(time_split[0])
         formatted_seconds = (float(time) - minutes) * 60.0
         return '%02.0f:%02.0f' % (minutes, formatted_seconds)
-    
-    '''
-     Gets the age range that a cadet is a part of. Used for getting the correct Grader (score value) object
-    '''
+
     def get_age_group(self):
+        '''
+         Gets the age range that a cadet is a part of. Used for getting the correct Grader (score value) object
+        '''
         score_values=Grader.objects.all()
         
         cadet_age = self.cadet.age
@@ -199,11 +207,11 @@ class PtScore(models.Model):
             value = score_value.age_group.split('-')
             if cadet_age >= int(value[0]) and cadet_age <= int(value[1]):
                 return score_value.age_group      
-            
-    '''
-     Used to calculate the score for two-mile run
-    '''
+
     def get_run_score(self,two_mile_grader):
+        '''
+         Used to calculate the score for two-mile run
+        '''
         # Gets the list of keys in minute format, so a key of '17:30' will be represented
         # as '17.5'
         times_in_mins_list = [self.get_time_mins(time) for time in two_mile_grader.get_ordered_dict()]
@@ -235,10 +243,9 @@ class PtScore(models.Model):
                 
             # Check to see if our two-mile time is between this_time and next_time. Also makes sure
             # that we aren't at the end of the cycle by checking that next_time is not equal to first_time.
-            # If true we return this_time as the key, since it is the faster of the two times.
+            # If true we return next_time as the key, since it is the slower of the two times.
             elif run_time > this_time and run_time < next_time and next_time != first_time:
-                print "between %s and %s" % (this_time, next_time)
-                time_key = this_time
+                time_key = next_time
             # Checks if run_time is less than this_time and if this_time is the first time in the list.
             # If so it means they had a faster time than the fastest time on the scale, so they make a 100.
             elif run_time < this_time and this_time == first_time:

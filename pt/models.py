@@ -128,6 +128,105 @@ class PtScore(models.Model):
         
         # Call the actual save method to save the score in the database
         super(PtScore, self).save(*args, **kwargs)
+
+    def get_max_score(self, scores):
+        max_score = 0
+        for score in scores:
+            if score.score > max_score:
+                max_score = score.score
+        return max_score
+
+    def get_min_score(self, scores):
+        min_score = scores[0].score
+        for score in scores:
+            if score.score < min_score:
+                min_score = score.score
+        return min_score
+
+    def get_score_value(self, value, score_value_dict, event='default'):
+        """this function finds the highest grader key & value above a given value"""
+        if event == 'pushups' or event == 'situps' or event == 'default':
+            if str(value) in score_value_dict:
+                return score_value_dict[str(value)]
+            else:
+                if value < max(score_value_dict):
+                    return '100'
+                else:
+                    return '0'
+
+        if event == 'Two-mile run':
+            stripped_score_value_dict = [int(x.replace(':', '')) for x in score_value_dict]
+            stripped_value = int(value.replace(':', ''))
+            if str(value) in score_value_dict:
+                return score_value_dict[str(value)]
+            #extra code to account for in between values goes here
+            else:
+                for key in stripped_score_value_dict:
+                    if stripped_value < key:
+                        if stripped_value > key - 6:
+                            unstripped_value = str(key)
+                            unstripped_value = unstripped_value[:2] + ':' + unstripped_value[2:]
+                            try:
+                                return score_value_dict[unstripped_value]
+                            except KeyError:
+                                if key < max(stripped_score_value_dict):
+                                    return '100'
+                                else:
+                                    return '0'
+            if stripped_value > max(stripped_score_value_dict):
+                return '100'
+            else:
+                return '0'
+
+    def get_avg_pushups(self, scores):
+        sum_pushups = 0
+        length = len(scores)
+        for score in scores:
+            sum_pushups += int(score.pushups)
+        avg = sum_pushups / length
+        return avg
+
+    def get_avg_situps(self, scores):
+        sum_situps = 0
+        length = len(scores)
+        for score in scores:
+            sum_situps += int(score.situps)
+        avg = sum_situps / length
+        return avg
+
+    #still getting over 60 seconds in some cases. Average isn't quite right
+    def get_avg_two(self, scores):
+        sum_time = 0
+        length = len(scores)
+        for score in scores:
+            stripped_score = score.get_run_time_str().replace(':', '')
+            seconds = int(stripped_score[2:])
+            seconds = str(seconds / float(60))
+            stripped_score = float(stripped_score[:2] + '.' + seconds[2:])
+            sum_time += stripped_score
+        avg = sum_time / float(length)
+        decimal = str(avg).split('.')[1]
+        decimal = str(int(decimal) * 60)
+        avg = str(avg).split('.')[0] + ':' + str(decimal)[:2]
+        return avg
+
+    def get_avg_two_mile(self, scores):
+        sum_time = 0
+        length = len(scores)
+        for score in scores:
+            time = score.get_two_mile_min()
+            sum_time = sum_time + time
+        avg = str(sum_time / length)
+        return scores[0].convert_time_mins_secs(avg)
+
+
+    def get_avg_total_score(self, scores):
+        sum_time = 0
+        length = len(scores)
+        for score in scores:
+            sum_time += int(score.score)
+        avg = sum_time / length
+        return avg
     
     """
     This method takes the two_mile info (CharField) of the cadet at hand and splits it into a list

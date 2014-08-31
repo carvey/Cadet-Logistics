@@ -67,19 +67,21 @@ class CadetPage(View):
     template_name='personnel/cadet_page.html'
     
     def get(self, request, cadet_id, tab='overview'):
-        cadet = Cadet.objects.get(id = cadet_id)
-        scores = PtScore.objects.filter(cadet = cadet_id)
+        cadet = Cadet.objects.get(id=cadet_id)
+        scores = PtScore.objects.filter(cadet=cadet_id)
         ordered_scores = scores.order_by('-pt_test')[:3]
         score_values = Grader.objects.all()
         
         #initializing pt related vars to 0 ahead of time, in case the cadet has no pt tests yet
         max_score = min_score = avg_score = avg_pushups = avg_situps = avg_two_mile = 0
         avg_pushup_score = avg_pushup_score = avg_situp_score = avg_two_mile_score = 0
+
+        ptscore = PtScore()
         
         if scores:
-            max_score = cadet.get_max_score(scores)
-            min_score = cadet.get_min_score(scores)
-            avg_score = cadet.get_avg_total_score(scores)
+            max_score = ptscore.get_max_score(scores)
+            min_score = ptscore.get_min_score(scores)
+            avg_score = ptscore.get_avg_total_score(scores)
             
             #queries for getting the Grader objects (score values)
             age = scores[0].get_age_group()
@@ -87,13 +89,13 @@ class CadetPage(View):
             situp_score_values = Grader.objects.get(gender=cadet.gender, activity='situps', age_group=age).get_ordered_dict() 
             two_mile_score_values = Grader.objects.get(gender=cadet.gender, activity='Two-mile run', age_group=age).get_ordered_dict()
             
-            avg_pushups = cadet.get_avg_pushups(scores)
-            avg_situps = cadet.get_avg_situps(scores)
-            avg_two_mile = cadet.get_avg_two_mile(scores)
+            avg_pushups = ptscore.get_avg_pushups(scores)
+            avg_situps = ptscore.get_avg_situps(scores)
+            avg_two_mile = ptscore.get_avg_two_mile(scores)
             
-            avg_pushup_score = cadet.get_score_value(avg_pushups, pushup_score_values, event='pushups')
-            avg_situp_score = cadet.get_score_value(avg_situps, situp_score_values, event='situps')
-            avg_two_mile_score = cadet.get_score_value(avg_two_mile, two_mile_score_values, event='Two-mile run')
+            avg_pushup_score = ptscore.get_score_value(avg_pushups, pushup_score_values, event='pushups')
+            avg_situp_score = ptscore.get_score_value(avg_situps, situp_score_values, event='situps')
+            avg_two_mile_score = ptscore.get_score_value(avg_two_mile, two_mile_score_values, event='Two-mile run')
         
         
         

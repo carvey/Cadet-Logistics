@@ -58,11 +58,11 @@ class PtTest(models.Model):
 
 #The PTscore information for each cadet. Indentified by a foreign key linking to a specific cadet
 class PtScore(models.Model):
-    grader = models.ForeignKey('personnel.Cadet', related_name='grader', blank=False, null=True) 
-    pt_test = models.ForeignKey(PtTest, default='', blank=False, null=False)
-    cadre_grader=models.ForeignKey('personnel.Cadre', blank=True, null=True)
     cadet = models.ForeignKey('personnel.Cadet', related_name='cadet_score', blank=False)
-    score = models.PositiveIntegerField(default=0)
+    pt_test = models.ForeignKey(PtTest, default='', blank=False, null=False)
+    grader = models.ForeignKey('personnel.Cadet', related_name='grader', blank=False, null=True)
+    cadre_grader=models.ForeignKey('personnel.Cadre', blank=True, null=True)
+
     pushups = models.PositiveIntegerField(default=0)
     situps = models.PositiveIntegerField(default=0)
     two_mile = models.CharField(max_length=5, null=True, validators=[
@@ -72,6 +72,11 @@ class PtScore(models.Model):
                                                                          code="Invalid_time_format"
                                                                          ),
                                                           ])
+
+    score = models.PositiveIntegerField(default=0)
+    pushups_score = models.PositiveIntegerField(default=0)
+    situps_score = models.PositiveIntegerField(default=0)
+    run_score = models.PositiveIntegerField(default=0)
     
     def __unicode__(self):  
         format_date = self.pt_test.date.strftime('%d %b, %Y')
@@ -97,14 +102,18 @@ class PtScore(models.Model):
             # Check to see if the number of pushups for the PtScore object is
             # in the list of keys. If it is then we use the pushups value as the key to get the grade.
             if string_pushups in pushups_score_dict.keys():
-                self.score = self.score + int(pushups_score_dict[string_pushups])
+                score_from_dict = int(pushups_score_dict[string_pushups])
+                self.pushups_score = score_from_dict
+                self.score += score_from_dict
             # The value of pushups was not found in the keys so we determine if it was below the lowest
             # or above the highest pushups value
             else:
                 if float(self.pushups) < float(pushups_grader.get_first()):
-                    self.score = self.score + 0
+                    self.pushups_score = 0
+                    self.score += self.pushups_score
                 elif float(self.pushups) > float(pushups_grader.get_last()):
-                    self.score = self.score + 100
+                    self.pushups_score = 100
+                    self.score += self.pushups_score
 
             # Get the score dictionary from the situps grader object
             situps_score_dict = situps_grader.get_ordered_dict()
@@ -115,18 +124,23 @@ class PtScore(models.Model):
             # Check to see if the number of situps for the PtScore object is
             # in the list of keys. If it is then we use the situps value as the key to get the grade.
             if string_situps in situps_score_dict.keys():
-                self.score = self.score + int(situps_score_dict[string_situps])
+                score_from_dict = int(situps_score_dict[string_situps])
+                self.situps_score = score_from_dict
+                self.score += self.situps_score
 
             # The value of situps was not found in the keys so we determine if it was below the lowest
             # or above the highest situps value
             else:
                 if float(self.situps) < float(situps_grader.get_first()):
-                    self.score = self.score + 0
+                    self.situps_score = 0
+                    self.score += self.situps_score
                 elif float(self.situps) > float(pushups_grader.get_last()):
-                    self.score = self.score + 100
+                    self.situps_score = 100
+                    self.score += self.situps_score
 
             # Calculate the two-mile score
-            self.score = self.score + int(self.get_run_score(two_mile_grader))
+            self.run_score = int(self.get_run_score(two_mile_grader))
+            self.score += self.run_score
 
         except IndexError:
             #this will catch an index error to avoid errors when running scripted db population

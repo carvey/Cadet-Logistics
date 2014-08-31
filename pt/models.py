@@ -78,7 +78,7 @@ class PtScore(models.Model):
         return 'PT Score %s for cadet: %s' % (format_date, self.cadet)
     
     def save(self, *args, **kwargs):
-        try: #this will catch an index error to avoid errors when running scripted db population
+        try:
             age_group = self.get_age_group()
             # Gets the graders for the cadet
             pushups_grader = Grader.objects.filter(age_group=age_group, gender=self.cadet.gender, activity='Pushups')[0]
@@ -102,7 +102,6 @@ class PtScore(models.Model):
                     self.score = self.score + 0
                 elif float(self.pushups) > float(pushups_grader.get_last()):
                     self.score = self.score + 100
-            print "Score after pushups: %s" % self.score
 
             # Get the score dictionary from the situps grader object
             situps_score_dict = situps_grader.get_ordered_dict()
@@ -117,13 +116,12 @@ class PtScore(models.Model):
                     self.score = self.score + 0
                 elif float(self.situps) > float(pushups_grader.get_last()):
                     self.score = self.score + 100
-            print "Score after situps: %s" % self.score
 
             # Calculate the two-mile score
             self.score = self.score + int(self.get_run_score(two_mile_grader))
 
-            print "Score after two-mile %s" % self.score
         except IndexError:
+            #this will catch an index error to avoid errors when running scripted db population
             pass
         
         # Call the actual save method to save the score in the database
@@ -169,8 +167,10 @@ class PtScore(models.Model):
         seconds = time_list[1]
         return minutes + (seconds/60.0)
     
-    # Converts a given time string in the form of '[mm]:[ss]' into a decimal minutes format
-    # So a time of '13:30' will be returned as 13.5
+    '''
+     Converts a given time string in the form of '[mm]:[ss]' into a decimal minutes format
+     So a time of '13:30' will be returned as 13.5
+    '''
     def get_time_mins(self, time):
         time_list = time.split(':')
         time_list = [int(t) for t in time_list]
@@ -178,15 +178,19 @@ class PtScore(models.Model):
         seconds = time_list[1]
         return minutes + (seconds/60.0)
     
-    # Converts a given time string from minutes into the form '[mm]:[ss]'.
-    # So a time of '13.5' will be returned as '13:30'
+    '''
+     Converts a given time string from minutes into the form '[mm]:[ss]'.
+     So a time of '13.5' will be returned as '13:30'
+    '''
     def convert_time_mins_secs(self, time):
         time_split = time.split('.')
         minutes = float(time_split[0])
         formatted_seconds = (float(time) - minutes) * 60.0
         return '%02.0f:%02.0f' % (minutes, formatted_seconds)
     
-    #gets the age range that a cadet is a part of. Used for getting the correct Grader (score value) object
+    '''
+     Gets the age range that a cadet is a part of. Used for getting the correct Grader (score value) object
+    '''
     def get_age_group(self):
         score_values=Grader.objects.all()
         
@@ -196,7 +200,9 @@ class PtScore(models.Model):
             if cadet_age >= int(value[0]) and cadet_age <= int(value[1]):
                 return score_value.age_group      
             
-    # Used to calculate the score for two-mile run
+    '''
+     Used to calculate the score for two-mile run
+    '''
     def get_run_score(self,two_mile_grader):
         # Gets the list of keys in minute format, so a key of '17:30' will be represented
         # as '17.5'

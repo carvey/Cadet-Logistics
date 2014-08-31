@@ -129,11 +129,13 @@ def create_pt_scores():
             cadet_score = None
             try:
                 cadet_score = PtScore.objects.get(cadet=cadet, pt_test=test) #checks to see whether a ptscore has already been created for this test and cadet
+                cadet_score.save()
             except:
                 pass
             if cadet_score == None:
                 score = PtScore.objects.get_or_create(grader=random.choice(grader_list), pt_test=test, cadet=cadet, pushups=random.randint(0,80), situps=random.randint(0,80), score=0, two_mile="%s:%s" % (random.randint(12,20), random.randint(0,59)))
-                
+                score.save()
+
 def generate_pt_score_value():
     pt_tests = PtTest.objects.all()
     score_values = Grader.objects.all()

@@ -1,0 +1,72 @@
+<script>
+//Flot Pie Chart
+$(function() {
+
+    var data = [{
+        label: "Males",
+        data: {{ male_cadets.count }},
+        color: "#476B6B",
+    }, {
+        label: "Females",
+        data: {{ female_cadets.count }},
+
+    }];
+
+    var plotObj = $.plot($("#gender_comparison"), data, {
+        series: {
+            pie: {
+                show: true
+            }
+        },
+        grid: {
+            hoverable: true
+        },
+        tooltip: true,
+        tooltipOpts: {
+            content: "%p.0%, %s", // show percentages, rounding to 2 decimal places
+            shifts: {
+                x: 20,
+                y: 0
+            },
+            defaultTheme: false
+        }
+    });
+
+
+
+    var volunteer_data =
+    [
+        {
+            label: "Completed",
+            data: {{ volunteer_hours }},
+            color: "#476B6B",
+        },
+        {
+            label: "Not Completed",
+            data: {{ not_volunteer_hours }},
+
+        }
+    ];
+
+    var volunteer_hours = $.plot($("#volunteer_hours"), volunteer_data, {
+        series: {
+            pie: {
+                show: true
+            }
+        },
+        grid: {
+            hoverable: true
+        },
+        tooltip: true,
+        tooltipOpts: {
+            content: "%p.0%, %s", // show percentages, rounding to 2 decimal places
+            shifts: {
+                x: 20,
+                y: 0
+            },
+            defaultTheme: false
+        }
+    });
+
+});
+</script>

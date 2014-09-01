@@ -39,8 +39,8 @@ class Stats(View):
             return sum_gpa / cadets_with_gpa
 
         avg_gpa = get_avg_gpa()
-        percent_volunteer_hours_completed = (len(cadets.filter(volunteer_hours_completed=True))) / len(cadets)
-        percent_volunteer_hours_completed *= 100
+        completed_volunteer_hours = len(cadets.filter(volunteer_hours_completed=True))
+        not_completed_volunteer_hours = len(cadets.exclude(volunteer_hours_completed=True))
 
         context = {
             'tab': tab,
@@ -51,7 +51,8 @@ class Stats(View):
             'male_cadets': male_cadets,
             'female_cadets': female_cadets,
             'avg_gpa': avg_gpa,
-            'percent_volunteer_hours_completed': percent_volunteer_hours_completed,
+            'volunteer_hours': completed_volunteer_hours,
+            'not_volunteer_hours': not_completed_volunteer_hours,
         }
 
         return render(request, self.template_name, context)

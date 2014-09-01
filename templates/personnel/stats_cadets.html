@@ -15,10 +15,12 @@
 	<div class='col-md-4'>
 		<div class='panel panel-default'>
 			<div class='panel-heading'>
-				Two
+				Current Cadets
 			</div>
 			<div class='panel-body'>
-				Two
+				<div><h3>Active Cadets: {{ current_cadets.count }}</h3></div>
+                <div><h3>Contracted Cadets: {{ contracted_cadets.count }}</h3></div>
+                <div><h3>SMP Cadets: {{ smp_cadets.count }}</h3></div>
 			</div>
 		</div>
 	</div>
@@ -30,10 +32,12 @@
 <div class='col-md-4'>
 		<div class='panel panel-default'>
 			<div class='panel-heading'>
-				Three
+				Gender Comparison
 			</div>
 			<div class='panel-body'>
-				Three
+                <div class="flot-chart">
+                    <div class="flot-chart-content" id="gender_comparison"></div>
+                </div>
 			</div>
 		</div>
 	</div>
@@ -41,10 +45,18 @@
 	<div class='col-md-4'>
 		<div class='panel panel-default'>
 			<div class='panel-heading'>
-				Four
+				Volunteer Hour Completion
 			</div>
 			<div class='panel-body'>
-				Four
+                {% if volunteer_hours == 0 %}
+                    0% of cadets have completed their volunteer hours
+                {% elif not_volunteer_hours == 0 %}
+                    100% of Cadets Have completed volunteer hours
+                {% else %}
+                    <div class="flot-chart">
+                        <div class="flot-chart-content" id="volunteer_hours"></div>
+                    </div>
+                {% endif %}
 			</div>
 		</div>
 	</div>

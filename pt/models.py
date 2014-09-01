@@ -214,7 +214,7 @@ class PtScore(models.Model):
         avg = sum_situps / length
         return avg
 
-    #still getting over 60 seconds in some cases. Average isn't quite right
+
     def get_avg_two(self, scores):
         sum_time = 0
         length = len(scores)

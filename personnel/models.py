@@ -130,3 +130,6 @@ class MsLevel(models.Model):
 
     class Meta:
         db_table = 'MsLevel'
+
+
+#TODO We can put a snapshot model here to periodically store personnel (data)

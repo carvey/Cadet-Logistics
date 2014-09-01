@@ -1,4 +1,5 @@
 from django import template
+from personnel.models import MsLevel
 
 register = template.Library()
 
@@ -33,15 +34,15 @@ def active_cadet(dropped, commissioned=False):
 
 @register.filter(name="active_color")
 def active_color(dropped, commissioned=False):
-    if dropped == False:
-        if commissioned == False:
+    if dropped is False:
+        if commissioned is False:
             return "#00b300"  # green
-    if dropped == True:
+    if dropped is True:
         return "#FF0000"  # red
-    if commissioned == True:
+    if commissioned is True:
         return "#000000"  # black
-    if dropped == True:
-        if commissioned == True:
+    if dropped is True:
+        if commissioned is True:
             return "#FF0000"  # red
 
 
@@ -49,3 +50,9 @@ def active_color(dropped, commissioned=False):
 def phone_format(number):
     if len(number) == 10:
         return '(%s)-%s-%s' % (number[:3], number[3:6], number[6:10])
+
+
+@register.filter(name='class_filter')
+def class_filter(cadets, ms_class):
+    ms = MsLevel.objects.get(name=ms_class)
+    return cadets.filter(ms_level=ms)

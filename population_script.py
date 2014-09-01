@@ -50,10 +50,10 @@ def populate():
     ms3 = MsLevel.objects.get(name="MS3")
     ms4 = MsLevel.objects.get(name="MS4")
 
-    add_cadet(first_name="Taylor", last_name="Cooper", age=20, ms_level=ms3, company=alpha, platoon=alpha1st)
-    add_cadet(first_name="Jason", last_name="Canter", age=20, ms_level=ms3, company=alpha, platoon=alpha1st)
-    add_cadet(first_name="Eddie", last_name="Hanson", age=20, ms_level=ms3, company=alpha, platoon=alpha1st)
-    add_cadet(first_name="Ashley", last_name="Scott", age=20, gender="Female", ms_level=ms3, company=alpha,
+    add_cadet(first_name="Taylor", last_name="Cooper", age=20, ms_level=ms4, company=alpha, platoon=alpha1st)
+    add_cadet(first_name="Jason", last_name="Canter", age=20, ms_level=ms4, company=alpha, platoon=alpha1st)
+    add_cadet(first_name="Eddie", last_name="Hanson", age=20, ms_level=ms4, company=alpha, platoon=alpha1st)
+    add_cadet(first_name="Ashley", last_name="Scott", age=20, gender="Female", ms_level=ms4, company=alpha,
               platoon=alpha1st)
     add_cadet(first_name="Danial", last_name="Miller", age=20, ms_level=ms3, company=alpha, platoon=alpha1st)
 

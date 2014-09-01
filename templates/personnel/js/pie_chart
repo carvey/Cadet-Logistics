@@ -1,5 +1,8 @@
+{% load personnel_filters %}
+
 <script>
 //Flot Pie Chart
+//NOTE -- If a data series contains 0 values, all flot charts on the page will freak out
 $(function() {
 
     var data = [{
@@ -39,12 +42,12 @@ $(function() {
         {
             label: "Completed",
             data: {{ volunteer_hours }},
-            color: "#476B6B",
+
         },
         {
             label: "Not Completed",
             data: {{ not_volunteer_hours }},
-
+            color: "#476B6B",
         }
     ];
 
@@ -68,5 +71,46 @@ $(function() {
         }
     });
     {% endif %}
+
+
+    var ms_data = [
+    {
+        label: "MS1's",
+        data: {{ current_cadets|class_filter:'ms1'|length }},
+        color: "#476B6B",
+    },
+    {
+        label: "MS2's",
+        data: {{ current_cadets|class_filter:'ms2'|length }},
+    },
+    {
+        label: "MS3's",
+        data: {{ current_cadets|class_filter:'ms3'|length }},
+    },
+    {
+        label: "MS4's",
+        data: {{ current_cadets|class_filter:'ms4'|length }},
+    },
+    ];
+
+    var ms_graph = $.plot($("#class_breakdown"), ms_data, {
+        series: {
+            pie: {
+                show: true
+            }
+        },
+        grid: {
+            hoverable: true
+        },
+        tooltip: true,
+        tooltipOpts: {
+            content: "%p.0%, %s", // show percentages, rounding to 2 decimal places
+            shifts: {
+                x: 20,
+                y: 0
+            },
+            defaultTheme: false
+        }
+    });
 });
 </script>

@@ -143,11 +143,24 @@ class CadetsView(View):
         return render(request, self.template_name, context)
 
 
-class CadetsStatView(View):
-    template_name = 'pt/cadets_stats.html'
+class StatisticsView(View):
+    template_name = 'pt/statistics.html'
 
     def get(self, request):
+        avg_pt_scores = {}
+        pt_tests = PtTest.objects.all()
+        count=0
+        for test_counter, pt_test in enumerate(pt_tests):
+            pt_scores = PtScore.objects.filter(pt_test=pt_test)
+            total_num = len(pt_scores)
+            total_score = 0
+            for score_counter, pt_score in enumerate(pt_scores):
+                total_score += pt_score.score
+            avg_score = float(total_score)/total_num
+            avg_pt_scores["%s" % pt_test] = avg_score
+        print avg_pt_scores
         context = {
+            'data' : avg_pt_scores,
         }
         return render(request, self.template_name, context)
 

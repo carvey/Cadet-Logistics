@@ -26,7 +26,7 @@ class Users(models.Model):
     first_name = models.CharField(max_length=25)
     last_name = models.CharField(max_length=30)
     # pass this value to the set_password function get it hashed
-    password = models.CharField(max_length=128, blank=False, null=True)
+    password = models.CharField(max_length=128, blank=True, null=True)
     age = models.PositiveIntegerField(blank=False)
     email = models.EmailField(blank=True, validators=[validate_email])
 

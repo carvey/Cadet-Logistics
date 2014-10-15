@@ -75,7 +75,7 @@ WSGI_APPLICATION = 'eagletrack_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'blogger',
+        'NAME': 'eagletrack',
         'USER': 'charles',
         'PASSWORD': 'shorefish',
         'HOST': 'savoysterhouse.cnkdqqk3dlt2.us-west-2.rds.amazonaws.com',

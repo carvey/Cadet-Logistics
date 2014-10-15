@@ -107,9 +107,10 @@ USE_L10N = True
 
 USE_TZ = True
 
+#A setting to allow django debug toolbar to work with wsgi interface
+DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.6/howto/static-files/
+
 STATIC_ROOT = PROJECT_PATH + '/../static'
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (

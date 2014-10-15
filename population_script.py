@@ -100,6 +100,7 @@ def populate():
     create_pt_scores()
     assign_eagle_id()
     assign_cell_num()
+    assign_email()
     assign_gpa()
     assign_ms_grade()
     assign_contract_smp()
@@ -151,8 +152,7 @@ def create_pt_scores():
                 pass
             if cadet_score == None:
                 score = PtScore.objects.get_or_create(grader=random.choice(grader_list), pt_test=test, cadet=cadet, pushups=random.randint(0,80), situps=random.randint(0,80), score=0, two_mile="%s:%s" % (random.randint(12,20), random.randint(0,59)))
-                print score
-                score[0].save()
+                score.save()
 
 
 def generate_pt_score_value():
@@ -180,7 +180,7 @@ def assign_eagle_id():
     starting_id = 900000000
     for cadet in cadets:
         cadet.eagle_id = starting_id
-        starting_id = starting_id + 1
+        starting_id += 1
         cadet.save()
 
 
@@ -188,9 +188,15 @@ def assign_cell_num():
     starting_num = 7702501639
     for cadet in cadets:
         cadet.cell_number = starting_num
-        starting_num = starting_num + 4
+        starting_num += 4
         cadet.save()
 
+def assign_email():
+    starting_num = 00000
+    for cadet in cadets:
+        cadet.email = cadet.first_name[:1] + cadet.last_name + str(starting_num) + '@georgiasouthern.edu'
+        starting_num += 75
+        cadet.save()
 
 def assign_gpa():
     for cadet in cadets:

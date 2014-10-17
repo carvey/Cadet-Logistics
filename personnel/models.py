@@ -2,6 +2,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator, validat
 from django.db import models
 from django.contrib.auth.hashers import make_password
 
+
 '''Static variables'''
 ONE = 'one'
 TWO = 'two'
@@ -19,6 +20,20 @@ GENDER_CHOICES = (
     (male, 'Male'),
     (female, 'Female')
 )
+
+
+class School(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __unicode__(self):
+        return self.name
+
+
+class Demographic(models.Model):
+    demographic = models.CharField(max_length=25)
+
+    def __unicode__(self):
+        return self.demographic
 
 
 class Users(models.Model):
@@ -62,6 +77,10 @@ class Cadet(Users):
     This model extends the Users abstract model. Each cadet should ideally be assigned to a company"""
     eagle_id = models.PositiveIntegerField(default=0, blank=False, null=True)
     gender = models.CharField(max_length=6, choices=GENDER_CHOICES, blank=False, null=True)
+    school = models.ForeignKey(School, blank=True, null=True)
+    demographic = models.ManyToManyField(Demographic)
+
+    # #
     company = models.ForeignKey(Company, blank=True, null=True)
     platoon = models.ForeignKey('Platoon', blank=True, null=True)
     ms_level = models.ForeignKey('MsLevel', blank=False, null=False)
@@ -71,7 +90,8 @@ class Cadet(Users):
     is_company_staff = models.BooleanField(default=False)
     # #
     cell_number = models.CharField(max_length=14, blank=True)
-    volunteer_hours_completed = models.BooleanField(default=False)
+    volunteer_hours_completed = models.IntegerField(default=0)
+    volunteer_hours_status = models.BooleanField(default=False)
     turned_in_104r = models.BooleanField(default=False)
     # #
     on_profile = models.BooleanField(default=False)
@@ -86,6 +106,8 @@ class Cadet(Users):
     # #
     contracted = models.BooleanField(default=False)
     smp = models.BooleanField(default=False)
+    nurse = models.BooleanField(default=False)
+    nurse_contracted = models.BooleanField(default=False)
     dropped = models.BooleanField(default=False)
     commissioned = models.BooleanField(default=False)
     # #
@@ -132,4 +154,25 @@ class MsLevel(models.Model):
         db_table = 'MsLevel'
 
 
-#TODO We can put a snapshot model here to periodically store personnel (data)
+class SnapShot(models.Model):
+    """This model is meant to record data at certain time intervals.
+    All data should be filtered to active cadets.
+    Time interval: 3 times per semester (max)"""
+    date = models.DateField(auto_now_add=True)
+    class_year = models.ForeignKey(MsLevel)
+    cadets = models.PositiveIntegerField(default=0)
+    males = models.PositiveIntegerField(default=0)
+    females = models.PositiveIntegerField(default=0)
+    contracted_cadets = models.PositiveIntegerField(default=0)
+    smp_cadets = models.PositiveIntegerField(default=0)
+
+    ms1_count = models.PositiveIntegerField(default=0)
+    ms2_count = models.PositiveIntegerField(default=0)
+    ms3_count = models.PositiveIntegerField(default=0)
+    ms4_count = models.PositiveIntegerField(default=0)
+
+    avg_gpa = models.PositiveIntegerField(default=0)
+    avg_ms1_gpa = models.PositiveIntegerField(default=0)
+    avg_ms2_gpa = models.PositiveIntegerField(default=0)
+    avg_ms3_gpa = models.PositiveIntegerField(default=0)
+    avg_ms4_gpa = models.PositiveIntegerField(default=0)

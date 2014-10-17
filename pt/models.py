@@ -199,6 +199,7 @@ class PtScore(models.Model):
                 return '0'
 
     def get_avg_pushups(self, scores):
+        """Returns the avg **number** of pushups over the given set of scores"""
         sum_pushups = 0
         length = len(scores)
         for score in scores:
@@ -206,7 +207,16 @@ class PtScore(models.Model):
         avg = sum_pushups / length
         return avg
 
+    def get_avg_pushup_score(self, cadet, scores):
+        """Returns the avg **score** for the number of pushups over the given set of scores"""
+        age = scores[0].get_age_group()
+        pushup_score_values = Grader.objects.get(gender=cadet.gender, activity='pushups',
+                                                 age_group=age).get_ordered_dict()
+        avg_pushups = self.get_avg_pushups(scores)
+        return self.get_score_value(avg_pushups, pushup_score_values, event='pushups')
+
     def get_avg_situps(self, scores):
+        """Returns the avg **number** of situps over the given set of scores"""
         sum_situps = 0
         length = len(scores)
         for score in scores:
@@ -214,23 +224,16 @@ class PtScore(models.Model):
         avg = sum_situps / length
         return avg
 
+    def get_avg_situp_score(self, cadet, scores):
+        """Returns the avg **score** for the number of situps over the given set of scores"""
+        age = scores[0].get_age_group()
+        situp_score_values = Grader.objects.get(gender=cadet.gender, activity='situps',
+                                                age_group=age).get_ordered_dict()
+        avg_situps = self.get_avg_situps(scores)
+        return self.get_score_value(avg_situps, situp_score_values, event='situps')
 
-    def get_avg_two(self, scores):
-        sum_time = 0
-        length = len(scores)
-        for score in scores:
-            stripped_score = score.get_run_time_str().replace(':', '')
-            seconds = int(stripped_score[2:])
-            seconds = str(seconds / float(60))
-            stripped_score = float(stripped_score[:2] + '.' + seconds[2:])
-            sum_time += stripped_score
-        avg = sum_time / float(length)
-        decimal = str(avg).split('.')[1]
-        decimal = str(int(decimal) * 60)
-        avg = str(avg).split('.')[0] + ':' + str(decimal)[:2]
-        return avg
-
-    def get_avg_two_mile(self, scores):
+    def get_avg_run_time(self, scores):
+        """Returns the avg **time** over the given set of scores"""
         sum_time = 0
         length = len(scores)
         for score in scores:
@@ -239,8 +242,16 @@ class PtScore(models.Model):
         avg = str(sum_time / length)
         return scores[0].convert_time_mins_secs(avg)
 
+    def get_avg_run_score(self, cadet, scores):
+        """Returns the avg **score** of the given set of scores"""
+        age = scores[0].get_age_group()
+        two_mile_score_values = Grader.objects.get(gender=cadet.gender, activity='Two-mile run',
+                                                       age_group=age).get_ordered_dict()
+        avg_two_mile = self.get_avg_run_time(scores)
+        return self.get_score_value(avg_two_mile, two_mile_score_values, event='Two-mile run')
 
     def get_avg_total_score(self, scores):
+        """Returns the avg **score** over the given set of scores"""
         sum_time = 0
         length = len(scores)
         for score in scores:
@@ -264,12 +275,12 @@ class PtScore(models.Model):
         return split_time
 
     def get_run_time_str(self):
-        '''
+        """
          Helper method to return the run time with
          a zero place holder if the minutes has
          only one number. So a time of 15:4 will
          be returned as 15:04.
-        '''
+        """
         time = self.get_run_time()
         return '%02d:%02d' % (time[0], time[1])
     
@@ -283,21 +294,21 @@ class PtScore(models.Model):
         return self.situps
 
     def get_two_mile_min(self):
-        '''
+        """
          Helper method to get the two mile time
          in minutes for computation. So a time of
          15:43 will be returned as 15.72 minutes
-        '''
+        """
         time_list = self.get_run_time()
         minutes = time_list[0]
         seconds = time_list[1]
         return minutes + (seconds/60.0)
 
     def get_time_mins(self, time):
-        '''
+        """
          Converts a given time string in the form of '[mm]:[ss]' into a decimal minutes format
          So a time of '13:30' will be returned as 13.5
-        '''
+        """
         time_list = time.split(':')
         time_list = [int(t) for t in time_list]
         minutes = time_list[0]
@@ -305,19 +316,19 @@ class PtScore(models.Model):
         return minutes + (seconds/60.0)
 
     def convert_time_mins_secs(self, time):
-        '''
+        """
          Converts a given time string from minutes into the form '[mm]:[ss]'.
          So a time of '13.5' will be returned as '13:30'
-        '''
+        """
         time_split = time.split('.')
         minutes = float(time_split[0])
         formatted_seconds = (float(time) - minutes) * 60.0
         return '%02.0f:%02.0f' % (minutes, formatted_seconds)
 
     def get_age_group(self):
-        '''
+        """
          Gets the age range that a cadet is a part of. Used for getting the correct Grader (score value) object
-        '''
+        """
         score_values=Grader.objects.all()
         
         cadet_age = self.cadet.age
@@ -327,9 +338,9 @@ class PtScore(models.Model):
                 return score_value.age_group      
 
     def get_run_score(self,two_mile_grader):
-        '''
+        """
          Used to calculate the score for two-mile run
-        '''
+        """
         # Gets the list of keys in minute format, so a key of '17:30' will be represented
         # as '17.5'
         times_in_mins_list = [self.get_time_mins(time) for time in two_mile_grader.get_ordered_dict()]
@@ -382,6 +393,8 @@ class PtScore(models.Model):
             grade = two_mile_grader.get_ordered_dict()[str(score_key)]
 
             return grade
+
+
         
     class Meta:
         db_table='PtScore'

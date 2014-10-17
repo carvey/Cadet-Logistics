@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.generic import View
 
-from pt.models import PtTest, PtScore
+from pt.models import PtTest, PtScore, Grader
 from personnel.models import Company, Cadet
 
 '''
@@ -170,8 +170,29 @@ class CadetsListingView(View):
 
     def get(self, request):
         cadets = Cadet.objects.all()
+        all_scores = PtScore.objects.all()
+
+        avg_pushup_scores = {}
+        avg_situp_scores = {}
+        avg_run_scores = {}
+        avg_scores = {}
+
+        ptscore = PtScore()
+
+        for cadet in cadets:
+            scores = all_scores.filter(cadet=cadet)
+
+            avg_pushup_scores[cadet.id] = ptscore.get_avg_pushup_score(cadet, scores)
+            avg_situp_scores[cadet.id] = ptscore.get_avg_situp_score(cadet, scores)
+            avg_run_scores[cadet.id] = ptscore.get_avg_run_score(cadet, scores)
+            avg_scores[cadet.id] = ptscore.get_avg_total_score(scores)
+
         context = {
             'cadets': cadets,
+            'avg_pushup_scores': avg_pushup_scores,
+            'avg_situp_scores': avg_situp_scores,
+            'avg_run_scores': avg_run_scores,
+            'avg_scores': avg_scores
         }
         return render(request, self.template_name, context)
 

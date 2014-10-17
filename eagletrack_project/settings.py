@@ -71,27 +71,27 @@ WSGI_APPLICATION = 'eagletrack_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 #
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'eagletrack',
-        'USER': 'charles',
-        'PASSWORD': 'shorefish',
-        'HOST': 'savoysterhouse.cnkdqqk3dlt2.us-west-2.rds.amazonaws.com',
-        'PORT': '3306',
-    }
-}
-
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',
 #         'NAME': 'eagletrack',
-#         'USER': 'root',
-#        # 'PASSWORD': '',
-#         'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
+#         'USER': 'charles',
+#         'PASSWORD': 'shorefish',
+#         'HOST': 'savoysterhouse.cnkdqqk3dlt2.us-west-2.rds.amazonaws.com',
 #         'PORT': '3306',
 #     }
 # }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'eagletrack',
+        'USER': 'root',
+       # 'PASSWORD': '',
+        'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
+        'PORT': '3306',
+    }
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/

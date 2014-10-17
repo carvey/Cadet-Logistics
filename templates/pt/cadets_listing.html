@@ -1,4 +1,7 @@
 {% extends 'datatable_base.html' %}
+{% load pt_filters %}
+
+
 {% block page_header %}
 Cadet PT Listing Page
 {% endblock %}
@@ -9,16 +12,20 @@ Cadets Listing
 
 {% block columns %}
 	<th>Name</th>
-	<th>Eagle ID</th>
-	<th>Gender</th>
+	<th>Avg. Pushup Score</th>
+	<th>Avg. Situp Score</th>
+    <th>Avg. Run Score</th>
+    <th>Avg. Total Score</th>
 {% endblock %}
 
 {% block table_data %}
 	{% for cadet in cadets %}
 	<tr>
 		<td><a href="/personnel/cadets/{{cadet.id}}/pt/">{{cadet.get_name}}</a></td>
-		<td>{{cadet.eagle_id}}</td>
-		<td>{{cadet.gender}}</td>
+		<td>{{ cadet|get_score:avg_pushup_scores }}</td>
+		<td>{{ cadet|get_score:avg_situp_scores }}</td>
+        <td>{{ cadet|get_score:avg_run_scores }}</td>
+        <td>{{ cadet|get_score:avg_scores }}</td>
 	</tr>
 	{% endfor %}
 {% endblock %}

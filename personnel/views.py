@@ -98,7 +98,7 @@ class CadetPage(View):
 
             avg_pushups = ptscore.get_avg_pushups(scores)
             avg_situps = ptscore.get_avg_situps(scores)
-            avg_two_mile = ptscore.get_avg_two_mile(scores)
+            avg_two_mile = ptscore.get_avg_run_time(scores)
 
             avg_pushup_score = ptscore.get_score_value(avg_pushups, pushup_score_values, event='pushups')
             avg_situp_score = ptscore.get_score_value(avg_situps, situp_score_values, event='situps')

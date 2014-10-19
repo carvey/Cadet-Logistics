@@ -1,3 +1,5 @@
+{% load personnel_filters %}
+
 <script>
 	//Flot Line Chart
 	$(document).ready(function() {
@@ -5,8 +7,12 @@
 	    plot();
 
 	    function plot() {
-	        var cadets = {{current_cadets|length}}
-	        var dates = [10, 15, 20, 25]
+
+            var times = [
+                {% for snap in snapshots %}
+                    [{{ snap.date|timestamp }}, {{ snap.cadets }}],
+                {% endfor %}
+            ];
 
 	        var options = {
 	            series: {
@@ -22,11 +28,10 @@
 	            },
 	            yaxis: {
 	                min: 0,
-	                max: 40
+	                max: {{ current_cadets|length }} + 10
 	            },
 	            xaxis: {
-	            	min: 0,
-	            	max: 40,
+	            	mode: "time"
 	            },
 	            tooltip: true,
 	            tooltipOpts: {
@@ -40,11 +45,11 @@
 
 	        var plotObj = $.plot($("#flot-line-chart"), [
                 {
-	                data: cadets,
+	                data: times,
 	                label: "Active Cadets"
 	            },
                 ],
 	            options);
 	    }
 	});
-	</script>
+</script>

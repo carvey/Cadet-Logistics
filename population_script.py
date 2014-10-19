@@ -14,8 +14,14 @@ sys.path.append(os.path.dirname(__file__))
 # Create your tests here.
 cadets = Cadet.objects.all()
 
+def clear_cadets():
+    for cadet in Cadet.objects.all():
+        cadet.delete()
 
 def populate():
+    #use this for when snapshots need testing, otherwise comment it out
+    clear_cadets()
+
     add_company(name="Alpha")
     add_company(name="Bravo")
     add_company(name="Charlie")
@@ -50,12 +56,16 @@ def populate():
     ms3 = MsLevel.objects.get(name="MS3")
     ms4 = MsLevel.objects.get(name="MS4")
 
+    generate_snapshots(date = datetime.date(2014, 6, 1))
+
     add_cadet(first_name="Taylor", last_name="Cooper", age=20, ms_level=ms4, company=alpha, platoon=alpha1st)
     add_cadet(first_name="Jason", last_name="Canter", age=20, ms_level=ms4, company=alpha, platoon=alpha1st)
     add_cadet(first_name="Eddie", last_name="Hanson", age=20, ms_level=ms4, company=alpha, platoon=alpha1st)
     add_cadet(first_name="Ashley", last_name="Scott", age=20, gender="Female", ms_level=ms4, company=alpha,
               platoon=alpha1st)
     add_cadet(first_name="Danial", last_name="Miller", age=20, ms_level=ms3, company=alpha, platoon=alpha1st)
+
+    generate_snapshots(date = datetime.date(2014, 7, 1))
 
     add_cadet(first_name="Oliver", last_name="Paige", age=20, gender="Female", ms_level=ms3, company=alpha,
               platoon=alpha2nd)
@@ -65,6 +75,8 @@ def populate():
     add_cadet(first_name="Eva", last_name="Lowry", age=20, gender="Female", ms_level=ms3, company=alpha,
               platoon=alpha2nd)
 
+    generate_snapshots(date = datetime.date(2014, 8, 1))
+
     add_cadet(first_name="Kellie", last_name="Rogers", age=19, gender="Female", ms_level=ms2, company=bravo,
               platoon=bravo1st)
     add_cadet(first_name="Trenton", last_name="Francis", age=19, ms_level=ms2, company=bravo, platoon=bravo1st)
@@ -72,6 +84,8 @@ def populate():
               platoon=bravo1st)
     add_cadet(first_name="Robert", last_name="Bacon", age=19, ms_level=ms2, company=bravo, platoon=bravo1st)
     add_cadet(first_name="Samual", last_name="Gates", age=19, ms_level=ms2, company=bravo, platoon=bravo1st)
+
+    generate_snapshots(date = datetime.date(2014, 9, 1))
 
     add_cadet(first_name="Thomas", last_name="Lee", age=19, ms_level=ms2, company=bravo, platoon=bravo2nd)
     add_cadet(first_name="Jennifer", last_name="Stone", age=19, gender="Female", ms_level=ms2, company=bravo,
@@ -81,17 +95,23 @@ def populate():
               platoon=bravo2nd)
     add_cadet(first_name="James", last_name="Cooper", age=19, ms_level=ms2, company=bravo, platoon=bravo2nd)
 
+    generate_snapshots(date = datetime.date(2014, 10, 1))
+
     add_cadet(first_name="Mary", last_name="Jones", age=18, gender="Female", ms_level=ms1, company=charlie)
     add_cadet(first_name="Roger", last_name="Alan", age=18, ms_level=ms1, company=charlie)
     add_cadet(first_name="Pablo", last_name="Smith", age=18, ms_level=ms1, company=charlie)
     add_cadet(first_name="Garret", last_name="Timpson", age=18, ms_level=ms1, company=charlie)
     add_cadet(first_name="Julia", last_name="Anderson", age=18, gender="Female", ms_level=ms1, company=charlie)
 
+    generate_snapshots(date = datetime.date(2014, 11, 1))
+
     add_cadet(first_name="Joe", last_name="Taylor", age=18, ms_level=ms1, company=delta)
     add_cadet(first_name="Jim", last_name="Bob", age=18, ms_level=ms1, company=delta)
     add_cadet(first_name="Alan", last_name="Smith", age=18, ms_level=ms1, company=delta)
     add_cadet(first_name="Jane", last_name="West", age=18, gender="Female", ms_level=ms1, company=delta)
     add_cadet(first_name="Anne", last_name="Locke", age=18, gender="Female", ms_level=ms1, company=delta)
+
+    generate_snapshots(date = datetime.date(2014, 12, 1))
 
     add_pt_test(date=datetime.date(2014, 6, 1) + datetime.timedelta(days=2), ms_lvl_4=False)
     add_pt_test(date=datetime.date(2014, 6, 1) + datetime.timedelta(days=5), ms_lvl_4=False)
@@ -105,6 +125,7 @@ def populate():
     assign_ms_grade()
     assign_contract_smp()
     assign_gender_to_males()
+
 
     create_graders()
     # generate_pt_score_value()
@@ -219,12 +240,55 @@ def assign_contract_smp():
             cadet.smp = True
         cadet.save()
 
+def generate_volunteer_completion():
+    pass
+
 
 def assign_gender_to_males():
     for cadet in cadets:
         if cadet.gender != "Female":
             cadet.gender = "Male"
 
+def get_gpa(cadets):
+        sum_gpa = 0
+        cadets_with_gpa = 0
+        for cadet in cadets:
+            if cadet.gpa > 0:
+                cadets_with_gpa += 1
+                sum_gpa = sum_gpa + cadet.gpa
+        if cadets_with_gpa == 0:
+            return 0
+        return sum_gpa / cadets_with_gpa
+
+def generate_snapshots(date):
+    snap = SnapShot()
+    current_cadets = Cadet.objects.all().__len__()
+    males = Cadet.objects.filter(gender='Male').__len__()
+    females = Cadet.objects.filter(gender='Female').__len__()
+    contracted_cadets = Cadet.objects.filter(contracted=True).__len__()
+    smp_cadets = Cadet.objects.filter(smp=True).__len__()
+
+    ms1 = MsLevel.objects.get(name="MS1")
+    ms2 = MsLevel.objects.get(name="MS2")
+    ms3 = MsLevel.objects.get(name="MS3")
+    ms4 = MsLevel.objects.get(name="MS4")
+
+    ms1_count = Cadet.objects.filter(ms_level=ms1).__len__()
+    ms2_count = Cadet.objects.filter(ms_level=ms2).__len__()
+    ms3_count = Cadet.objects.filter(ms_level=ms3).__len__()
+    ms4_count = Cadet.objects.filter(ms_level=ms4).__len__()
+
+    avg_gpa = get_gpa(cadets)
+    avg_ms1_gpa = get_gpa(cadets.filter(ms_level=ms1))
+    avg_ms2_gpa = get_gpa(cadets.filter(ms_level=ms2))
+    avg_ms3_gpa = get_gpa(cadets.filter(ms_level=ms3))
+    avg_ms4_gpa = get_gpa(cadets.filter(ms_level=ms4))
+
+    snap = SnapShot.objects.get_or_create(date=date, cadets=current_cadets, males=males, females=females, contracted_cadets=contracted_cadets,
+                                          smp_cadets=smp_cadets, ms1_count=ms1_count, ms2_count=ms2_count, ms3_count=ms3_count,
+                                          ms4_count=ms4_count, avg_gpa=avg_gpa, avg_ms1_gpa=avg_ms1_gpa, avg_ms2_gpa=avg_ms2_gpa,
+                                          avg_ms3_gpa=avg_ms3_gpa, avg_ms4_gpa=avg_ms4_gpa)
+    return snap
 
 def create_graders():
     # Male two-mile graders

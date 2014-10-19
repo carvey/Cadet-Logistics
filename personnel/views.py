@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.views.generic import View
 
-from personnel.models import Cadet, Company, MsLevel, Platoon
+from personnel.models import Cadet, Company, MsLevel, Platoon, SnapShot
 from pt.models import PtScore, Grader
 
 # Create your views here.
@@ -25,6 +25,8 @@ class Stats(View):
         contracted_cadets = cadets.filter(contracted=True)
         smp_cadets = cadets.filter(contracted=True)
 
+        snapshots = SnapShot.objects.all()
+
         male_cadets = cadets.filter(gender='male')
         female_cadets = cadets.filter(gender='female')
 
@@ -44,6 +46,7 @@ class Stats(View):
 
         context = {
             'tab': tab,
+            'snapshots': snapshots,
             'current_cadets': current_cadets,
             'at_risk_cadets': at_risk_cadets,
             'contracted_cadets': contracted_cadets,

@@ -1,5 +1,6 @@
 from django import template
 from personnel.models import MsLevel
+import calendar
 
 register = template.Library()
 
@@ -56,3 +57,7 @@ def phone_format(number):
 def class_filter(cadets, ms_class):
     ms = MsLevel.objects.get(name=ms_class)
     return cadets.filter(ms_level=ms)
+
+@register.filter(name='timestamp')
+def timestamp(snap):
+    return calendar.timegm(snap.timetuple()) * 1000

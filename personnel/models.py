@@ -41,7 +41,7 @@ class Users(models.Model):
     first_name = models.CharField(max_length=25)
     last_name = models.CharField(max_length=30)
     # pass this value to the set_password function get it hashed
-    password = models.CharField(max_length=128, blank=True, null=True)
+    password = models.CharField(max_length=128, blank=True, null=False)
     age = models.PositiveIntegerField(blank=False)
     email = models.EmailField(blank=True, validators=[validate_email])
 
@@ -158,8 +158,9 @@ class SnapShot(models.Model):
     """This model is meant to record data at certain time intervals.
     All data should be filtered to active cadets.
     Time interval: 3 times per semester (max)"""
-    date = models.DateField(auto_now_add=True)
-    class_year = models.ForeignKey(MsLevel)
+
+    #auto_now_add will need to be true at deployment unless we want to specify date manually
+    date = models.DateField(auto_now_add=False)
     cadets = models.PositiveIntegerField(default=0)
     males = models.PositiveIntegerField(default=0)
     females = models.PositiveIntegerField(default=0)
@@ -171,8 +172,11 @@ class SnapShot(models.Model):
     ms3_count = models.PositiveIntegerField(default=0)
     ms4_count = models.PositiveIntegerField(default=0)
 
-    avg_gpa = models.PositiveIntegerField(default=0)
-    avg_ms1_gpa = models.PositiveIntegerField(default=0)
-    avg_ms2_gpa = models.PositiveIntegerField(default=0)
-    avg_ms3_gpa = models.PositiveIntegerField(default=0)
-    avg_ms4_gpa = models.PositiveIntegerField(default=0)
+    avg_gpa = models.DecimalField(max_digits=3, decimal_places=2, default=0.0, null=True)
+    avg_ms1_gpa = models.DecimalField(max_digits=3, decimal_places=2, default=0.0, null=True)
+    avg_ms2_gpa = models.DecimalField(max_digits=3, decimal_places=2, default=0.0, null=True)
+    avg_ms3_gpa = models.DecimalField(max_digits=3, decimal_places=2, default=0.0, null=True)
+    avg_ms4_gpa = models.DecimalField(max_digits=3, decimal_places=2, default=0.0, null=True)
+
+    def __unicode__(self):
+        return self.date.strftime('%m %Y, %d')

@@ -166,13 +166,16 @@ class PtScore(models.Model):
     def get_score_value(self, value, score_value_dict, event='default'):
         """this function finds the highest grader key & value above a given value"""
         if event == 'pushups' or event == 'situps' or event == 'default':
+            if event == 'situps':
+                print value
+                print score_value_dict
             if str(value) in score_value_dict:
                 return score_value_dict[str(value)]
             else:
-                if value < max(score_value_dict):
-                    return '100'
-                else:
+                if value < int(min(score_value_dict)):
                     return '0'
+                elif value > int(max(score_value_dict)):
+                    return '100'
 
         if event == 'Two-mile run':
             stripped_score_value_dict = [int(x.replace(':', '')) for x in score_value_dict]
@@ -183,19 +186,18 @@ class PtScore(models.Model):
             else:
                 for key in stripped_score_value_dict:
                     if stripped_value < key:
-                        if stripped_value > key - 6:
-                            unstripped_value = str(key)
-                            unstripped_value = unstripped_value[:2] + ':' + unstripped_value[2:]
-                            try:
-                                return score_value_dict[unstripped_value]
-                            except KeyError:
-                                if key < max(stripped_score_value_dict):
-                                    return '100'
-                                else:
-                                    return '0'
+                        unstripped_value = str(key)
+                        unstripped_value = unstripped_value[:2] + ':' + unstripped_value[2:]
+                        try:
+                            return score_value_dict[unstripped_value]
+                        except KeyError:
+                            if key < max(stripped_score_value_dict):
+                                return '100'
+                            else:
+                                return '0'
             if stripped_value > max(stripped_score_value_dict):
                 return '100'
-            else:
+            elif stripped_value < min(stripped_score_value_dict):
                 return '0'
 
     def get_avg_pushups(self, scores):
@@ -213,6 +215,7 @@ class PtScore(models.Model):
         pushup_score_values = Grader.objects.get(gender=cadet.gender, activity='pushups',
                                                  age_group=age).get_ordered_dict()
         avg_pushups = self.get_avg_pushups(scores)
+
         return self.get_score_value(avg_pushups, pushup_score_values, event='pushups')
 
     def get_avg_situps(self, scores):

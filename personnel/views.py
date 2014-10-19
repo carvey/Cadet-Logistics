@@ -78,7 +78,7 @@ class CadetPage(View):
 
         # initializing pt related vars to 0 ahead of time, in case the cadet has no pt tests yet
         max_score = min_score = avg_score = avg_pushups = avg_situps = avg_two_mile = 0
-        avg_pushup_score = avg_pushup_score = avg_situp_score = avg_two_mile_score = 0
+        avg_pushup_score = avg_situp_score = avg_two_mile_score = 0
 
         ptscore = PtScore()
 
@@ -87,22 +87,13 @@ class CadetPage(View):
             min_score = ptscore.get_min_score(scores)
             avg_score = ptscore.get_avg_total_score(scores)
 
-            #queries for getting the Grader objects (score values)
-            age = scores[0].get_age_group()
-            pushup_score_values = Grader.objects.get(gender=cadet.gender, activity='pushups',
-                                                     age_group=age).get_ordered_dict()
-            situp_score_values = Grader.objects.get(gender=cadet.gender, activity='situps',
-                                                    age_group=age).get_ordered_dict()
-            two_mile_score_values = Grader.objects.get(gender=cadet.gender, activity='Two-mile run',
-                                                       age_group=age).get_ordered_dict()
-
             avg_pushups = ptscore.get_avg_pushups(scores)
             avg_situps = ptscore.get_avg_situps(scores)
             avg_two_mile = ptscore.get_avg_run_time(scores)
 
-            avg_pushup_score = ptscore.get_score_value(avg_pushups, pushup_score_values, event='pushups')
-            avg_situp_score = ptscore.get_score_value(avg_situps, situp_score_values, event='situps')
-            avg_two_mile_score = ptscore.get_score_value(avg_two_mile, two_mile_score_values, event='Two-mile run')
+            avg_pushup_score = ptscore.get_avg_pushup_score(cadet, scores)
+            avg_situp_score = ptscore.get_avg_situp_score(cadet, scores)
+            avg_two_mile_score = ptscore.get_avg_run_score(cadet, scores)
 
         context = {
             'cadet': cadet,

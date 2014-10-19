@@ -1,5 +1,4 @@
 from django import template
-from personnel.models import MsLevel
 
 register = template.Library()
 

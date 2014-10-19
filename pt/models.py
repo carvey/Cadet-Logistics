@@ -52,9 +52,23 @@ class PtTest(models.Model):
     def __unicode__(self):
         format_date = self.date.strftime('%d %b, %Y')
         return '%s PT Test' % format_date
-    
+
+    def getAddress(self):
+        return "/pt/tests/scores/%d" % self.id
+
+    def getAvgTotalScore(self):
+        pt_scores = PtScore.objects.filter(pt_test=self)
+        num_of_scores = len(pt_scores)
+        if num_of_scores == 0:
+            return 0
+        total=0
+        for pt_score in pt_scores:
+            total += pt_score.score
+        return total/num_of_scores
+
     class Meta:
-        db_table='PtTest'  
+        db_table='PtTest'
+
 
 #The PTscore information for each cadet. Indentified by a foreign key linking to a specific cadet
 class PtScore(models.Model):

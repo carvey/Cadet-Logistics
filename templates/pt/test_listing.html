@@ -1,20 +1,45 @@
-{% extends 'datatable_base.html' %}
+{#{% extends 'datatable_base.html' %}#}
+{#{% block page_header %}#}
+{#PT Test Listing Page#}
+{#{% endblock %}#}
+{##}
+{#{% block table_title %}#}
+{#PT Tests#}
+{#{% endblock %}#}
+{##}
+{#{% block columns%}#}
+{#	<th>PT Test</th>#}
+{#{% endblock %}#}
+{##}
+{#{% block table_data %}#}
+{#	{% for test in tests %}#}
+{#	<tr class="odd gradeX">#}
+{#		<td><a href="/pt/tests/scores/{{test.id}}">{{test}}</a></td>#}
+{#	</tr>#}
+{#	{% endfor %}#}
+{#{% endblock %}#}
+
+{% extends 'base.html' %}
 {% block page_header %}
 PT Test Listing Page
 {% endblock %}
 
-{% block table_title %}
-PT Tests
-{% endblock %}
-
-{% block columns%}
-	<th>PT Test</th>
-{% endblock %}
-
-{% block table_data %}
-	{% for test in tests %}
-	<tr class="odd gradeX">
-		<td><a href="/pt/tests/scores/{{test.id}}">{{test}}</a></td>
-	</tr>
-	{% endfor %}
+{% block content %}
+<div class="row">
+    {% for test in tests %}
+    <div class="col-lg-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <a href="{{ test.getAddress }}">
+                <h3 class="panel-title">{{ test }} <span class="glyphicon glyphicon-stats" style="float: right;"></span></h3>
+                </a>
+            </div>
+            <div class="panel-body">
+                <p>Info for {{ test }}</p>
+                <p>Avg score: {{ test.getAvgTotalScore }}</p>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
 {% endblock %}

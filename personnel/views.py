@@ -41,8 +41,8 @@ class Stats(View):
             return sum_gpa / cadets_with_gpa
 
         avg_gpa = get_avg_gpa()
-        completed_volunteer_hours = len(cadets.filter(volunteer_hours_completed=True))
-        not_completed_volunteer_hours = len(cadets.exclude(volunteer_hours_completed=True))
+        completed_volunteer_hours = len(cadets.filter(volunteer_hours_status=True))
+        not_completed_volunteer_hours = len(cadets.exclude(volunteer_hours_status=True))
 
         context = {
             'tab': tab,

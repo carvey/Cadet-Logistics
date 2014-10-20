@@ -18,6 +18,7 @@ def clear_cadets():
     for cadet in Cadet.objects.all():
         cadet.delete()
 
+
 def populate():
     #use this for when snapshots need testing, otherwise comment it out
     clear_cadets()
@@ -56,6 +57,11 @@ def populate():
     ms3 = MsLevel.objects.get(name="MS3")
     ms4 = MsLevel.objects.get(name="MS4")
 
+    add_demographic(demographic="White")
+    add_demographic(demographic="Black")
+    add_demographic(demographic="Asian")
+    add_demographic(demographic="American Indian")
+    add_demographic(demographic="Hispanic")
 
     add_cadet(first_name="Taylor", last_name="Cooper", age=20, ms_level=ms4, company=alpha, platoon=alpha1st)
     add_cadet(first_name="Jason", last_name="Canter", age=20, ms_level=ms4, company=alpha, platoon=alpha1st)
@@ -122,6 +128,9 @@ def populate():
     assign_contract_smp()
     assign_gender_to_males()
     generate_volunteer_completion()
+    assign_nursing_cadets()
+    assign_demographics()
+    assign_at_risk_cadets()
 
     generate_snapshots(date = datetime.date(2014, 6, 1), start=0, end=0)
     generate_snapshots(date = datetime.date(2014, 7, 1), start=0, end=3)
@@ -162,6 +171,9 @@ def add_pt_test(date, ms_lvl_4):
     pt_test = PtTest.objects.get_or_create(date=date, MsLevelFour=ms_lvl_4)
     return pt_test
 
+def add_demographic(demographic):
+    demo = Demographic.objects.get_or_create(demographic=demographic)
+    return demo
 
 def create_pt_scores():
     grader_list = Cadet.objects.filter(ms_level__name='MS4' and 'MS3')
@@ -215,12 +227,14 @@ def assign_cell_num():
         starting_num += 4
         cadet.save()
 
+
 def assign_email():
     starting_num = 00000
     for cadet in cadets:
-        cadet.email = cadet.first_name[:1] + cadet.last_name + str(starting_num) + '@georgiasouthern.edu'
+        cadet.email = cadet.first_name[:1].lower() + cadet.last_name.lower() + str(starting_num) + '@georgiasouthern.edu'
         starting_num += 75
         cadet.save()
+
 
 def assign_gpa():
     for cadet in cadets:
@@ -243,18 +257,44 @@ def assign_contract_smp():
             cadet.smp = True
         cadet.save()
 
+
 def generate_volunteer_completion():
     for cadet in cadets:
         rand = random.randint(0, 20)
         if rand % 3 == 0:
             cadet.volunteer_hours_status = True
-        cadet.save()
+            cadet.save()
 
 
 def assign_gender_to_males():
     for cadet in cadets:
         if cadet.gender != "Female":
             cadet.gender = "Male"
+
+
+def assign_at_risk_cadets():
+    for cadet in cadets:
+        rand = random.randint(0, 20)
+        if rand % 8 == 0:
+            cadet.at_risk = True
+            cadet.save()
+
+
+def assign_nursing_cadets():
+    for cadet in cadets:
+        rand = random.randint(0, 20)
+        if rand % 8 == 0:
+            cadet.nurse_contracted = True
+            cadet.save()
+
+
+def assign_demographics():
+    if Demographic.objects.all():
+        for cadet in cadets:
+            demographics_count = Demographic.objects.all().__len__()
+            rand = random.randint(1, demographics_count)
+            cadet.demographic = Demographic.objects.get(id=rand)
+            cadet.save()
 
 def get_gpa(cadets):
         sum_gpa = 0
@@ -266,6 +306,7 @@ def get_gpa(cadets):
         if cadets_with_gpa == 0:
             return 0
         return sum_gpa / cadets_with_gpa
+
 
 def generate_snapshots(date, start, end):
     current_cadets = Cadet.objects.all()[start:end].__len__()
@@ -290,11 +331,18 @@ def generate_snapshots(date, start, end):
     avg_ms3_gpa = get_gpa(cadets.filter(ms_level=ms3))
     avg_ms4_gpa = get_gpa(cadets.filter(ms_level=ms4))
 
+    try:
+        SnapShot.objects.get(date=date)
+        return None
+    except:
+        pass
+
     snap = SnapShot.objects.get_or_create(date=date, cadets=current_cadets, males=males, females=females, contracted_cadets=contracted_cadets,
                                           smp_cadets=smp_cadets, ms1_count=ms1_count, ms2_count=ms2_count, ms3_count=ms3_count,
                                           ms4_count=ms4_count, avg_gpa=avg_gpa, avg_ms1_gpa=avg_ms1_gpa, avg_ms2_gpa=avg_ms2_gpa,
                                           avg_ms3_gpa=avg_ms3_gpa, avg_ms4_gpa=avg_ms4_gpa)
     return snap
+
 
 def create_graders():
     # Male two-mile graders

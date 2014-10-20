@@ -61,3 +61,9 @@ def class_filter(cadets, ms_class):
 @register.filter(name='timestamp')
 def timestamp(snap):
     return calendar.timegm(snap.timetuple()) * 1000
+
+@register.filter(name='demographics')
+def demographics(demos, key):
+    print demos
+    print key
+    return demos.get(key)

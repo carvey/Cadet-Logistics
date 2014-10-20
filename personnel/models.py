@@ -44,6 +44,7 @@ class Users(models.Model):
     password = models.CharField(max_length=128, blank=True, null=False)
     age = models.PositiveIntegerField(blank=False)
     email = models.EmailField(blank=True, validators=[validate_email])
+    demographic = models.ForeignKey(Demographic, blank=True, null=True)
 
     def __unicode__(self):
         return self.last_name + ", " + self.first_name
@@ -78,7 +79,6 @@ class Cadet(Users):
     eagle_id = models.PositiveIntegerField(default=0, blank=False, null=True)
     gender = models.CharField(max_length=6, choices=GENDER_CHOICES, blank=False, null=True)
     school = models.ForeignKey(School, blank=True, null=True)
-    demographic = models.ManyToManyField(Demographic)
 
     # #
     company = models.ForeignKey(Company, blank=True, null=True)

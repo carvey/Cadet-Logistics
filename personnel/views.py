@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.views.generic import View
 
-from personnel.models import Cadet, Company, MsLevel, Platoon, SnapShot
+from personnel.models import Cadet, Company, MsLevel, Platoon, SnapShot, Demographic
 from pt.models import PtScore, Grader
 
 # Create your views here.
@@ -24,11 +24,21 @@ class Stats(View):
         at_risk_cadets = cadets.filter(at_risk=True)
         contracted_cadets = cadets.filter(contracted=True)
         smp_cadets = cadets.filter(contracted=True)
+        nursing_contracted = cadets.filter(nurse_contracted=True)
+        demographics = Demographic.objects.all()
 
         snapshots = SnapShot.objects.all()
 
         male_cadets = cadets.filter(gender='male')
         female_cadets = cadets.filter(gender='female')
+
+        demo_dict = {}
+        for demo in demographics:
+            demo_dict[demo.demographic] = 0
+
+        for cadet in cadets:
+            if cadet.demographic:
+                demo_dict[cadet.demographic.demographic] += 1
 
         # consider moving to utils
         def get_avg_gpa():
@@ -40,7 +50,7 @@ class Stats(View):
                     sum_gpa = sum_gpa + cadet.gpa
             return sum_gpa / cadets_with_gpa
 
-        avg_gpa = get_avg_gpa()
+        avg_gpa = round(get_avg_gpa(), 2)
         completed_volunteer_hours = len(cadets.filter(volunteer_hours_status=True))
         not_completed_volunteer_hours = len(cadets.exclude(volunteer_hours_status=True))
 
@@ -50,6 +60,8 @@ class Stats(View):
             'current_cadets': current_cadets,
             'at_risk_cadets': at_risk_cadets,
             'contracted_cadets': contracted_cadets,
+            'nursing_contracted': nursing_contracted,
+            'demographics': demo_dict,
             'smp_cadets': smp_cadets,
             'male_cadets': male_cadets,
             'female_cadets': female_cadets,

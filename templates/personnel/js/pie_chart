@@ -5,7 +5,8 @@
 //NOTE -- If a data series contains 0 values, all flot charts on the page will freak out
 $(function() {
 
-    var data = [{
+    var data = [
+    {
         label: "Males",
         data: {{ male_cadets.count }},
         color: "#476B6B",
@@ -18,9 +19,27 @@ $(function() {
     var plotObj = $.plot($("#gender_comparison"), data, {
         series: {
             pie: {
-                show: true
-            }
+                show: true,
+                radius: 1,
+                label: {
+                    show: true,
+                    radius: 2/3,
+                    formatter: function(label, series) {
+                    return '<div style="font-size:14px ;text-align:center; padding:2px; color:white;">'+label+'<br/>'+Math.round(series.percent)+'%</div>';
+                    },
+                    threshold: 0.1,
+                    background: {
+                        opacity: 0.2,
+                        color: "#444"
+                    }
+                }
+            },
+
         },
+        legend: {
+                show: false
+            },
+
         grid: {
             hoverable: true
         },
@@ -35,28 +54,40 @@ $(function() {
         }
     });
 
-    {% if volunteer_hours != 0 and not_volunteer_hours != 0 %}
 
-    var volunteer_data =
-    [
-        {
-            label: "Completed",
-            data: {{ volunteer_hours }},
-
-        },
-        {
-            label: "Not Completed",
-            data: {{ not_volunteer_hours }},
-            color: "#476B6B",
-        }
+    var demographics =
+    [   {% for demo in demographics %}
+            {
+                label: "{{ demo }}",
+                data: {{ demographics|demographics:demo }},
+            },
+        {% endfor %}
     ];
 
-    var volunteer_hours = $.plot($("#volunteer_hours"), volunteer_data, {
+    var demographics = $.plot($("#demographics"), demographics, {
         series: {
             pie: {
-                show: true
-            }
+                show: true,
+                radius: 1,
+                label: {
+                    show: true,
+                    radius: 2/3,
+                    formatter: function(label, series) {
+                    return '<div style="font-size:14px ;text-align:center; padding:2px; color:white;">'+label+'<br/>'+Math.round(series.percent)+'%</div>';
+                    },
+                    threshold: 0.1,
+                    background: {
+                        opacity: 0.2,
+                        color: "#444"
+                    }
+                }
+            },
+
         },
+        legend: {
+                show: false
+            },
+
         grid: {
             hoverable: true
         },
@@ -70,7 +101,6 @@ $(function() {
             defaultTheme: false
         }
     });
-    {% endif %}
 
 
     var ms_data = [
@@ -96,9 +126,27 @@ $(function() {
     var ms_graph = $.plot($("#class_breakdown"), ms_data, {
         series: {
             pie: {
-                show: true
-            }
+                show: true,
+                radius: 1,
+                label: {
+                    show: true,
+                    radius: 2/3,
+                    formatter: function(label, series) {
+                    return '<div style="font-size:14px ;text-align:center; padding:2px; color:white;">'+label+'<br/>'+Math.round(series.percent)+'%</div>';
+                    },
+                    threshold: 0.1,
+                    background: {
+                        opacity: 0.2,
+                        color: "#444"
+                    }
+                }
+            },
+
         },
+        legend: {
+                show: false
+            },
+
         grid: {
             hoverable: true
         },

@@ -101,7 +101,6 @@ class TestListingView(View):
 
     def get(self, request):
         pt_tests = PtTest.objects.all()
-        pt_tests[0].getAvgTotalScore()
         context = {
             'tests': pt_tests,
         }

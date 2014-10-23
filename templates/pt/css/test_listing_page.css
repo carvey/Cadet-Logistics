@@ -1,0 +1,8 @@
+.panel-test-list {
+    border-top: #DFDFDF 1px solid;
+    padding-top: 10px;
+    padding-bottom: 5px;
+}
+.test-list-value {
+    float: right;
+}

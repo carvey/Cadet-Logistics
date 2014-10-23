@@ -1,0 +1,49 @@
+<script>
+    $(function() {
+
+        var data = [
+            {
+                label: "Avg Score",
+                data: {{ avgScore }},
+                color: "#2C9930"
+            },
+            {
+                label: "",
+                data: 300-{{ avgScore }},
+                color: "#CCC"
+            }
+        ];
+
+        $.plot($("#test-{{ test.id }}"), data, {
+            series: {
+                pie: {
+                    show: true,
+                    innerRadius: 50,
+                    radius: 80,
+                    label: {
+                        show: true,
+                        radius: 0,
+                        formatter: function (label, series) {
+                            if(label != "")
+                                return '<div style="font-size:14px ;text-align:center; padding:2px; color:white;">' + label + '<br/>' + series.data[0][1] + '</div>';
+                            else
+                                return ''
+                        },
+                        threshold: 0.1,
+                        background: {
+                            opacity: 0.8,
+                            color: "#2C9930"
+                        }
+                    },
+                    offset: {
+                        top: 0,
+                        left: -10
+                    }
+                }
+            },
+            legend: {
+                show: false
+            },
+        });
+    });
+</script>

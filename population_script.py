@@ -141,7 +141,7 @@ def populate():
     generate_snapshots(date = datetime.date(2014, 12, 1), start=0, end=30)
 
     create_graders()
-    # generate_pt_score_value()
+    #generate_pt_score_value()
 
 
 def add_company(name, co=None, fs=None):

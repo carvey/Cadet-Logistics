@@ -4,7 +4,7 @@ from itertools import cycle
 
 from django.db import models
 from datetime import datetime
-from personnel.models import MsLevel
+from personnel.models import Cadet
 from django.core.validators import RegexValidator
 
 male='Male'
@@ -65,6 +65,26 @@ class PtTest(models.Model):
         for pt_score in pt_scores:
             total += pt_score.score
         return total/num_of_scores
+
+    def getNumberOfScores(self):
+        return len(PtScore.objects.filter(pt_test=self))
+
+    def getHighestScore(self):
+        scores = PtScore.objects.filter(pt_test=self)
+        highest_score = scores[0].score
+        for score in scores:
+            if score.score > highest_score:
+                highest_score = score.score
+
+        return highest_score
+
+    def getLowestScore(self):
+        scores = PtScore.objects.filter(pt_test=self)
+        lowest_score = scores[0].score
+        for score in scores:
+            if score.score < lowest_score:
+                lowest_score = score.score
+        return lowest_score
 
     class Meta:
         db_table='PtTest'

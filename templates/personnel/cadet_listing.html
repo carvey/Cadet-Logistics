@@ -1,4 +1,4 @@
-{% extends 'datatable_base.html' %}
+{% extends 'datatables/datatable_base.html' %}
 
 <!-- The Title of the page -->
 {% block page_header %}
@@ -28,8 +28,8 @@
 	{% for cadet in cadets %}
 	   <tr class="odd gradeX">
 	       <td><a href = "/personnel/cadets/{{cadet.id}}">{{cadet.last_name}}, {{cadet.first_name}}</a></td>
-	       <td><a href = "/personnel/companycadets/{{cadet.company}}">{{cadet.company}}</a></td>
-	       <td><a href = "/personnel/mscadets/{{cadet.ms_level}}">{{cadet.ms_level}}</a></td>
+	       <td><a href = "/personnel/companys/{{cadet.company}}">{{cadet.company}}</a></td>
+	       <td><a href = "/personnel/ms-classes/{{cadet.ms_level}}">{{cadet.ms_level}}</a></td>
 	       <td>{{cadet.contracted}}</td>
 	       <td>{{cadet.smp}}</td>
 	       <td>({{cadet.cell_number|slice:":3"}})-{{cadet.cell_number|slice:"3:6"}}-{{cadet.cell_number|slice:"6:10"}}</td>

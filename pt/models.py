@@ -200,9 +200,6 @@ class PtScore(models.Model):
     def get_score_value(self, value, score_value_dict, event='default'):
         """this function finds the highest grader key & value above a given value"""
         if event == 'pushups' or event == 'situps' or event == 'default':
-            if event == 'situps':
-                print value
-                print score_value_dict
             if str(value) in score_value_dict:
                 return score_value_dict[str(value)]
             else:

@@ -1,7 +1,7 @@
-{% extends 'datatable_base.html' %}
+{% extends 'datatables/datatable_base.html' %}
 
 {% block page_header %}
-Military Science Levels Listing
+Military Science Classes Listing
 {% endblock %}
 
 {% block table_title %}
@@ -15,7 +15,7 @@ Military Science Levels Listing
 {% block table_data %}
 	{% for class in ms_classes %}
 		<tr class="odd gradeX">
-			<td><a href = "/personnel/mscadets/{{class.name}}">{{class.name}} Class</a></td>
+			<td><a href = "/personnel/ms-classes/{{class.name}}">{{class.name}} Class</a></td>
 		</tr>
 	{% endfor %}
 {% endblock %}

@@ -1,4 +1,4 @@
-{% extends 'datatable_base.html' %}
+{% extends 'datatables/datatable_base.html' %}
 
 {% block page_header %}
 	PT Scores
@@ -19,7 +19,7 @@
 {% block table_data %}
 	{% for score in scores %}
 		<tr class="odd gradeX">
-				<td>{{score.cadet}}</td>
+				<td><a href="/personnel/cadets/{{ score.cadet.id }}/pt/">{{score.cadet}}</a></td>
 				<td>{{score.pushups}}</td>
 				<td>{{score.situps}}</td>
 				<td>{{score.get_run_time_str}}</td> <!-- Not sorting properly. May have to do with creating in pop script -->

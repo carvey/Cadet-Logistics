@@ -127,6 +127,26 @@ class CadetPage(View):
         return render(request, self.template_name, context)
 
 
+class CompanyDetail(View):
+    template = 'personnel/grouping_profile.html'
+
+    def get(self, request, company_name, tab='stats'):
+        company = Company.objects.get(name=company_name)
+        group = "%s Company" % company.name
+        groups = Platoon.objects.filter(company=company)
+        link = "platoons"
+        listing_template = 'personnel/grouping_listing.html'
+
+        context = {'tab': tab,
+                   'company': company,
+                   'group': group,
+                   'groups': groups,
+                   'link': link,
+                   'listing_template': listing_template,
+                   }
+        return render(request, self.template, context)
+
+
 class CompanyListing(View):
     template_name = 'personnel/company_listing.html'
 
@@ -146,6 +166,25 @@ class CompanyCadetListing(View):
         return render(request, self.template_name, {'company': company, 'cadets': cadets})
 
 
+class MSLevelDetail(View):
+    template = 'personnel/grouping_profile.html'
+
+    def get(self, request, ms_class, tab='stats'):
+        ms_level = MsLevel.objects.get(name=ms_class)
+        group = "%s Class" % ms_level.name
+        groups = Cadet.objects.filter(ms_level=ms_level)
+        link = "/personnel/cadets"
+        listing_template = 'personnel/grouping_listing.html'
+
+        context = {'tab': tab,
+                   'group': group,
+                   'groups': groups,
+                   'link': link,
+                   'listing_template': listing_template,
+                   }
+        return render(request, self.template, context)
+
+
 class MSlevelListing(View):
     template_name = 'personnel/ms_listing.html'
 
@@ -162,3 +201,31 @@ class MScadetListing(View):
         ms_class = MsLevel.objects.get(name=ms_class)
         cadets = Cadet.objects.filter(ms_level=ms_class)
         return render(request, self.template_name, {'ms_class': ms_class, 'cadets': cadets})
+
+
+class PlatoonDetail(View):
+    template = 'personnel/grouping_profile.html'
+
+    def get(self, request, company_name, platoon_id, tab='stats'):
+        company = Company.objects.get(name=company_name)
+        platoon = Platoon.objects.get(id=platoon_id, company=company)
+        group = "%s Platoon" % platoon.name
+        groups = Cadet.objects.filter(platoon=platoon)
+        link = "/personnel/cadets"
+        listing_template = 'personnel/grouping_listing.html'
+
+        context = {'tab': tab,
+                   'platoon': platoon,
+                   'group': group,
+                   'groups': groups,
+                   'link': link,
+                   'listing_template': listing_template,
+                   }
+        return render(request, self.template, context)
+
+
+class PlatoonListing(View):
+    template = ''
+
+    def get(self, request):
+        return render(request, self.template, {})

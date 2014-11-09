@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+
+{% block page_header %}
+{{ group }}
+{% endblock %}
+
+{% block content %}
+	<ul class='nav nav-tabs'>
+		<li {% if tab == "stats" %}class="active"{% endif %}><a href="#stats" data-toggle="tab">Stats</a></li>
+		<li {% if tab == "listing" %}class="active"{% endif %}><a href="#listing" data-toggle="tab">Listing</a></li>
+	</ul>
+	
+	<div class="tab-content">
+		
+		<div class='tab-pane fade{% if tab == "stats" %} in active{% endif %}' id='stats'>
+{#			{% include 'personnel/stats_cadets.html' %}#}
+		</div>
+		
+		
+		<div class='tab-pane fade{% if tab == "listing" %} in active{% endif %} ' id='listing'>
+			{% include listing_template %}
+		</div>
+
+		</div>
+	</div>
+{% endblock %}
+
+{% block page_scripts %}
+	<script src="{% static 'js/plugins/flot/jquery.flot.js' %}"></script>
+    <script src="{% static 'js/plugins/flot/jquery.flot.time.js'  %}"></script>
+	<script src="{% static 'js/plugins/flot/jquery.flot.tooltip.min.js' %}"></script>
+    <script src="{% static 'js/plugins/flot/jquery.flot.pie.js' %}"></script>
+{% endblock %}

@@ -131,7 +131,7 @@ class Cadre(Users):
 
 class Platoon(models.Model):
     """Each Platoon can only belong to one company."""
-    name = models.CharField(max_length=15, default="1st Platoon")
+    name = models.PositiveIntegerField(default=1, blank=False)
     company = models.ForeignKey(Company, db_index=False, related_name='company', blank=True, null=True)
 
     class Meta:
@@ -139,7 +139,7 @@ class Platoon(models.Model):
 
     def __unicode__(self):
         if self.company:
-            return str(self.company) + ": " + self.name
+            return str(self.company) + " " + str(self.name) + " Platoon"
         else:
             return self.name
 
@@ -154,6 +154,10 @@ class MsLevel(models.Model):
         db_table = 'MsLevel'
 
 
+class Year(models.Model):
+    year = models.CharField(max_length=9, blank=False, default="2014-2015")
+
+
 class SnapShot(models.Model):
     """This model is meant to record data at certain time intervals.
     All data should be filtered to active cadets.
@@ -161,6 +165,7 @@ class SnapShot(models.Model):
 
     #auto_now_add will need to be true at deployment unless we want to specify date manually
     date = models.DateField(auto_now_add=False)
+    year = models.ForeignKey(Year, null=True)
     cadets = models.PositiveIntegerField(default=0)
     males = models.PositiveIntegerField(default=0)
     females = models.PositiveIntegerField(default=0)

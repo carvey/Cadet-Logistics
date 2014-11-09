@@ -64,6 +64,4 @@ def timestamp(snap):
 
 @register.filter(name='demographics')
 def demographics(demos, key):
-    print demos
-    print key
     return demos.get(key)

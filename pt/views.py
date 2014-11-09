@@ -158,7 +158,6 @@ class StatisticsView(View):
                 total_score += pt_score.score
             avg_score = float(total_score)/total_num
             avg_pt_scores["%s" % pt_test] = avg_score
-        print avg_pt_scores
         context = {
             'data' : avg_pt_scores,
         }

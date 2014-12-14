@@ -1,19 +1,17 @@
-from django.shortcuts import render, render_to_response, redirect
-from django.http import HttpResponse, HttpResponseRedirect
-from django.template import RequestContext
+from django.shortcuts import render
 from django.views.generic import View
-
 from personnel.models import Cadet, Company, MsLevel, Platoon, SnapShot, Demographic
-from pt.models import PtScore, Grader
+from pt.models import PtScore, PtTest, Grader
+import collections
 
 # Create your views here.
 
-class index(View):
+
+class Index(View):
     template_name = "index.html"
 
     def get(self, request):
         return render(request, self.template_name, {})
-
 
 class Stats(View):
     template_name = 'personnel/personnel_stats.html'
@@ -40,17 +38,7 @@ class Stats(View):
             if cadet.demographic:
                 demo_dict[cadet.demographic.demographic] += 1
 
-        # consider moving to utils
-        def get_avg_gpa():
-            sum_gpa = 0
-            cadets_with_gpa = 0
-            for cadet in cadets:
-                if cadet.gpa > 0:
-                    cadets_with_gpa += 1
-                    sum_gpa = sum_gpa + cadet.gpa
-            return sum_gpa / cadets_with_gpa
-
-        avg_gpa = round(get_avg_gpa(), 2)
+        avg_gpa = Cadet.get_avg_gpa(current_cadets)
         completed_volunteer_hours = len(cadets.filter(volunteer_hours_status=True))
         not_completed_volunteer_hours = len(cadets.exclude(volunteer_hours_status=True))
 
@@ -136,6 +124,26 @@ class CompanyDetail(View):
         groups = Platoon.objects.filter(company=company)
         link = "platoons"
         listing_template = 'personnel/grouping_listing.html'
+
+        cadets = Cadet.objects.filter(company=company)
+        count = cadets.count()
+        contracted = cadets.filter(contracted=True)
+        smp = cadets.filter(smp=True)
+        avg_gpa = Cadet.get_avg_gpa(cadets)
+        at_risk = cadets.filter(at_risk=True)
+        # test = PtTest.objects.all().order_by('-id')[0]
+        # scores = PtScore.objects.filter(pt_test=test)
+        #top_pt_cadets = test.get_n_highest_scores(cadets, scores, 3)
+
+        all_scores = PtScore.objects.all()
+        avg_scores = {}
+        ptscore = PtScore()
+        for cadet in cadets:
+            scores = all_scores.filter(cadet=cadet)
+            avg_scores[cadet] = ptscore.get_avg_total_score(scores)
+        avg_scores = collections.OrderedDict(reversed(sorted(avg_scores.items(), key=lambda t: t[1])))
+        top_scores = avg_scores
+
 
         context = {'tab': tab,
                    'company': company,

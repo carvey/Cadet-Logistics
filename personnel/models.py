@@ -116,6 +116,17 @@ class Cadet(Users):
     def get_name(self):
         return '%s %s' % (self.first_name, self.last_name)
 
+    #function used to return the avg gpa of a set of cadets
+    @staticmethod
+    def get_avg_gpa(cadets):
+        sum_gpa = 0
+        cadets_with_gpa = 0
+        for cadet in cadets:
+            if cadet.gpa > 0:
+                cadets_with_gpa += 1
+                sum_gpa = sum_gpa + cadet.gpa
+        return round(sum_gpa / cadets_with_gpa, 2)
+
     class Meta:
         db_table = 'Cadet'
 

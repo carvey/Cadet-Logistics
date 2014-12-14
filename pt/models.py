@@ -6,6 +6,7 @@ from django.db import models
 from datetime import datetime
 from personnel.models import Cadet
 from django.core.validators import RegexValidator
+from population_script import add_pt_test
 
 male='Male'
 female='Female'
@@ -66,8 +67,10 @@ class PtTest(models.Model):
             total += pt_score.score
         return total/num_of_scores
 
+
     def getNumberOfScores(self):
         return len(PtScore.objects.filter(pt_test=self))
+
 
     def getHighestScore(self):
         scores = PtScore.objects.filter(pt_test=self)
@@ -77,6 +80,28 @@ class PtTest(models.Model):
                 highest_score = score.score
 
         return highest_score
+
+    def get_highest_scoring_cadet(self, scores):
+        highest_scoring_cadet = scores[0].cadet
+        highest_score = scores[0]
+        for score in scores:
+            if score.score > highest_score.score:
+                highest_score = score
+                highest_scoring_cadet = score.cadet
+        #returns {cadet : score}
+        return {highest_scoring_cadet: highest_score}
+
+    #returns the n highest scores over a set/subset of cadets
+    def get_n_highest_scores(self, cadets, scores, n):
+        winners = collections.OrderedDict()
+        for score in scores:
+            if score.cadet not in cadets:
+                    scores = scores.exclude(id=score.id)
+        for count in range(0, n):
+            current_winner = self.get_highest_scoring_cadet(scores)
+            winners.update(current_winner)
+            scores = scores.exclude(id=current_winner.values()[0].id)
+        return winners
 
     def getLowestScore(self):
         scores = PtScore.objects.filter(pt_test=self)

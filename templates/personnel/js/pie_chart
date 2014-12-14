@@ -106,20 +106,20 @@ $(function() {
     var ms_data = [
     {
         label: "MS1's",
-        data: {{ current_cadets|class_filter:'ms1'|length }},
+        data: {{ cadets|class_filter:'ms1'|length }},
         color: "#476B6B",
     },
     {
         label: "MS2's",
-        data: {{ current_cadets|class_filter:'ms2'|length }},
+        data: {{ cadets|class_filter:'ms2'|length }},
     },
     {
         label: "MS3's",
-        data: {{ current_cadets|class_filter:'ms3'|length }},
+        data: {{ cadets|class_filter:'ms3'|length }},
     },
     {
         label: "MS4's",
-        data: {{ current_cadets|class_filter:'ms4'|length }},
+        data: {{ cadets|class_filter:'ms4'|length }},
     },
     ];
 

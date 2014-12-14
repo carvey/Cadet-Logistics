@@ -19,7 +19,9 @@
                 Heading Test
             </div>
             <div class="panel-body">
-                Body text
+                <div><h3>Current Cadets: {{ cadets.count }}</h3></div>
+                <div><h3>Contracted cadets: {{ contracted.count }}</h3></div>
+                <div><h3>SMP Cadets: {{ smp.count }}</h3></div>
             </div>
         </div>
     </div>
@@ -27,11 +29,55 @@
     <div class="col-md-4">
         <div class="panel panel-default">
             <div class="panel-heading">
-                Heading stuff
+                Misc Data
             </div>
             <div class="panel-body">
-                Body info
+                <div><h3>Avg. GPA: {{ avg_gpa }}</h3></div>
+                <div><h3>At Risk Cadets: {{ at_risk.count }}</h3></div>
+                <div><h3>Profiles: {{ profiles.count }}</h3></div>
             </div>
         </div>
     </div>
+</div>
+
+<div class='row'>
+<div class='col-md-4'>
+		<div class='panel panel-default'>
+			<div class='panel-heading'>
+				Gender Comparison
+			</div>
+			<div class='panel-body'>
+                <div class="flot-chart">
+                    <div class="flot-chart-content" id="gender_comparison"></div>
+                </div>
+			</div>
+		</div>
+	</div>
+
+	<div class='col-md-4'>
+		<div class='panel panel-default'>
+			<div class='panel-heading'>
+				Demographics Breakdown
+			</div>
+			<div class='panel-body'>
+                    <div class="flot-chart">
+                        <div class="flot-chart-content" id="demographics"></div>
+                    </div>
+			</div>
+		</div>
+	</div>
+
+	<div class='col-md-4'>
+		<div class='panel panel-default'>
+			<div class='panel-heading'>
+				MS Level Breakdown
+			</div>
+			<div class='panel-body'>
+				<div class="flot-chart">
+                    <div class="flot-chart-content" id="class_breakdown"></div>
+                </div>
+			</div>
+		</div>
+	</div>
+
 </div>

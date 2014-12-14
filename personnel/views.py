@@ -45,7 +45,7 @@ class Stats(View):
         context = {
             'tab': tab,
             'snapshots': snapshots,
-            'current_cadets': current_cadets,
+            'cadets': current_cadets,
             'at_risk_cadets': at_risk_cadets,
             'contracted_cadets': contracted_cadets,
             'nursing_contracted': nursing_contracted,
@@ -131,10 +131,12 @@ class CompanyDetail(View):
         smp = cadets.filter(smp=True)
         avg_gpa = Cadet.get_avg_gpa(cadets)
         at_risk = cadets.filter(at_risk=True)
+        profiles = cadets.filter(on_profile=True)
         # test = PtTest.objects.all().order_by('-id')[0]
         # scores = PtScore.objects.filter(pt_test=test)
         #top_pt_cadets = test.get_n_highest_scores(cadets, scores, 3)
 
+        #Get the top 3 cadets
         all_scores = PtScore.objects.all()
         avg_scores = {}
         ptscore = PtScore()
@@ -142,15 +144,28 @@ class CompanyDetail(View):
             scores = all_scores.filter(cadet=cadet)
             avg_scores[cadet] = ptscore.get_avg_total_score(scores)
         avg_scores = collections.OrderedDict(reversed(sorted(avg_scores.items(), key=lambda t: t[1])))
-        top_scores = avg_scores
-
+        top_scores = collections.OrderedDict()
+        count = 0
+        for x, y in avg_scores.items():
+            top_scores.update({x: y})
+            count += 1
+            if count > 3: #the number of top cadets to get
+                break
 
         context = {'tab': tab,
+                   'cadets': cadets,
                    'company': company,
                    'group': group,
                    'groups': groups,
                    'link': link,
                    'listing_template': listing_template,
+                   'contracted': contracted,
+                   'smp': smp,
+                   'avg_gpa': avg_gpa,
+                   'at_risk': at_risk,
+                   'profiles': profiles,
+                   'top_scores': top_scores,
+
                    }
         return render(request, self.template, context)
 

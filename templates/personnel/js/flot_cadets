@@ -28,7 +28,7 @@
 	            },
 	            yaxis: {
 	                min: 0,
-	                max: {{ current_cadets|length }} + 10
+	                max: {{ cadets|length }} + 10
 	            },
 	            xaxis: {
 	            	mode: "time"

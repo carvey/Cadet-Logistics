@@ -270,7 +270,7 @@ def assign_contract_smp():
 def generate_volunteer_completion():
     for cadet in cadets:
         rand = random.randint(0, 20)
-        if rand % 3 == 0:
+        if rand % 2 == 0:
             cadet.volunteer_hours_status = True
             cadet.save()
 

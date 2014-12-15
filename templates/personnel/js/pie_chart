@@ -54,55 +54,56 @@ $(function() {
         }
     });
 
+    {% if demographics %}
+        var demographics =
+        [   {% for demo in demographics %}
+                {
+                    label: "{{ demo }}",
+                    data: {{ demographics|demographics:demo }},
+                },
+            {% endfor %}
+        ];
 
-    var demographics =
-    [   {% for demo in demographics %}
-            {
-                label: "{{ demo }}",
-                data: {{ demographics|demographics:demo }},
-            },
-        {% endfor %}
-    ];
-
-    var demographics = $.plot($("#demographics"), demographics, {
-        series: {
-            pie: {
-                show: true,
-                radius: 1,
-                label: {
+        var demographics = $.plot($("#demographics"), demographics, {
+            series: {
+                pie: {
                     show: true,
-                    radius: 2/3,
-                    formatter: function(label, series) {
-                    return '<div style="font-size:14px ;text-align:center; padding:2px; color:white;">'+label+'<br/>'+Math.round(series.percent)+'%</div>';
-                    },
-                    threshold: 0.1,
-                    background: {
-                        opacity: 0.2,
-                        color: "#444"
+                    radius: 1,
+                    label: {
+                        show: true,
+                        radius: 2/3,
+                        formatter: function(label, series) {
+                        return '<div style="font-size:14px ;text-align:center; padding:2px; color:white;">'+label+'<br/>'+Math.round(series.percent)+'%</div>';
+                        },
+                        threshold: 0.1,
+                        background: {
+                            opacity: 0.2,
+                            color: "#444"
+                        }
                     }
-                }
+                },
+
             },
+            legend: {
+                    show: false
+                },
 
-        },
-        legend: {
-                show: false
+            grid: {
+                hoverable: true
             },
+            tooltip: true,
+            tooltipOpts: {
+                content: "%p.0%, %s", // show percentages, rounding to 2 decimal places
+                shifts: {
+                    x: 20,
+                    y: 0
+                },
+                defaultTheme: false
+            }
+        });
+    {% endif %}
 
-        grid: {
-            hoverable: true
-        },
-        tooltip: true,
-        tooltipOpts: {
-            content: "%p.0%, %s", // show percentages, rounding to 2 decimal places
-            shifts: {
-                x: 20,
-                y: 0
-            },
-            defaultTheme: false
-        }
-    });
-
-
+    /*
     var ms_data = [
     {
         label: "MS1's",
@@ -160,5 +161,55 @@ $(function() {
             defaultTheme: false
         }
     });
+    */
+
+    var volunteer_completion = [
+    {
+        label: "Completed",
+        data: 2,
+        color: "#476B6B",
+    }, {
+        label: "Not Completed",
+        data: {{ cadets.count }},
+    }];
+
+    var volunteers = $.plot($("#volunteer_completion"), volunteer_completion, {
+        series: {
+            pie: {
+                show: true,
+                radius: 1,
+                label: {
+                    show: true,
+                    radius: 2/3,
+                    formatter: function(label, series) {
+                    return '<div style="font-size:14px ;text-align:center; padding:2px; color:white;">'+label+'<br/>'+Math.round(series.percent)+'%</div>';
+                    },
+                    threshold: 0.1,
+                    background: {
+                        opacity: 0.2,
+                        color: "#444"
+                    }
+                }
+            },
+
+        },
+        legend: {
+                show: false
+            },
+
+        grid: {
+            hoverable: true
+        },
+        tooltip: true,
+        tooltipOpts: {
+            content: "%p.0%, %s", // show percentages, rounding to 2 decimal places
+            shifts: {
+                x: 20,
+                y: 0
+            },
+            defaultTheme: false
+        }
+    });
 });
+
 </script>

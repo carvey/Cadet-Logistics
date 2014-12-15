@@ -125,16 +125,16 @@ class CompanyDetail(View):
         link = "platoons"
         listing_template = 'personnel/grouping_listing.html'
 
+        #TODO Once we figure this page out, a lot of this needs to be abstracted
         cadets = Cadet.objects.filter(company=company)
-        count = cadets.count()
         contracted = cadets.filter(contracted=True)
         smp = cadets.filter(smp=True)
         avg_gpa = Cadet.get_avg_gpa(cadets)
         at_risk = cadets.filter(at_risk=True)
         profiles = cadets.filter(on_profile=True)
-        # test = PtTest.objects.all().order_by('-id')[0]
-        # scores = PtScore.objects.filter(pt_test=test)
-        #top_pt_cadets = test.get_n_highest_scores(cadets, scores, 3)
+        male_cadets = cadets.filter(gender='Male')
+        female_cadets = cadets.filter(gender='Female')
+        completed_volunteer_hours = cadets.filter(volunteer_hours_completed=True)
 
         #Get the top 3 cadets
         all_scores = PtScore.objects.all()
@@ -164,6 +164,9 @@ class CompanyDetail(View):
                    'avg_gpa': avg_gpa,
                    'at_risk': at_risk,
                    'profiles': profiles,
+                   'male_cadets': male_cadets,
+                   'female_cadets': female_cadets,
+                   'completed_hours': completed_volunteer_hours,
                    'top_scores': top_scores,
 
                    }

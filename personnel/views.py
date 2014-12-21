@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.views.generic import View
 from personnel.models import Cadet, Company, MsLevel, Platoon, SnapShot, Demographic
 from pt.models import PtScore, PtTest, Grader
+from django.core.exceptions import ObjectDoesNotExist
 import collections
 
 # Create your views here.
@@ -14,7 +15,7 @@ class Index(View):
         return render(request, self.template_name, {})
 
 class Stats(View):
-    template_name = 'personnel/personnel_stats.html'
+    template_name = 'personnel/stat_page/personnel_stats.html'
 
     def get(self, request, tab='cadets'):
         cadets = Cadet.objects.all()
@@ -39,7 +40,7 @@ class Stats(View):
                 demo_dict[cadet.demographic.demographic] += 1
 
         avg_gpa = Cadet.get_avg_gpa(current_cadets)
-        completed_volunteer_hours = len(cadets.filter(volunteer_hours_status=True))
+        completed_volunteer_hours = cadets.filter(volunteer_hours_status=True)
         not_completed_volunteer_hours = len(cadets.exclude(volunteer_hours_status=True))
 
         context = {
@@ -54,8 +55,7 @@ class Stats(View):
             'male_cadets': male_cadets,
             'female_cadets': female_cadets,
             'avg_gpa': avg_gpa,
-            'volunteer_hours': completed_volunteer_hours,
-            'not_volunteer_hours': not_completed_volunteer_hours,
+            'completed_hours': completed_volunteer_hours,
         }
 
         return render(request, self.template_name, context)
@@ -71,7 +71,7 @@ class CadetListing(View):
 
 
 class CadetPage(View):
-    template_name = 'personnel/cadet_page.html'
+    template_name = 'personnel/cadet_page/cadet_page.html'
 
     def get(self, request, cadet_id, tab='overview'):
         cadet = Cadet.objects.get(id=cadet_id)
@@ -115,61 +115,79 @@ class CadetPage(View):
         return render(request, self.template_name, context)
 
 
+#Shared functionality between the grouping views
+def grouping_data(company=None, platoon=None):
+    if (platoon):
+        cadets = Cadet.objects.filter(platoon=platoon)
+    elif (platoon and company):
+        try:
+            cadets = Cadet.objects.filter(company=company, platoon=platoon)
+        except ObjectDoesNotExist:
+            print "Invalid query. Most likely, the company and platoon don't match"
+            return
+    elif (company):
+        cadets = Cadet.objects.filter(company=company)
+
+    contracted = cadets.filter(contracted=True)
+    smp = cadets.filter(smp=True)
+    avg_gpa = Cadet.get_avg_gpa(cadets)
+    at_risk = cadets.filter(at_risk=True)
+    profiles = cadets.filter(on_profile=True)
+    male_cadets = cadets.filter(gender='Male')
+    female_cadets = cadets.filter(gender='Female')
+    completed_volunteer_hours = cadets.filter(volunteer_hours_completed=True)
+
+    #Get the top 3 cadets
+    all_scores = PtScore.objects.all()
+    avg_scores = {}
+    ptscore = PtScore()
+    for cadet in cadets:
+        scores = all_scores.filter(cadet=cadet)
+        avg_scores[cadet] = ptscore.get_avg_total_score(scores)
+    avg_scores = collections.OrderedDict(reversed(sorted(avg_scores.items(), key=lambda t: t[1])))
+    top_scores = collections.OrderedDict()
+    count = 0
+    for x, y in avg_scores.items():
+        top_scores.update({x: y})
+        count += 1
+        if count > 3: #the number of top cadets to get
+            break
+    context = {
+               'cadets': cadets,
+               'contracted': contracted,
+               'smp': smp,
+               'avg_gpa': avg_gpa,
+               'at_risk': at_risk,
+               'profiles': profiles,
+               'male_cadets': male_cadets,
+               'female_cadets': female_cadets,
+               'completed_hours': completed_volunteer_hours,
+               'top_scores': top_scores,
+               }
+    return context
+
+
 class CompanyDetail(View):
-    template = 'personnel/grouping_profile.html'
+    template = 'personnel/group_pages/grouping_profile.html'
 
     def get(self, request, company_name, tab='stats'):
         company = Company.objects.get(name=company_name)
         group = "%s Company" % company.name
         groups = Platoon.objects.filter(company=company)
         link = "platoons"
-        listing_template = 'personnel/grouping_listing.html'
-
-        #TODO Once we figure this page out, a lot of this needs to be abstracted
-        cadets = Cadet.objects.filter(company=company)
-        contracted = cadets.filter(contracted=True)
-        smp = cadets.filter(smp=True)
-        avg_gpa = Cadet.get_avg_gpa(cadets)
-        at_risk = cadets.filter(at_risk=True)
-        profiles = cadets.filter(on_profile=True)
-        male_cadets = cadets.filter(gender='Male')
-        female_cadets = cadets.filter(gender='Female')
-        completed_volunteer_hours = cadets.filter(volunteer_hours_completed=True)
-
-        #Get the top 3 cadets
-        all_scores = PtScore.objects.all()
-        avg_scores = {}
-        ptscore = PtScore()
-        for cadet in cadets:
-            scores = all_scores.filter(cadet=cadet)
-            avg_scores[cadet] = ptscore.get_avg_total_score(scores)
-        avg_scores = collections.OrderedDict(reversed(sorted(avg_scores.items(), key=lambda t: t[1])))
-        top_scores = collections.OrderedDict()
-        count = 0
-        for x, y in avg_scores.items():
-            top_scores.update({x: y})
-            count += 1
-            if count > 3: #the number of top cadets to get
-                break
+        listing_template = 'personnel/group_pages/grouping_listing.html'
 
         context = {'tab': tab,
-                   'cadets': cadets,
                    'company': company,
                    'group': group,
                    'groups': groups,
                    'link': link,
                    'listing_template': listing_template,
-                   'contracted': contracted,
-                   'smp': smp,
-                   'avg_gpa': avg_gpa,
-                   'at_risk': at_risk,
-                   'profiles': profiles,
-                   'male_cadets': male_cadets,
-                   'female_cadets': female_cadets,
-                   'completed_hours': completed_volunteer_hours,
-                   'top_scores': top_scores,
-
                    }
+
+        #Additions to the context
+        context.update(grouping_data(company=company))
+
         return render(request, self.template, context)
 
 
@@ -200,7 +218,7 @@ class MSLevelDetail(View):
         group = "%s Class" % ms_level.name
         groups = Cadet.objects.filter(ms_level=ms_level)
         link = "/personnel/cadets"
-        listing_template = 'personnel/grouping_listing.html'
+        listing_template = 'personnel/group_pages/grouping_listing.html'
 
         context = {'tab': tab,
                    'group': group,
@@ -230,7 +248,7 @@ class MScadetListing(View):
 
 
 class PlatoonDetail(View):
-    template = 'personnel/grouping_profile.html'
+    template = 'personnel/group_pages/grouping_profile.html'
 
     def get(self, request, company_name, platoon_id, tab='stats'):
         company = Company.objects.get(name=company_name)
@@ -238,7 +256,7 @@ class PlatoonDetail(View):
         group = "%s Platoon" % platoon.name
         groups = Cadet.objects.filter(platoon=platoon)
         link = "/personnel/cadets"
-        listing_template = 'personnel/grouping_listing.html'
+        listing_template = 'personnel/group_pages/grouping_listing.html'
 
         context = {'tab': tab,
                    'platoon': platoon,
@@ -247,6 +265,8 @@ class PlatoonDetail(View):
                    'link': link,
                    'listing_template': listing_template,
                    }
+        #Additons to the context
+        context.update(grouping_data(platoon=platoon))
         return render(request, self.template, context)
 
 

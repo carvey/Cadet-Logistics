@@ -1,0 +1,198 @@
+{% load personnel_filters %}
+
+<script>
+/*
+    Format for flot code entry:
+    //Graph name
+    All necessary code
+    //End Graph name
+
+    Leave at least 3 lines in between each entry
+*/
+
+
+
+//MS Level Breakdown ----------------------------
+$(function() {
+
+
+    var ms_data = [
+        {
+            label: "MS1's",
+            data: {{ cadets|class_filter:'ms1'|length }},
+            color: "#476B6B",
+        },
+        {
+            label: "MS2's",
+            data: {{ cadets|class_filter:'ms2'|length }},
+        },
+        {
+            label: "MS3's",
+            data: {{ cadets|class_filter:'ms3'|length }},
+        },
+        {
+            label: "MS4's",
+            data: {{ cadets|class_filter:'ms3'|length }},
+        },
+    ];
+
+    var ms_graph = $.plot($("#class_breakdown"), ms_data, {
+        series: {
+            pie: {
+                show: true,
+                radius: 1,
+                label: {
+                    show: true,
+                    radius: 2 / 3,
+                    formatter: function (label, series) {
+                        return '<div style="font-size:14px ;text-align:center; padding:2px; color:white;">' + label + '<br/>' + Math.round(series.percent) + '%</div>';
+                    },
+                    threshold: 0.1,
+                    background: {
+                        opacity: 0.2,
+                        color: "#444"
+                    }
+                }
+            },
+
+        },
+        legend: {
+            show: false
+        },
+
+        grid: {
+            hoverable: true
+        },
+        tooltip: true,
+        tooltipOpts: {
+            content: "%p.0%, %s", // show percentages, rounding to 2 decimal places
+            shifts: {
+                x: 20,
+                y: 0
+            },
+            defaultTheme: false
+        }
+    });
+});
+//End MS level breakdown ------------------------
+
+
+
+//Gender Comparison ----------------------------
+$(function() {
+
+    var data = [
+        {
+            label: "Males",
+            data: {{ male_cadets.count }},
+            color: "#476B6B",
+        },
+        {
+            label: "Females",
+            data: {{ female_cadets.count }},
+
+        }
+    ];
+
+    var plotObj = $.plot($("#gender_comparison"), data, {
+        series: {
+            pie: {
+                show: true,
+                radius: 1,
+                label: {
+                    show: true,
+                    radius: 2 / 3,
+                    formatter: function (label, series) {
+                        return '<div style="font-size:14px ;text-align:center; padding:2px; color:white;">' + label + '<br/>' + Math.round(series.percent) + '%</div>';
+                    },
+                    threshold: 0.1,
+                    background: {
+                        opacity: 0.2,
+                        color: "#444"
+                    }
+                }
+            },
+
+        },
+        legend: {
+            show: false
+        },
+
+        grid: {
+            hoverable: true
+        },
+        tooltip: true,
+        tooltipOpts: {
+            content: "%p.0%, %s", // show percentages, rounding to 2 decimal places
+            shifts: {
+                x: 20,
+                y: 0
+            },
+            defaultTheme: false
+        }
+    });
+});
+
+//Volunteer Completion ------------------------
+    $(function () {
+
+
+        var difference = Math.abs({{cadets.count}} - {{ completed_hours.count }});
+        var volunteer_completion = [
+            {
+                label: "Completed",
+                data: {{ completed_hours.count }},
+                color: "#476B6B",
+            },
+            {
+                label: "Not Completed",
+                data: difference,
+            }
+        ];
+
+        var options = {
+            series: {
+                pie: {
+                    show: true,
+                    radius: 1,
+                    label: {
+                        show: true,
+                        radius: 2 / 3,
+                        formatter: function (label, series) {
+                            return '<div style="font-size:14px ;text-align:center; padding:2px; color:white;">' + label + '<br/>' + Math.round(series.percent) + '%</div>';
+                        },
+                        threshold: 0.1,
+                        background: {
+                            opacity: 0.2,
+                            color: "#444"
+                        }
+                    }
+                }
+
+            },
+            legend: {
+                show: false
+            },
+
+            grid: {
+                hoverable: true
+            },
+            tooltip: true,
+            tooltipOpts: {
+                content: "%p.0%, %s", // show percentages, rounding to 2 decimal places
+                shifts: {
+                    x: 20,
+                    y: 0
+                },
+                defaultTheme: false
+            }
+        };
+
+        $.plot($("#volunteer_completion"), volunteer_completion, options);
+    });
+
+
+//End volunteer completion --------------------
+
+</script>
+

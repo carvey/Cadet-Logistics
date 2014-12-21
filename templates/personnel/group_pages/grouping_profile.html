@@ -15,7 +15,7 @@
 	<div class="tab-content">
 		
 		<div class='tab-pane fade{% if tab == "stats" %} in active{% endif %}' id='stats'>
-			{% include 'personnel/grouping_stats.html' %}
+			{% include 'personnel/group_pages/grouping_stats.html' %}
 		</div>
 		
 		
@@ -32,6 +32,7 @@
     <script src="{% static 'js/plugins/flot/jquery.flot.time.js'  %}"></script>
 	<script src="{% static 'js/plugins/flot/jquery.flot.tooltip.min.js' %}"></script>
     <script src="{% static 'js/plugins/flot/jquery.flot.pie.js' %}"></script>
-    {% include 'personnel/js/flot_profile_attendance.html' %}
-    {% include 'personnel/js/pie_chart' %}
+
+    {% include 'personnel/group_pages/js/flot_profile_attendance.html' %}
+    {% include 'personnel/group_pages/js/flot_pie.html' %}
 {% endblock %}

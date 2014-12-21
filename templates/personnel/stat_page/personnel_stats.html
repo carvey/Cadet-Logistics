@@ -16,7 +16,7 @@ Personnel Statistics
 	<div class="tab-content">
 		
 		<div class='tab-pane fade{% if tab == "cadets" %} in active{% endif %}' id='cadets'>
-			{% include 'personnel/stats_cadets.html' %}
+			{% include 'personnel/stat_page/stats_cadets.html' %}
 		</div>
 
 	</div>
@@ -27,6 +27,6 @@ Personnel Statistics
     <script src="{% static 'js/plugins/flot/jquery.flot.time.js'  %}"></script>
 	<script src="{% static 'js/plugins/flot/jquery.flot.tooltip.min.js' %}"></script>
     <script src="{% static 'js/plugins/flot/jquery.flot.pie.js' %}"></script>
-    {% include 'personnel/js/flot_cadets' %}
-    {% include 'personnel/js/pie_chart' %}
+    {% include 'personnel/stat_page/js/flot_cadets.html' %}
+    {% include 'personnel/stat_page/js/flot_pie.html' %}
 {% endblock %}

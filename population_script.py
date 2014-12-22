@@ -140,6 +140,7 @@ def populate():
     assign_nursing_cadets()
     assign_demographics()
     assign_at_risk_cadets()
+    generate_profiles()
 
     generate_snapshots(date = datetime.date(2014, 6, 1), start=0, end=0)
     generate_snapshots(date = datetime.date(2014, 7, 1), start=0, end=3)
@@ -305,6 +306,7 @@ def assign_demographics():
             cadet.demographic = Demographic.objects.get(id=rand)
             cadet.save()
 
+#should not be called in the populate function
 def get_gpa(cadets):
         sum_gpa = 0
         cadets_with_gpa = 0
@@ -316,6 +318,12 @@ def get_gpa(cadets):
             return 0
         return sum_gpa / cadets_with_gpa
 
+def generate_profiles():
+    for cadet in cadets:
+        rand = random.randint(0, 20)
+        if rand % 3 == 0:
+            cadet.on_profile = True
+            cadet.profile_reason = "Needs more water."
 
 def generate_snapshots(date, start, end):
     current_cadets = Cadet.objects.all()[start:end].__len__()

@@ -148,10 +148,11 @@ def grouping_data(company=None, platoon=None):
     top_scores = collections.OrderedDict()
     count = 0
     for x, y in avg_scores.items():
-        top_scores.update({x: y})
+        top_scores.update({y: x})
         count += 1
-        if count > 3: #the number of top cadets to get
+        if count >= 5: #the number of top cadets to get
             break
+
     context = {
                'cadets': cadets,
                'contracted': contracted,
@@ -162,7 +163,7 @@ def grouping_data(company=None, platoon=None):
                'male_cadets': male_cadets,
                'female_cadets': female_cadets,
                'completed_hours': completed_volunteer_hours,
-               'top_scores': top_scores,
+               'top_scores': reversed(sorted(top_scores.items())),
                }
     return context
 

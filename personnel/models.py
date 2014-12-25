@@ -1,6 +1,7 @@
 from django.core.validators import MaxValueValidator, MinValueValidator, validate_email
 from django.db import models
 from django.contrib.auth.hashers import make_password
+from collections import OrderedDict
 
 
 '''Static variables'''
@@ -126,6 +127,20 @@ class Cadet(Users):
                 cadets_with_gpa += 1
                 sum_gpa = sum_gpa + cadet.gpa
         return round(sum_gpa / cadets_with_gpa, 2)
+
+    @staticmethod
+    def get_top_gpa_cadets(cadets, num=3):
+        gpas = {}
+        for cadet in cadets:
+            gpas.update({cadet.gpa: cadet})
+        gpas = OrderedDict(reversed(sorted(gpas.items(), key=lambda t: t[1])))
+        top_gpas = OrderedDict()
+        count = 0
+        for x, y in gpas.items():
+            top_gpas.update({x: y})
+            if count > num:
+                break
+        return reversed(sorted(top_gpas.items()))
 
     class Meta:
         db_table = 'Cadet'

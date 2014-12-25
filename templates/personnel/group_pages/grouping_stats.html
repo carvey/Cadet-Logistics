@@ -109,5 +109,20 @@
 		</div>
 	</div>
 
+    <div class='col-md-4'>
+		<div class='panel panel-default'>
+			<div class='panel-heading'>
+				Highest GPAs
+			</div>
+			<div class='panel-body' id="top_pt">
+				<ul>
+                    {% for gpa, cadet in top_gpas %}
+                        <li>{{ cadet.get_name }}: {{ gpa }}</li>
+                    {% endfor %}
+				</ul>
+			</div>
+		</div>
+	</div>
+
 
 </div>

@@ -153,6 +153,8 @@ def grouping_data(company=None, platoon=None):
         if count >= 5: #the number of top cadets to get
             break
 
+    top_gpas = Cadet.get_top_gpa_cadets(cadets)
+
     context = {
                'cadets': cadets,
                'contracted': contracted,
@@ -164,6 +166,7 @@ def grouping_data(company=None, platoon=None):
                'female_cadets': female_cadets,
                'completed_hours': completed_volunteer_hours,
                'top_scores': reversed(sorted(top_scores.items())),
+               'top_gpas': top_gpas
                }
     return context
 

@@ -1,4 +1,12 @@
 {% load personnel_filters %}
+<style>
+    .top_list {
+        font-size: 20px;
+    }
+    #top_pt ul {
+        padding: 15px;
+    }
+</style>
 
 <div class='row'>
 	<div class='col-md-8'>
@@ -44,6 +52,57 @@
 </div>
 
 
+<div class="row">
+    <div class='col-md-4'>
+		<div class='panel panel-default'>
+			<div class='panel-heading'>
+				Top Average PT Scores
+			</div>
+			<div class='panel-body top_list'>
+				<ul>
+                    {% for score, cadet in top_scores %}
+                        <li>{{ cadet.get_name }}: {{ score }}</li>
+                    {% endfor %}
+				</ul>
+			</div>
+		</div>
+	</div>
+
+    <div class='col-md-4'>
+		<div class='panel panel-default'>
+			<div class='panel-heading'>
+				Highest GPAs
+			</div>
+			<div class='panel-body top_list'>
+				<ul>
+                    {% for gpa, cadet in top_gpas %}
+                        <li>{{ cadet.get_name }}: {{ gpa }}</li>
+                    {% endfor %}
+				</ul>
+			</div>
+		</div>
+	</div>
+
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Least Events Missed
+            </div>
+            <div class="panel-body top_list">
+                <ul>
+                    <li>First Last: 0</li>
+                    <li>First Last: 0</li>
+                    <li>First Last: 1</li>
+                    <li>First Last: 2</li>
+                    <li>First Last: 5</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
 <div class='row'>
 <div class='col-md-4'>
 		<div class='panel panel-default'>
@@ -85,19 +144,3 @@
 	</div>
 
 </div>
-
-
-<div class='row'>
-	<div class='col-md-6'>
-			<div class='panel panel-default'>
-				<div class='panel-heading'>
-					Six
-				</div>
-				<div class='panel-body'>
-					Six
-				</div>
-			</div>
-		</div>
-	
-</div>
-

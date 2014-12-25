@@ -133,12 +133,14 @@ class Cadet(Users):
         gpas = {}
         for cadet in cadets:
             gpas.update({cadet.gpa: cadet})
-        gpas = OrderedDict(reversed(sorted(gpas.items(), key=lambda t: t[1])))
+        gpas = OrderedDict(reversed(sorted(gpas.items(), key=lambda t: t[0])))
         top_gpas = OrderedDict()
         count = 0
         for x, y in gpas.items():
             top_gpas.update({x: y})
-            if count > num:
+            print top_gpas
+            count += 1
+            if count == num:
                 break
         return reversed(sorted(top_gpas.items()))
 

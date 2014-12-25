@@ -324,6 +324,7 @@ def generate_profiles():
         if rand % 3 == 0:
             cadet.on_profile = True
             cadet.profile_reason = "Needs more water."
+            cadet.save()
 
 def generate_snapshots(date, start, end):
     current_cadets = Cadet.objects.all()[start:end].__len__()

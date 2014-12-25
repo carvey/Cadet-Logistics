@@ -91,7 +91,9 @@ class Cadet(Users):
     is_company_staff = models.BooleanField(default=False)
     # #
     cell_number = models.CharField(max_length=14, blank=True)
+    #the volunteer_hours_completed field is a measure of the amount of hours completed
     volunteer_hours_completed = models.IntegerField(default=0)
+    #the volunteer_hours_status boolean is to tell whether a cadet has completed the minimum number of hours
     volunteer_hours_status = models.BooleanField(default=False)
     turned_in_104r = models.BooleanField(default=False)
     # #
@@ -138,7 +140,6 @@ class Cadet(Users):
         count = 0
         for x, y in gpas.items():
             top_gpas.update({x: y})
-            print top_gpas
             count += 1
             if count == num:
                 break

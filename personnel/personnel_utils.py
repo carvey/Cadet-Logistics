@@ -14,7 +14,7 @@ def grouping_data(cadets):
     profiles = cadets.filter(on_profile=True)
     male_cadets = cadets.filter(gender='Male')
     female_cadets = cadets.filter(gender='Female')
-    completed_volunteer_hours = cadets.filter(volunteer_hours_completed=True)
+    completed_volunteer_hours = cadets.filter(volunteer_hours_status=True)
 
     #Get the top 3 cadets
     all_scores = PtScore.objects.all()

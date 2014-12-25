@@ -20,14 +20,21 @@ def clear_cadets():
 
 
 def populate():
+    print "clearing cadets"
     #use this for when snapshots need testing, otherwise comment it out
     clear_cadets()
+    print "done clearing cadets"
+    print "-----------------------"
 
+    print "Creating companies"
     add_company(name="Alpha")
     add_company(name="Bravo")
     add_company(name="Charlie")
     add_company(name="Delta")
+    print "done creating companies"
+    print "-----------------------"
 
+    print "creating platoons"
     alpha = Company.objects.get(name="Alpha")
     add_platoon(name=1, company=alpha)
     add_platoon(name=2, company=alpha)
@@ -43,7 +50,10 @@ def populate():
     delta = Company.objects.get(name="Delta")
     add_platoon(name=1, company=delta)
     add_platoon(name=2, company=delta)
+    print "done creating platoons"
+    print "-----------------------"
 
+    print "Getting platoon objects"
     # objects for for the platoons that were just created
     alpha1st = Platoon.objects.get(name=1, company=alpha)
     alpha2nd = Platoon.objects.get(name=2, company=alpha)
@@ -53,95 +63,184 @@ def populate():
     charlie2nd = Platoon.objects.get(name=2, company=charlie)
     delta1st = Platoon.objects.get(name=1, company=delta)
     delta2nd = Platoon.objects.get(name=2, company=delta)
+    print "done getting platoon objects"
+    print "-----------------------"
 
+    print "adding ms levels"
     # adding ms levels
     add_mslevel(name="MS1")
     add_mslevel(name="MS2")
     add_mslevel(name="MS3")
     add_mslevel(name="MS4")
+    print "done adding ms levels"
+    print "-----------------------"
 
+    print "getting ms level objects"
     # getting objects for the ms levels that were just created
     ms1 = MsLevel.objects.get(name="MS1")
     ms2 = MsLevel.objects.get(name="MS2")
     ms3 = MsLevel.objects.get(name="MS3")
     ms4 = MsLevel.objects.get(name="MS4")
+    print "done getting ms level objects"
+    print "-----------------------"
 
+    print "Adding demographics"
     add_demographic(demographic="White")
     add_demographic(demographic="Black")
     add_demographic(demographic="Asian")
     add_demographic(demographic="American Indian")
     add_demographic(demographic="Hispanic")
+    print "done adding demographics"
+    print "-----------------------"
 
+
+    print "Creating cadets"
+    #Alpha Company
+    add_cadet(first_name="Adam", last_name="Kostner", age=20, ms_level=ms4, company=alpha, cc=True)
+    add_cadet(first_name="Cole", last_name="Stuart", age=20, ms_level=ms4, company=alpha, fs=True)
     add_cadet(first_name="Taylor", last_name="Cooper", age=20, ms_level=ms4, company=alpha, platoon=alpha1st)
     add_cadet(first_name="Jason", last_name="Canter", age=20, ms_level=ms4, company=alpha, platoon=alpha1st)
     add_cadet(first_name="Eddie", last_name="Hanson", age=20, ms_level=ms4, company=alpha, platoon=alpha1st)
-    add_cadet(first_name="Ashley", last_name="Scott", age=20, gender="Female", ms_level=ms4, company=alpha,
-              platoon=alpha1st)
+    add_cadet(first_name="Ashley", last_name="Scott", age=20, gender="Female", ms_level=ms4, company=alpha, platoon=alpha1st)
     add_cadet(first_name="Danial", last_name="Miller", age=20, ms_level=ms3, company=alpha, platoon=alpha1st)
 
 
-    add_cadet(first_name="Oliver", last_name="Paige", age=20, gender="Female", ms_level=ms3, company=alpha,
-              platoon=alpha2nd)
-    add_cadet(first_name="Gordon", last_name="Thomas", age=20, ms_level=ms3, company=alpha, platoon=alpha2nd)
-    add_cadet(first_name="Chris", last_name="Danials", age=20, ms_level=ms3, company=alpha, platoon=alpha2nd)
-    add_cadet(first_name="Joshua", last_name="Springer", age=20, ms_level=ms3, company=alpha, platoon=alpha2nd)
-    add_cadet(first_name="Eva", last_name="Lowry", age=20, gender="Female", ms_level=ms3, company=alpha,
-              platoon=alpha2nd)
-
-
-    add_cadet(first_name="Kellie", last_name="Rogers", age=19, gender="Female", ms_level=ms2, company=bravo,
-              platoon=bravo1st)
+    #Bravo company
+    add_cadet(first_name="James", last_name="Lee", age=20, ms_level=ms3, company=bravo, cc=True)
+    add_cadet(first_name="Joanna", last_name="Henry", age=20, ms_level=ms3, company=bravo, fs=True)
+    #Bravo 1st platoon
+    add_cadet(first_name="Kyle", last_name="Jackson", age=20, ms_level=ms3, company=bravo, platoon=bravo1st, pc=True)
+    add_cadet(first_name="Kathy", last_name="Jones", age=20, gender="Female", ms_level=ms3, company=bravo, platoon=bravo1st, ps=True)
+    add_cadet(first_name="Kellie", last_name="Rogers", age=19, gender="Female", ms_level=ms2, company=bravo, platoon=bravo1st)
+    add_cadet(first_name="Oliver", last_name="Paige", age=20, gender="Female", ms_level=ms2, company=bravo, platoon=bravo1st)
     add_cadet(first_name="Trenton", last_name="Francis", age=19, ms_level=ms2, company=bravo, platoon=bravo1st)
-    add_cadet(first_name="Samantha", last_name="Roberts", age=19, gender="Female", ms_level=ms2, company=bravo,
-              platoon=bravo1st)
+    add_cadet(first_name="Samantha", last_name="Roberts", age=19, gender="Female", ms_level=ms2, company=bravo, platoon=bravo1st)
     add_cadet(first_name="Robert", last_name="Bacon", age=19, ms_level=ms2, company=bravo, platoon=bravo1st)
     add_cadet(first_name="Samual", last_name="Gates", age=19, ms_level=ms2, company=bravo, platoon=bravo1st)
-
-
+    #Bravo 2nd Platoon
+    add_cadet(first_name="George", last_name="Hart", age=20, ms_level=ms3, company=bravo, platoon=bravo2nd, pc=True)
+    add_cadet(first_name="Wilson", last_name="Cooper", age=20, ms_level=ms3, company=bravo, platoon=bravo2nd, ps=True)
     add_cadet(first_name="Thomas", last_name="Lee", age=19, ms_level=ms2, company=bravo, platoon=bravo2nd)
-    add_cadet(first_name="Jennifer", last_name="Stone", age=19, gender="Female", ms_level=ms2, company=bravo,
-              platoon=bravo2nd)
+    add_cadet(first_name="Jennifer", last_name="Stone", age=19, gender="Female", ms_level=ms2, company=bravo, platoon=bravo2nd)
+    add_cadet(first_name="Eva", last_name="Lowry", age=20, gender="Female", ms_level=ms2, company=bravo, platoon=bravo2nd)
     add_cadet(first_name="Michael", last_name="Han", age=19, ms_level=ms2, company=bravo, platoon=bravo2nd)
-    add_cadet(first_name="Kathy", last_name="Marino", age=19, gender="Female", ms_level=ms2, company=bravo,
-              platoon=bravo2nd)
+    add_cadet(first_name="Kathy", last_name="Marino", age=19, gender="Female", ms_level=ms2, company=bravo, platoon=bravo2nd)
     add_cadet(first_name="James", last_name="Cooper", age=19, ms_level=ms2, company=bravo, platoon=bravo2nd)
 
 
-
+    #Charlie Company
+    add_cadet(first_name="Sarah", last_name="Klein", age=20, gender="Female", ms_level=ms3, company=charlie, cc=True)
+    add_cadet(first_name="Kenny", last_name="Walts", age=20, ms_level=ms3, company=charlie, fs=True)
+    #Charlie First Platoon
+    add_cadet(first_name="Matthew", last_name="Henry", age=20, ms_level=ms3, company=charlie, platoon=charlie1st, pc=True)
+    add_cadet(first_name="Audrey", last_name="Chantel", age=20, gender="Female", ms_level=ms3, company=charlie, platoon=charlie1st, ps=True)
     add_cadet(first_name="Mary", last_name="Jones", age=18, gender="Female", ms_level=ms1, company=charlie, platoon=charlie1st)
     add_cadet(first_name="Roger", last_name="Alan", age=18, ms_level=ms1, company=charlie, platoon=charlie1st)
+    add_cadet(first_name="Joshua", last_name="Springer", age=20, ms_level=ms2, company=charlie, platoon=charlie1st)
     add_cadet(first_name="Pablo", last_name="Smith", age=18, ms_level=ms1, company=charlie, platoon=charlie1st)
+    #Charlie 2nd Platoon
+    add_cadet(first_name="Gordon", last_name="Miles", age=20, ms_level=ms3, company=charlie, platoon=charlie2nd, pc=True)
+    add_cadet(first_name="Mia", last_name="Scott", age=20, gender="Female", ms_level=ms3, company=charlie, platoon=charlie2nd, ps=True)
+    add_cadet(first_name="Brett", last_name="Cade", age=20, ms_level=ms2, company=charlie, platoon=charlie2nd)
     add_cadet(first_name="Garret", last_name="Timpson", age=18, ms_level=ms1, company=charlie, platoon=charlie2nd)
     add_cadet(first_name="Julia", last_name="Anderson", age=18, gender="Female", ms_level=ms1, company=charlie, platoon=charlie2nd)
+    add_cadet(first_name="Chris", last_name="Danials", age=20, ms_level=ms2, company=charlie, platoon=charlie2nd)
 
 
-
+    #Delta company
+    add_cadet(first_name="Nick", last_name="Russel", age=20, ms_level=ms3, company=delta, cc=True)
+    add_cadet(first_name="Melissa", last_name="Hackman", age=20, gender="Female", ms_level=ms3, company=delta, fs=True)
+    #First Platoon
+    add_cadet(first_name="Alexander", last_name="May", age=20, ms_level=ms3, company=delta, platoon=delta1st, pc=True)
+    add_cadet(first_name="Jeff", last_name="Sleet", age=20, ms_level=ms3, company=delta, platoon=delta1st, ps=True)
     add_cadet(first_name="Joe", last_name="Taylor", age=18, ms_level=ms1, company=delta, platoon=delta1st)
     add_cadet(first_name="Jim", last_name="Bob", age=18, ms_level=ms1, company=delta, platoon=delta1st)
+    add_cadet(first_name="Gordon", last_name="Thomas", age=20, ms_level=ms2, company=delta, platoon=delta1st)
+    add_cadet(first_name="Isabella", last_name="Miller", age=19, gender="Female", ms_level=ms2, company=delta, platoon=delta1st)
+    #Second Platoon
+    add_cadet(first_name="Steve", last_name="Bolhman", age=20, ms_level=ms3, company=delta, platoon=delta2nd, pc=True)
+    add_cadet(first_name="Eric", last_name="Greenwood", age=20, ms_level=ms3, company=delta, platoon=delta2nd, ps=True)
     add_cadet(first_name="Alan", last_name="Smith", age=18, ms_level=ms1, company=delta, platoon=delta2nd)
+    add_cadet(first_name="Cody", last_name="Gruff", age=19, ms_level=ms2, company=delta, platoon=delta2nd)
     add_cadet(first_name="Jane", last_name="West", age=18, gender="Female", ms_level=ms1, company=delta, platoon=delta2nd)
     add_cadet(first_name="Anne", last_name="Locke", age=18, gender="Female", ms_level=ms1, company=delta, platoon=delta2nd)
+    print "Done creating cadets"
+    print "-----------------------"
 
 
-
+    print "Creating pt tests"
     add_pt_test(date=datetime.date(2014, 6, 1) + datetime.timedelta(days=2), ms_lvl_4=False)
     add_pt_test(date=datetime.date(2014, 6, 1) + datetime.timedelta(days=5), ms_lvl_4=False)
     add_pt_test(date=datetime.date(2014, 6, 1) + datetime.timedelta(days=7), ms_lvl_4=True)
+    print "Done adding pt tests"
+    print "-----------------------"
 
+    print "creating pt scores"
     create_pt_scores()
-    assign_eagle_id()
-    assign_cell_num()
-    assign_email()
-    assign_gpa()
-    assign_ms_grade()
-    assign_contract_smp()
-    assign_gender_to_males()
-    generate_volunteer_completion()
-    assign_nursing_cadets()
-    assign_demographics()
-    assign_at_risk_cadets()
-    generate_profiles()
+    print "done creating pt scores"
+    print "-----------------------"
 
+    print "assigning eagle ids"
+    assign_eagle_id()
+    print "done assigning eagle id's"
+    print "-----------------------"
+
+    print "assigning cell nums"
+    assign_cell_num()
+    print "Done assigning cell nums"
+    print "-----------------------"
+
+    print "assinging emails"
+    assign_email()
+    print "Done assigning emails"
+    print "-----------------------"
+
+    print "assigning gpas"
+    assign_gpa()
+    print "Done assigning gpa's"
+    print "-----------------------"
+
+    print "assigning ms grade"
+    assign_ms_grade()
+    print "Done assigning ms grades"
+    print "-----------------------"
+
+    print "assinging contracts and smps to cadets"
+    assign_contract_smp()
+    print "done assigning contracted and smp to cadets"
+    print "-----------------------"
+
+    print "assigning gender to males"
+    assign_gender_to_males()
+    print "Done assinging gender to males"
+    print "-----------------------"
+
+    print "generating volunteer completion"
+    generate_volunteer_completion()
+    print "Done generating volunteer completion"
+    print "-----------------------"
+
+    print "assigning nursing cadets"
+    assign_nursing_cadets()
+    print "Done assigning nursing cadets"
+    print "-----------------------"
+
+    print "assigning demographics"
+    assign_demographics()
+    print "Done assigning demographics"
+    print "-----------------------"
+
+    print "assigning at risk cadets"
+    assign_at_risk_cadets()
+    print "Done assigning at risk cadets"
+    print "-----------------------"
+
+    print "generating profiles"
+    generate_profiles()
+    print "Done generating profiles"
+    print "-----------------------"
+
+    print "Generating Snapshots"
     generate_snapshots(date = datetime.date(2014, 6, 1), start=0, end=0)
     generate_snapshots(date = datetime.date(2014, 7, 1), start=0, end=3)
     generate_snapshots(date = datetime.date(2014, 8, 1), start=0, end=12)
@@ -149,8 +248,13 @@ def populate():
     generate_snapshots(date = datetime.date(2014, 10, 1), start=0, end=23)
     generate_snapshots(date = datetime.date(2014, 11, 1), start=0, end=21)
     generate_snapshots(date = datetime.date(2014, 12, 1), start=0, end=30)
+    print "Done generating Snapshots"
+    print "-----------------------"
 
+    print "Creating graders"
     create_graders()
+    print "Done creating Graders"
+    print "-----------------------"
     #generate_pt_score_value()
 
 
@@ -165,10 +269,21 @@ def add_platoon(name, company):
 
 
 def add_cadet(first_name, last_name, age, ms_level, company, gender="Male", platoon=None, ms_grade=100, is_staff=False,
-              is_company_staff=False):
+              is_company_staff=False, cc=False, fs=False, pc=False, ps=False):
     c = Cadet.objects.get_or_create(first_name=first_name, last_name=last_name, age=age, gender=gender,
                                     ms_level=ms_level,
                                     company=company, platoon=platoon)[0]
+
+
+    if cc:
+        company.set_commander(c)
+    elif fs:
+        company.set_first_sergeant(c)
+    elif pc:
+        platoon.set_platoon_commander(c)
+    elif ps:
+        platoon.set_platoon_sergeant(c)
+
     return c
 
 

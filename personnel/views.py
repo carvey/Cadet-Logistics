@@ -108,7 +108,7 @@ class CompanyDetail(View):
         group = "%s Company" % company.name
         groups = Platoon.objects.filter(company=company)
         link = "platoons"
-        listing_template = 'personnel/group_pages/grouping_listing.html'
+        listing_template = 'personnel/group_pages/company_datatable_listing.html'
 
         context = {'tab': tab,
                    'company': company,

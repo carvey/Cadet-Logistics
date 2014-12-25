@@ -73,6 +73,24 @@ class Company(models.Model):
     def __unicode__(self):
         return self.name
 
+    def set_first_sergeant(self, cadet):
+        if self.first_sergeant:
+            self.first_sergeant.is_company_staff = False
+
+        self.first_sergeant = cadet
+        cadet.is_company_staff = True
+        cadet.save()
+        self.save()
+
+    def set_commander(self, cadet):
+        if self.company_commander:
+            self.company_commander.is_company_staff = False
+
+        self.company_commander = cadet
+        cadet.is_company_staff = True
+        cadet.save()
+        self.save()
+
 
 class Cadet(Users):
     """Cadet is the model for cadets in the batallion.
@@ -162,6 +180,12 @@ class Platoon(models.Model):
     """Each Platoon can only belong to one company."""
     name = models.PositiveIntegerField(default=1, blank=False)
     company = models.ForeignKey(Company, db_index=False, related_name='company', blank=True, null=True)
+    platoon_commander = models.OneToOneField('Cadet', db_index=False, related_name='pc',
+                                             limit_choices_to={'is_company_staff': True}, blank=True, null=True,
+                                             help_text="Enter the Platoon Commander")
+    platoon_sergeant = models.OneToOneField('Cadet', db_index=False, related_name="ps",
+                                          limit_choices_to={'is_company_staff': True}, blank=True, null=True,
+                                          help_text="Enter the Platoon Sergeant")
 
     class Meta:
         db_table = 'Platoon'
@@ -171,6 +195,24 @@ class Platoon(models.Model):
             return str(self.company) + " " + str(self.name) + " Platoon"
         else:
             return self.name
+
+    def set_platoon_commander(self, cadet):
+        if self.platoon_commander:
+            self.platoon_commander.is_company_staff = False
+
+        self.platoon_commander = cadet
+        cadet.is_company_staff = True
+        cadet.save()
+        self.save()
+
+    def set_platoon_sergeant(self, cadet):
+        if self.platoon_sergeant:
+            self.platoon_sergeant.is_company_staff = False
+
+        self.platoon_sergeant = cadet
+        cadet.is_company_staff = True
+        cadet.save()
+        self.save()
 
 
 class MsLevel(models.Model):

@@ -11,7 +11,11 @@
 						<p>Gender: {{cadet.gender}}</p>
 						<p>Age: {{cadet.age}}</p>
 						<p>GPA: {{cadet.gpa}}</p>
-						<p>Military Science Grade: {{cadet.ms_grade}}</p>
+                        <p>Contracted: {{cadet.contracted|interpret_bool}}</p>
+						<p>SMP: {{cadet.smp|interpret_bool}}</p>
+                        <hr>
+                        <p>Profile: {{ cadet.on_profile|interpret_bool }}</p>
+                        <p>At Risk: {{ cadet.at_risk|interpret_bool }}</p>
 						<hr>
 						<p>Email: {{cadet.email}}</p>
 						<p>Cell Number: {{cadet.cell_number|phone_format}}</p>
@@ -26,20 +30,24 @@
 						Assignment Information
 					</div>
 					<div class='panel-body'>
-						<p>MS Class: {{cadet.ms_level}}</p>
-						<p>Company: {{cadet.company}}</p>
-						<p>Staff: {{cadet.is_staff|interpret_bool}}</p>
-						<p>Company Staff: {{cadet.is_company_staff|interpret_bool}}</p>
-						{% with commissioned=cadet.commissioned %}
-							<p>Cadet Status: 
+                        {% with commissioned=cadet.commissioned %}
+							<p>Cadet Status:
 								<span style="color: {{cadet.dropped|active_color:commissioned}}">
 									{{cadet.dropped|active_cadet:commissioned}}
 								</span>
 							</p>
 						{% endwith %}
-						<hr>
-						<p>Contracted: {{cadet.contracted|interpret_bool}}</p>
-						<p>SMP: {{cadet.smp|interpret_bool}}</p>
+						<p>MS Class: {{cadet.ms_level}}</p>
+						<p>Company: {{cadet.company}}</p>
+                        <p>Platoon: </p>
+                        <hr>
+						<p>Staff: {{cadet.is_staff|interpret_bool}}</p>
+						<p>Company Staff: {{cadet.is_company_staff|interpret_bool}}</p>
+                        <p>Staff Position: </p>
+                        <hr>
+                        <p>Nursing Cadet: {{ cadet.nurse|interpret_bool }}</p>
+                        <p>Ranger Challenge: {{ cadet.ranger_challenge|interpret_bool }}</p>
+                        <p>Color Guard: {{ cadet.color_guard|interpret_bool }}</p>
 					</div>
 				</div>
 			</div>

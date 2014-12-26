@@ -15,8 +15,16 @@
 	{% for group in groups %}
         <tr>
             <td><a href="{{ link }}/{{ group.id }}">{{ group }}</a></td>
-            <td><a href="/personnel/cadets/{{ group.platoon_sergeant.id }}">{{ group.platoon_sergeant   }}</a></td>
-            <td><a href="/personnel/cadets/{{ group.platoon_sergeant.id }}">{{ group.platoon_commander }}</a></td>
+            {% if group.platoon_sergeant %}
+                <td><a href="/personnel/cadets/{{ group.platoon_sergeant.id }}">{{ group.platoon_sergeant }}</a></td>
+            {% else %}
+                <td>None</td>
+            {% endif %}
+            {% if group.platoon_commander %}
+                <td><a href="/personnel/cadets/{{ group.platoon_commander.id }}">{{ group.platoon_commander }}</a></td>
+            {% else %}
+                <td>None</td>
+            {% endif %}
         </tr>
     {% endfor %}
 {% endblock %}

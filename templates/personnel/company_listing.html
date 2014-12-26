@@ -19,8 +19,8 @@ Company Listing
 	{% for company in companies %}
 		<tr class="odd gradeX">
 			<td><a href = "/personnel/companys/{{company.name}}">{{company.name}}</a></td>
-			<td>{{company.company_commander}}</td>
-			<td>{{company.first_sergeant}}</td>
+			<td><a href="/personnel/cadets/{{ company.company_commander.id }}">{{company.company_commander}}</a></td>
+			<td><a href="/personnel/cadets/{{ company.first_sergeant.id }}">{{company.first_sergeant}}</a></td>
 		</tr>
 	{% endfor %}
 {% endblock %}

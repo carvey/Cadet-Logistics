@@ -132,6 +132,8 @@ class Cadet(Users):
     dropped = models.BooleanField(default=False)
     commissioned = models.BooleanField(default=False)
     # #
+    ranger_challenge = models.BooleanField(default=False)
+    color_guard = models.BooleanField(default=False)
     comments = models.TextField(max_length=1000, blank=True)
 
     def get_name(self):

@@ -144,7 +144,7 @@ class CadetsView(View):
 
 
 class StatisticsView(View):
-    template_name = 'pt/statistics.html'
+    template_name = 'pt/stat_page/statistics.html'
 
     def get(self, request):
         avg_pt_scores = {}
@@ -158,6 +158,7 @@ class StatisticsView(View):
                 total_score += pt_score.score
             avg_score = float(total_score)/total_num
             avg_pt_scores["%s" % pt_test] = avg_score
+
         context = {
             'data' : avg_pt_scores,
         }

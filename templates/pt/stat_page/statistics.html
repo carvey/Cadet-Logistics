@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block page_header %}
+PT Statistics Page
+{% endblock %}
+
+{% block content %}
+    <ul class='nav nav-tabs'>
+		<li {% if tab == "cadets" %}class="active"{% endif %}><a href="#cadets" data-toggle="tab">Cadets</a></li>
+{#		<li {% if tab == "companies" %}class="active"{% endif %}><a href="#companies" data-toggle="tab">Companies</a></li>#}
+{#		<li {% if tab == "ms" %}class="active"{% endif %}><a href="#ms" data-toggle="tab">MS Levels</a></li>#}
+	</ul>
+
+    <div class="tab-content">
+        <div class="tab-pane fade in active" id="cadet">
+            {% include 'pt/stat_page/stats_cadets.html' %}
+        </div>
+
+{#        <div class="tab-pane fade" id="companies">#}
+{#            {% include 'pt/stats_companies.html' %}#}
+{#        </div>#}
+{##}
+{#        <div class="tab-pane fade" id="ms">#}
+{#            {% include 'pt/stats_ms.html' %}#}
+{#        </div>#}
+    </div>
+
+{% endblock %}
+{% block page_scripts %}
+    <script src="{% static "js/plugins/flot/jquery.flot.js" %}"></script>
+    <script src="{% static 'js/plugins/flot/jquery.flot.tooltip.min.js' %}"></script>
+    {% include 'pt/stat_page/js/flot_average_score.html' %}
+
+{% endblock %}

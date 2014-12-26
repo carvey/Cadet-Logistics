@@ -37,7 +37,6 @@ def populate():
     print "creating platoons"
     alpha = Company.objects.get(name="Alpha")
     add_platoon(name=1, company=alpha)
-    add_platoon(name=2, company=alpha)
 
     bravo = Company.objects.get(name="Bravo")
     add_platoon(name=1, company=bravo)
@@ -56,7 +55,6 @@ def populate():
     print "Getting platoon objects"
     # objects for for the platoons that were just created
     alpha1st = Platoon.objects.get(name=1, company=alpha)
-    alpha2nd = Platoon.objects.get(name=2, company=alpha)
     bravo1st = Platoon.objects.get(name=1, company=bravo)
     bravo2nd = Platoon.objects.get(name=2, company=bravo)
     charlie1st = Platoon.objects.get(name=1, company=charlie)

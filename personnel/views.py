@@ -145,7 +145,7 @@ class CompanyCadetListing(View):
 
 
 class MSLevelDetail(View):
-    template = 'personnel/grouping_profile.html'
+    template = 'personnel/group_pages/grouping_profile.html'
 
     def get(self, request, ms_class, tab='stats'):
         ms_level = MsLevel.objects.get(name=ms_class)
@@ -160,6 +160,9 @@ class MSLevelDetail(View):
                    'link': link,
                    'listing_template': listing_template,
                    }
+        cadets = Cadet.objects.filter(ms_level=ms_level)
+        context.update(grouping_data(cadets))
+
         return render(request, self.template, context)
 
 

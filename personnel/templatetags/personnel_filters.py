@@ -65,3 +65,11 @@ def timestamp(snap):
 @register.filter(name='demographics')
 def demographics(demos, key):
     return demos.get(key)
+
+
+@register.filter(name='lookup')
+def display_ordereddict(list, index):
+    if index % 2 == 0:
+        return list[0]
+    else:
+        return list[1]

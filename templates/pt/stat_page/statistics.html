@@ -29,7 +29,9 @@ PT Statistics Page
 {% endblock %}
 {% block page_scripts %}
     <script src="{% static "js/plugins/flot/jquery.flot.js" %}"></script>
+    <script src="{% static 'js/plugins/flot/jquery.flot.time.js'  %}"></script>
     <script src="{% static 'js/plugins/flot/jquery.flot.tooltip.min.js' %}"></script>
+    <script src="{% static 'js/plugins/flot/jquery.flot.navigate.min.js' %}"></script>
     {% include 'pt/stat_page/js/flot_average_score.html' %}
-
+    {% include 'pt/stat_page/js/flot_pt_detail.html' %}
 {% endblock %}

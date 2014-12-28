@@ -7,6 +7,7 @@ from datetime import datetime
 from personnel.models import Cadet
 from django.core.validators import RegexValidator
 from population_script import add_pt_test
+from decimal import Decimal
 
 male='Male'
 female='Female'
@@ -111,6 +112,10 @@ class PtTest(models.Model):
                 lowest_score = score.score
         return lowest_score
 
+    def get_average_score(self, company):
+        scores = PtScore.objects.filter(pt_test=self, cadet__company=company)
+        return PtScore.get_avg_total_score(scores)
+
     class Meta:
         db_table='PtTest'
 
@@ -136,10 +141,30 @@ class PtScore(models.Model):
     pushups_score = models.PositiveIntegerField(default=0)
     situps_score = models.PositiveIntegerField(default=0)
     run_score = models.PositiveIntegerField(default=0)
+
     
     def __unicode__(self):  
         format_date = self.pt_test.date.strftime('%d %b, %Y')
         return 'PT Score %s for cadet: %s' % (format_date, self.cadet)
+
+    #Get the cadets with the top average pt scores
+    @staticmethod
+    def get_top_cadets(cadets):
+        all_scores = PtScore.objects.all()
+        avg_scores = {}
+        ptscore = PtScore()
+        for cadet in cadets:
+            scores = all_scores.filter(cadet=cadet)
+            avg_scores[cadet] = PtScore.get_avg_total_score(scores)
+        avg_scores = collections.OrderedDict(reversed(sorted(avg_scores.items(), key=lambda t: t[1])))
+        top_scores = collections.OrderedDict()
+        count = 0
+        for x, y in avg_scores.items():
+            top_scores.update({y: x})
+            count += 1
+            if count == 5: #the number of top cadets to get
+                break
+        return reversed(sorted(top_scores))
     
     def save(self, *args, **kwargs):
         try:
@@ -208,55 +233,26 @@ class PtScore(models.Model):
         # Call the actual save method to save the score in the database
         super(PtScore, self).save(*args, **kwargs)
 
-    def get_max_score(self, scores):
+    #TODO some of the average functions on the cadet page are slightly broken after the cleanup. Again.
+
+    @staticmethod
+    def get_max_score(scores):
         max_score = 0
         for score in scores:
             if score.score > max_score:
                 max_score = score.score
         return max_score
 
-    def get_min_score(self, scores):
+    @staticmethod
+    def get_min_score(scores):
         min_score = scores[0].score
         for score in scores:
             if score.score < min_score:
                 min_score = score.score
         return min_score
 
-    def get_score_value(self, value, score_value_dict, event='default'):
-        """this function finds the highest grader key & value above a given value"""
-        if event == 'pushups' or event == 'situps' or event == 'default':
-            if str(value) in score_value_dict:
-                return score_value_dict[str(value)]
-            else:
-                if value < int(min(score_value_dict)):
-                    return '0'
-                elif value > int(max(score_value_dict)):
-                    return '100'
-
-        if event == 'Two-mile run':
-            stripped_score_value_dict = [int(x.replace(':', '')) for x in score_value_dict]
-            stripped_value = int(value.replace(':', ''))
-            if str(value) in score_value_dict:
-                return score_value_dict[str(value)]
-            #extra code to account for in between values goes here
-            else:
-                for key in stripped_score_value_dict:
-                    if stripped_value < key:
-                        unstripped_value = str(key)
-                        unstripped_value = unstripped_value[:2] + ':' + unstripped_value[2:]
-                        try:
-                            return score_value_dict[unstripped_value]
-                        except KeyError:
-                            if key < max(stripped_score_value_dict):
-                                return '100'
-                            else:
-                                return '0'
-            if stripped_value > max(stripped_score_value_dict):
-                return '100'
-            elif stripped_value < min(stripped_score_value_dict):
-                return '0'
-
-    def get_avg_pushups(self, scores):
+    @staticmethod
+    def get_avg_pushups(scores):
         """Returns the avg **number** of pushups over the given set of scores"""
         sum_pushups = 0
         length = len(scores)
@@ -265,16 +261,16 @@ class PtScore(models.Model):
         avg = sum_pushups / length
         return avg
 
-    def get_avg_pushup_score(self, cadet, scores):
+    @staticmethod
+    def get_avg_pushup_score(scores):
         """Returns the avg **score** for the number of pushups over the given set of scores"""
-        age = scores[0].get_age_group()
-        pushup_score_values = Grader.objects.get(gender=cadet.gender, activity='pushups',
-                                                 age_group=age).get_ordered_dict()
-        avg_pushups = self.get_avg_pushups(scores)
+        avg_pushup_score = 0
+        for score in scores:
+            avg_pushup_score += score.pushups_score
+        return avg_pushup_score/scores.count()
 
-        return self.get_score_value(avg_pushups, pushup_score_values, event='pushups')
-
-    def get_avg_situps(self, scores):
+    @staticmethod
+    def get_avg_situps(scores):
         """Returns the avg **number** of situps over the given set of scores"""
         sum_situps = 0
         length = len(scores)
@@ -283,15 +279,16 @@ class PtScore(models.Model):
         avg = sum_situps / length
         return avg
 
-    def get_avg_situp_score(self, cadet, scores):
+    @staticmethod
+    def get_avg_situp_score(scores):
         """Returns the avg **score** for the number of situps over the given set of scores"""
-        age = scores[0].get_age_group()
-        situp_score_values = Grader.objects.get(gender=cadet.gender, activity='situps',
-                                                age_group=age).get_ordered_dict()
-        avg_situps = self.get_avg_situps(scores)
-        return self.get_score_value(avg_situps, situp_score_values, event='situps')
+        avg_situp_score = 0
+        for score in scores:
+            avg_situp_score += score.situps_score
+        return avg_situp_score/scores.count()
 
-    def get_avg_run_time(self, scores):
+    @staticmethod
+    def get_avg_run_time(scores):
         """Returns the avg **time** over the given set of scores"""
         sum_time = 0
         length = len(scores)
@@ -301,23 +298,25 @@ class PtScore(models.Model):
         avg = str(sum_time / length)
         return scores[0].convert_time_mins_secs(avg)
 
-    def get_avg_run_score(self, cadet, scores):
-        """Returns the avg **score** of the given set of scores"""
-        age = scores[0].get_age_group()
-        two_mile_score_values = Grader.objects.get(gender=cadet.gender, activity='Two-mile run',
-                                                       age_group=age).get_ordered_dict()
-        avg_two_mile = self.get_avg_run_time(scores)
-        return self.get_score_value(avg_two_mile, two_mile_score_values, event='Two-mile run')
+    @staticmethod
+    def get_avg_run_score(scores):
+        """Returns the avg run **score** of the given set of scores"""
+        avg_run_score = 0
+        for score in scores:
+            avg_run_score += score.run_score
+        return avg_run_score/scores.count()
 
-    def get_avg_total_score(self, scores):
+
+    @staticmethod
+    def get_avg_total_score(scores):
         """Returns the avg **score** over the given set of scores"""
-        sum_time = 0
+        sum = 0
         length = len(scores)
         for score in scores:
-            sum_time += int(score.score)
-        avg = sum_time / length
+            sum += int(score.score)
+        avg = sum / length
         return avg
-    
+
     """
     This method takes the two_mile info (CharField) of the cadet at hand and splits it into a list
     So a time of 15:43 should return a list value of [15, 43]
@@ -457,7 +456,7 @@ class PtScore(models.Model):
         
     class Meta:
         db_table='PtScore'
-        
+
 class Grader(models.Model):
     gender = models.CharField(max_length=6, choices=GENDER_CHOICES, blank=False, null=True)
     activity = models.CharField(max_length=15,choices=ACTIVITY_CHOICES, blank=False, null=True)

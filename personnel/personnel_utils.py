@@ -22,7 +22,7 @@ def grouping_data(cadets):
     ptscore = PtScore()
     for cadet in cadets:
         scores = all_scores.filter(cadet=cadet)
-        avg_scores[cadet] = ptscore.get_avg_total_score(scores)
+        avg_scores[cadet] = PtScore.get_avg_total_score(scores)
     avg_scores = collections.OrderedDict(reversed(sorted(avg_scores.items(), key=lambda t: t[1])))
     top_scores = collections.OrderedDict()
     count = 0

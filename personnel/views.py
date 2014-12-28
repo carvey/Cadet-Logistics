@@ -71,17 +71,17 @@ class CadetPage(View):
         ptscore = PtScore()
 
         if scores:
-            max_score = ptscore.get_max_score(scores)
-            min_score = ptscore.get_min_score(scores)
-            avg_score = ptscore.get_avg_total_score(scores)
+            max_score = PtScore.get_max_score(scores)
+            min_score = PtScore.get_min_score(scores)
+            avg_score = PtScore.get_avg_total_score(scores)
 
-            avg_pushups = ptscore.get_avg_pushups(scores)
-            avg_situps = ptscore.get_avg_situps(scores)
-            avg_two_mile = ptscore.get_avg_run_time(scores)
+            avg_pushups = PtScore.get_avg_pushups(scores)
+            avg_situps = PtScore.get_avg_situps(scores)
+            avg_two_mile = PtScore.get_avg_run_time(scores)
 
-            avg_pushup_score = ptscore.get_avg_pushup_score(cadet, scores)
-            avg_situp_score = ptscore.get_avg_situp_score(cadet, scores)
-            avg_two_mile_score = ptscore.get_avg_run_score(cadet, scores)
+            avg_pushup_score = PtScore.get_avg_pushup_score(scores)
+            avg_situp_score = PtScore.get_avg_situp_score(scores)
+            avg_two_mile_score = PtScore.get_avg_run_score(scores)
 
         context = {
             'cadet': cadet,

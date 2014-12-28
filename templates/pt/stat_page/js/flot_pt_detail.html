@@ -10,13 +10,9 @@
 
             var scores = [{% for key,value in data.items %}[{{ key.date|timestamp }}, {{ value }}], {% endfor %}];
 
-            {% for key, value in company_scores.items %}
-                var scores{{ forloop.counter }} = [
-                {% for test, avg in value.items %}
-                        [{{ test.date|timestamp }}, {{ avg }}],
-                {% endfor %}
-                ];
-            {% endfor %}
+            var pushups = [{% for key, value in pushup_test_scores.items %}[{{ key.date|timestamp }}, {{ value }}], {% endfor %}];
+            var situps = [{% for key, value in situp_test_scores.items %}[{{ key.date|timestamp }}, {{ value }}], {% endfor %}];
+            var run = [{% for key, value in run_test_scores.items %}[{{ key.date|timestamp }}, {{ value }}], {% endfor %}];
 
             var options = {
                 series: {
@@ -46,7 +42,7 @@
                 },
                 tooltip: true,
                 tooltipOpts: {
-                    content: "'%s' %x.1 PT test avg score is %y.4",
+                    content: "'%s' for %x.1 PT Test is %y.4",
                     shifts: {
                         x: -60,
                         y: 25
@@ -54,13 +50,13 @@
                 }
             };
 
-            var plotObj = $.plot($("#company_score_graph"),
+            var plotObj = $.plot($("#detail_score_graph"),
                     [
-                        {data: scores, label: "Batallion Average"},
+                        {data: scores, label: "Avg. Overall Score"},
+                        {data: pushups, label: "Avg. Pushup Score"},
+                        {data: situps, label: "Avg. Situp Score"},
+                        {data: run, label: "Avg. Run Score"}
 
-                        {% for key, value in company_scores.items %}
-                            {data: scores{{ forloop.counter }}, label: "{{ key.name }}"},
-                        {% endfor %}
                     ],
                 options);
         }

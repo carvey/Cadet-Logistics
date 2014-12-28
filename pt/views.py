@@ -157,10 +157,39 @@ class StatisticsView(View):
             for score_counter, pt_score in enumerate(pt_scores):
                 total_score += pt_score.score
             avg_score = float(total_score)/total_num
-            avg_pt_scores["%s" % pt_test] = avg_score
+            avg_pt_scores[pt_test] = avg_score
+
+
+        company_scores = {}
+        for company in Company.objects.all():
+            test_dict = {}
+            for test in PtTest.objects.all():
+                avg = test.get_average_score(company)
+                test_dict.update({test: avg})
+            company_scores[company] = test_dict
+
+
+        pushups = {}
+        situps = {}
+        run = {}
+        for test in PtTest.objects.all():
+            scores = PtScore.objects.filter(pt_test=test)
+            avg_pushup_score = PtScore.get_avg_pushup_score(scores)
+            avg_situp_score = PtScore.get_avg_situp_score(scores)
+            avg_run_score = PtScore.get_avg_run_score(scores)
+
+            pushups.update({test: avg_pushup_score})
+            situps.update({test: avg_situp_score})
+            run.update({test: avg_run_score})
+
 
         context = {
             'data' : avg_pt_scores,
+            'company_scores': company_scores,
+            'pushup_test_scores': pushups,
+            'situp_test_scores': situps,
+            'run_test_scores': run,
+
         }
         return render(request, self.template_name, context)
 
@@ -182,10 +211,10 @@ class CadetsListingView(View):
         for cadet in cadets:
             scores = all_scores.filter(cadet=cadet)
 
-            avg_pushup_scores[cadet.id] = ptscore.get_avg_pushup_score(cadet, scores)
-            avg_situp_scores[cadet.id] = ptscore.get_avg_situp_score(cadet, scores)
-            avg_run_scores[cadet.id] = ptscore.get_avg_run_score(cadet, scores)
-            avg_scores[cadet.id] = ptscore.get_avg_total_score(scores)
+            avg_pushup_scores[cadet.id] = ptscore.get_avg_pushup_score(scores)
+            avg_situp_scores[cadet.id] = ptscore.get_avg_situp_score(scores)
+            avg_run_scores[cadet.id] = ptscore.get_avg_run_score(scores)
+            avg_scores[cadet.id] = PtScore.get_avg_total_score(scores)
 
         context = {
             'cadets': cadets,

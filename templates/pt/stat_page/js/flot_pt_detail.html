@@ -35,10 +35,10 @@
                   categories: [{% for key, value in data.items %}"{{ key }}", {% endfor %}]
                 },
                 zoom: {
-                  interactive: true
+                  interactive: false
                 },
                 pan: {
-                   interactive: true
+                   interactive: false
                 },
                 tooltip: true,
                 tooltipOpts: {
@@ -50,15 +50,30 @@
                 }
             };
 
-            var plotObj = $.plot($("#detail_score_graph"),
-                    [
+            var data = [
 {#                        {data: scores, label: "Avg. Overall Score"},#}
                         {data: pushups, label: "Avg. Pushup Score"},
                         {data: situps, label: "Avg. Situp Score"},
                         {data: run, label: "Avg. Run Score"}
 
-                    ],
-                options);
+                    ];
+            var plotObj = $.plot($("#detail_score_graph"), data, options);
+
+            $('#company_flot').on('click', function(){
+               if ($(this).is(':checked')){
+                   var opts = plotObj.getOptions();
+                   opts.zoom.interactive = true;
+                   opts.zoom.interactive = true;
+                   plotObj.setupGrid();
+                   plotObj.draw();
+               } else {
+                   var opts = plotObj.getOptions();
+                   opts.zoom.interactive = false;
+                   opts.zoom.interactive = false;
+                   plotObj.setupGrid();
+                   plotObj.draw();
+               }
+            });
         }
     });
 </script>

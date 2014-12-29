@@ -59,6 +59,11 @@
         <div class="panel panel-default">
              <div class="panel-heading">
                  PT Detail Data by Test
+                 <span style="float: right">
+                     <form>
+                         Enable Panning/Zooming <input type="checkbox" id="batallion_detail" value="" />
+                    </form>
+                 </span>
              </div>
              <div class="panel-body">
                  <div class="flot-chart">
@@ -72,6 +77,11 @@
         <div class="panel panel-default">
              <div class="panel-heading">
                  Average Company PT Scores by Test
+                 <span style="float: right">
+                     <form>
+                         Enable Panning/Zooming <input type="checkbox" id="company_flot" value="" />
+                    </form>
+                 </span>
              </div>
              <div class="panel-body">
                  <div class="flot-chart">
@@ -123,3 +133,21 @@
 	</div>
 
 </div>
+
+<script>
+    $('#batallion_detail').on('click', function(){
+           if ($(this).is(':checked')){
+
+           } else {
+
+           }
+        });
+
+    $('#company_flot').on('click', function(){
+           if ($(this).is(':checked')){
+
+           } else {
+
+           }
+        });
+</script>

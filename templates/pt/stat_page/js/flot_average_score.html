@@ -1,6 +1,8 @@
 {% load pt_filters %}
 
 <script>
+
+
     //Flot Line Chart
     $(document).ready(function() {
         var offset = 0;
@@ -38,10 +40,10 @@
                   mode: "categories"
                 },
                 zoom: {
-                  interactive: true
+                  interactive: false
                 },
                 pan: {
-                   interactive: true
+                   interactive: false
                 },
                 tooltip: true,
                 tooltipOpts: {
@@ -53,15 +55,31 @@
                 }
             };
 
-            var plotObj = $.plot($("#company_score_graph"),
-                    [
-                        {data: scores, label: "Batallion Average"},
+            var data = [
+                            {data: scores, label: "Batallion Average"},
 
-                        {% for key, value in company_scores.items %}
-                            {data: scores{{ forloop.counter }}, label: "{{ key.name }}"},
-                        {% endfor %}
-                    ],
-                options);
+                            {% for key, value in company_scores.items %}
+                                {data: scores{{ forloop.counter }}, label: "{{ key.name }}"},
+                            {% endfor %}
+                        ];
+            var plotObj = $.plot($("#company_score_graph"), data, options);
+
+            $('#batallion_detail').on('click', function()
+            {
+               if ($(this).is(':checked'))
+               {
+                   options.zoom.interactive = true;
+                   options.zoom.interactive = true;
+                   plotObj.setupGrid();
+                   plotObj.draw();
+               } else
+               {
+                   options.zoom.interactive = false;
+                   options.zoom.interactive = false;
+                   plotObj.setupGrid();
+                   plotObj.draw();
+               }
+            });
         }
     });
 </script>

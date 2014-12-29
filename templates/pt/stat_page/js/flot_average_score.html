@@ -64,22 +64,6 @@
                         ];
             var plotObj = $.plot($("#company_score_graph"), data, options);
 
-            $('#batallion_detail').on('click', function()
-            {
-               if ($(this).is(':checked'))
-               {
-                   options.zoom.interactive = true;
-                   options.zoom.interactive = true;
-                   plotObj.setupGrid();
-                   plotObj.draw();
-               } else
-               {
-                   options.zoom.interactive = false;
-                   options.zoom.interactive = false;
-                   plotObj.setupGrid();
-                   plotObj.draw();
-               }
-            });
         }
     });
 </script>

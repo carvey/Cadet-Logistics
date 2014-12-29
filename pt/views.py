@@ -160,11 +160,20 @@ class StatisticsView(View):
             avg_pt_scores[pt_test] = avg_score
 
 
+        #most of the following code is used to get the average score for each pt event for each company
+        #This block serves two purposes though. The other is to get the avg scores per company per pt test
         company_test_scores = {}
-        company_detail_scores = {}
+        company_avg_overall_scores = {}
+        company_avg_pushup_scores = {}
+        company_avg_situp_scores = {}
+        company_avg_run_scores = {}
         for company in Company.objects.all():
             company_scores = PtScore.objects.filter(cadet__company=company)
-
+            company_avg_overall_scores.update({company: PtScore.get_avg_total_score(company_scores)})
+            company_avg_pushup_scores.update({company: PtScore.get_avg_pushup_score(company_scores)})
+            company_avg_situp_scores.update({company: PtScore.get_avg_situp_score(company_scores)})
+            company_avg_run_scores.update({company: PtScore.get_avg_run_score(company_scores)})
+            #the following is used for getting the avg scores per company per pt test
             test_dict = {}
             for test in PtTest.objects.all():
                 avg = test.get_average_score(company)
@@ -196,7 +205,11 @@ class StatisticsView(View):
             'situp_test_scores': situps,
             'run_test_scores': run,
             'top_cadets': top_cadets,
-            'lowest_cadets': worst_cadets
+            'lowest_cadets': worst_cadets,
+            'company_overall_scores': company_avg_overall_scores,
+            'company_situp_scores': company_avg_situp_scores,
+            'company_pushup_scores': company_avg_pushup_scores,
+            'company_run_scores': company_avg_run_scores
 
         }
         return render(request, self.template_name, context)

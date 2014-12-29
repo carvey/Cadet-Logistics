@@ -68,7 +68,6 @@ class CadetPage(View):
         max_score = min_score = avg_score = avg_pushups = avg_situps = avg_two_mile = 0
         avg_pushup_score = avg_situp_score = avg_two_mile_score = 0
 
-        ptscore = PtScore()
 
         if scores:
             max_score = PtScore.get_max_score(scores)

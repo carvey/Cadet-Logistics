@@ -8,12 +8,12 @@
 
         function plot() {
 
-            var scores = [{% for key,value in data.items %}[{{ key.date|timestamp }}, {{ value }}], {% endfor %}];
+            var scores = [{% for key,value in data.items %}["{{ key }}", {{ value }}], {% endfor %}];
 
             {% for key, value in company_scores.items %}
                 var scores{{ forloop.counter }} = [
                 {% for test, avg in value.items %}
-                        [{{ test.date|timestamp }}, {{ avg }}],
+                        ["{{ test }}", {{ avg }}],
                 {% endfor %}
                 ];
             {% endfor %}
@@ -35,8 +35,7 @@
                     max: 300
                 },
                 xaxis: {
-                  mode: "time",
-                  timeformat: "%e %b %y"
+                  mode: "categories"
                 },
                 zoom: {
                   interactive: true

@@ -8,6 +8,7 @@
 
         function plot() {
 
+            
             var scores = [{% for key,value in data.items %}["{{ key }}", {{ value }}], {% endfor %}];
 
             var pushups = [{% for key, value in pushup_test_scores.items %}["{{ key }}", {{ value }}], {% endfor %}];
@@ -16,8 +17,10 @@
 
             var options = {
                 series: {
-                    lines: {
-                        show: true
+                    bars: {
+                        show: true,
+                        barWidth: 0.3,
+                        stack: false
                     },
                     points: {
                         show: true
@@ -28,17 +31,11 @@
                 },
                 yaxis: {
                     min: 0,
-                    max: 100
+                    max: 300
                 },
                 xaxis: {
                   mode: "categories",
-                  categories: [{% for key, value in data.items %}"{{ key }}", {% endfor %}]
-                },
-                zoom: {
-                  interactive: true
-                },
-                pan: {
-                   interactive: true
+{#                  categories: [{% for key, value in data.items %}"{{ key }}", {% endfor %}]#}
                 },
                 tooltip: true,
                 tooltipOpts: {
@@ -50,12 +47,28 @@
                 }
             };
 
-            var plotObj = $.plot($("#detail_score_graph"),
+            var plotObj = $.plot($("#company_comparison"),
                     [
-{#                        {data: scores, label: "Avg. Overall Score"},#}
-                        {data: pushups, label: "Avg. Pushup Score"},
-                        {data: situps, label: "Avg. Situp Score"},
-                        {data: run, label: "Avg. Run Score"}
+                        {data: scores, label: "Avg. Overall Score", bars: {
+                            show: true,
+                            barWidth: 0.2,
+                            order: 0
+                        }},
+                        {data: pushups, label: "Avg. Pushup Score", bars: {
+                            show: true,
+                            barWidth: 0.2,
+                            order: 1
+                        }},
+                        {data: situps, label: "Avg. Situp Score", bars: {
+                            show: true,
+                            barWidth: 0.2,
+                            order: 2
+                        }},
+                        {data: run, label: "Avg. Run Score", bars: {
+                            show: true,
+                            barWidth: 0.2,
+                            order: 3
+                        }}
 
                     ],
                 options);

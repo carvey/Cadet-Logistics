@@ -147,24 +147,6 @@ class PtScore(models.Model):
         format_date = self.pt_test.date.strftime('%d %b, %Y')
         return 'PT Score %s for cadet: %s' % (format_date, self.cadet)
 
-    #Get the cadets with the top average pt scores
-    @staticmethod
-    def get_top_cadets(cadets):
-        all_scores = PtScore.objects.all()
-        avg_scores = {}
-        ptscore = PtScore()
-        for cadet in cadets:
-            scores = all_scores.filter(cadet=cadet)
-            avg_scores[cadet] = PtScore.get_avg_total_score(scores)
-        avg_scores = collections.OrderedDict(reversed(sorted(avg_scores.items(), key=lambda t: t[1])))
-        top_scores = collections.OrderedDict()
-        count = 0
-        for x, y in avg_scores.items():
-            top_scores.update({y: x})
-            count += 1
-            if count == 5: #the number of top cadets to get
-                break
-        return reversed(sorted(top_scores))
     
     def save(self, *args, **kwargs):
         try:
@@ -233,7 +215,40 @@ class PtScore(models.Model):
         # Call the actual save method to save the score in the database
         super(PtScore, self).save(*args, **kwargs)
 
-    #TODO some of the average functions on the cadet page are slightly broken after the cleanup. Again.
+    #Get the cadets with the top average pt scores
+    @staticmethod
+    def get_top_cadets(cadets, n=5):
+        all_scores = PtScore.objects.all()
+        avg_scores = {}
+        for cadet in cadets:
+            scores = all_scores.filter(cadet=cadet)
+            avg_scores[cadet] = PtScore.get_avg_total_score(scores)
+        avg_scores = collections.OrderedDict(reversed(sorted(avg_scores.items(), key=lambda t: t[1])))
+        top_scores = collections.OrderedDict()
+        count = 0
+        for x, y in avg_scores.items():
+            top_scores.update({y: x})
+            count += 1
+            if count == n: #the number of top cadets to get
+                break
+        return reversed(sorted(top_scores.items()))
+
+    @staticmethod
+    def get_worst_cadets(cadets, n=5):
+        all_scores = PtScore.objects.all()
+        avg_scores = {}
+        for cadet in cadets:
+            scores = all_scores.filter(cadet=cadet)
+            avg_scores[cadet] = PtScore.get_avg_total_score(scores)
+        avg_scores = collections.OrderedDict(sorted(avg_scores.items(), key=lambda t: t[1]))
+        top_scores = collections.OrderedDict()
+        count = 0
+        for x, y in avg_scores.items():
+            top_scores.update({y: x})
+            count += 1
+            if count == n: #the number of top cadets to get
+                break
+        return sorted(top_scores.items())
 
     @staticmethod
     def get_max_score(scores):
@@ -263,7 +278,9 @@ class PtScore(models.Model):
 
     @staticmethod
     def get_avg_pushup_score(scores):
-        """Returns the avg **score** for the number of pushups over the given set of scores"""
+        """Returns the avg **score** for the number of pushups over the given set of scores.
+        Note that this function takes the average of the scores for each PtScore, it does not get
+        the score of the average pushup count. These two numbers can be different."""
         avg_pushup_score = 0
         for score in scores:
             avg_pushup_score += score.pushups_score
@@ -277,11 +294,14 @@ class PtScore(models.Model):
         for score in scores:
             sum_situps += int(score.situps)
         avg = sum_situps / length
+        print "avg situps: %s" % avg
         return avg
 
     @staticmethod
     def get_avg_situp_score(scores):
-        """Returns the avg **score** for the number of situps over the given set of scores"""
+        """Returns the avg **score** for the number of situps over the given set of scores
+        Note that this function takes the average of the scores for each PtScore, it does not get
+        the score of the average situp count. These two numbers can be different."""
         avg_situp_score = 0
         for score in scores:
             avg_situp_score += score.situps_score
@@ -300,7 +320,9 @@ class PtScore(models.Model):
 
     @staticmethod
     def get_avg_run_score(scores):
-        """Returns the avg run **score** of the given set of scores"""
+        """Returns the avg run **score** of the given set of scores
+        Note that this function takes the average of the scores for each PtScore, it does not get
+        the score of the average run time. These two numbers can be different."""
         avg_run_score = 0
         for score in scores:
             avg_run_score += score.run_score

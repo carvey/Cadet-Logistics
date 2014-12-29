@@ -1,5 +1,59 @@
 
 
+<style>
+    .top_list {
+        font-size: 20px;
+        padding: 15px;
+    }
+</style>
+
+<div class="row">
+    <div class='col-md-8'>
+        <div class="panel panel-default">
+             <div class="panel-heading">
+                 PT Detail Data by Test
+             </div>
+             <div class="panel-body">
+                 <div class="flot-chart">
+                     <div class="flot-chart-content" id="company_comparison"></div>
+                 </div>
+             </div>
+         </div>
+    </div>
+
+    <div class='col-md-4'>
+		<div class='panel panel-default'>
+			<div class='panel-heading'>
+				Top Average PT Scores
+			</div>
+			<div class='panel-body top_list'>
+				<ol>
+                    {% for score, cadet in top_cadets %}
+                        <li>{{ cadet.get_name }}: {{ score }}</li>
+                    {% endfor %}
+				</ol>
+			</div>
+		</div>
+	</div>
+
+    <div class='col-md-4'>
+		<div class='panel panel-default'>
+			<div class='panel-heading'>
+				Lowest Average PT Scores
+			</div>
+			<div class='panel-body top_list'>
+				<ol>
+                    {% for score, cadet in lowest_cadets %}
+                        <li>{{ cadet.get_name }}: {{ score }}</li>
+                    {% endfor %}
+				</ol>
+			</div>
+		</div>
+	</div>
+
+
+</div>
+
 <div class="row">
     <div class='col-md-6'>
         <div class="panel panel-default">
@@ -31,5 +85,41 @@
 <div class="row">
 
 
+    <div class='col-md-3'>
+		<div class='panel panel-default'>
+			<div class='panel-heading'>
+				Top Average PT Scores
+			</div>
+			<div class='panel-body'>
+
+			</div>
+		</div>
+	</div>
+
+    <div class='col-md-3'>
+		<div class='panel panel-default'>
+			<div class='panel-heading'>
+				Top Average PT Scores
+			</div>
+			<div class='panel-body'>
+
+			</div>
+		</div>
+	</div>
+
+
+</div>
+
+<div class="row">
+    <div class='col-md-3'>
+		<div class='panel panel-default'>
+			<div class='panel-heading'>
+				Top Average PT Scores
+			</div>
+			<div class='panel-body'>
+
+			</div>
+		</div>
+	</div>
 
 </div>

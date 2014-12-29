@@ -39,7 +39,7 @@
 						{% endwith %}
 						<p>MS Class: {{cadet.ms_level}}</p>
 						<p>Company: {{cadet.company}}</p>
-                        <p>Platoon: </p>
+                        <p>Platoon: {{ cadet.platoon.display_name }}</p>
                         <hr>
 						<p>Staff: {{cadet.is_staff|interpret_bool}}</p>
 						<p>Company Staff: {{cadet.is_company_staff|interpret_bool}}</p>

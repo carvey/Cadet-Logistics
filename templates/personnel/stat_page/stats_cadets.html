@@ -2,8 +2,6 @@
 <style>
     .top_list {
         font-size: 20px;
-    }
-    #top_pt ul {
         padding: 15px;
     }
 </style>
@@ -59,11 +57,11 @@
 				Top Average PT Scores
 			</div>
 			<div class='panel-body top_list'>
-				<ul>
+				<ol>
                     {% for score, cadet in top_scores %}
                         <li>{{ cadet.get_name }}: {{ score }}</li>
                     {% endfor %}
-				</ul>
+				</ol>
 			</div>
 		</div>
 	</div>

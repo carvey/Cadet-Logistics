@@ -16,21 +16,8 @@ def grouping_data(cadets):
     female_cadets = cadets.filter(gender='Female')
     completed_volunteer_hours = cadets.filter(volunteer_hours_status=True)
 
-    #Get the top 3 cadets
-    all_scores = PtScore.objects.all()
-    avg_scores = {}
-    ptscore = PtScore()
-    for cadet in cadets:
-        scores = all_scores.filter(cadet=cadet)
-        avg_scores[cadet] = PtScore.get_avg_total_score(scores)
-    avg_scores = collections.OrderedDict(reversed(sorted(avg_scores.items(), key=lambda t: t[1])))
-    top_scores = collections.OrderedDict()
-    count = 0
-    for x, y in avg_scores.items():
-        top_scores.update({y: x})
-        count += 1
-        if count == 5: #the number of top cadets to get
-            break
+    #Get the top n cadets
+    top_scores = PtScore.get_top_cadets(cadets)
 
     top_gpas = Cadet.get_top_gpa_cadets(cadets, 5)
 
@@ -44,7 +31,7 @@ def grouping_data(cadets):
                'male_cadets': male_cadets,
                'female_cadets': female_cadets,
                'completed_hours': completed_volunteer_hours,
-               'top_scores': reversed(sorted(top_scores.items())),
+               'top_scores': top_scores,
                'top_gpas': top_gpas
                }
     return context

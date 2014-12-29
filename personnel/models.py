@@ -193,10 +193,28 @@ class Platoon(models.Model):
         db_table = 'Platoon'
 
     def __unicode__(self):
+        end_string = "th"
+        if self.name % 10 == 1:
+            end_string = "st"
+        elif self.name % 10 == 2:
+            end_string = "nd"
+        elif self.name % 10 == 3:
+            end_string = "rd"
+
         if self.company:
-            return str(self.company) + " " + str(self.name) + " Platoon"
+            return str(self.company) + " Company, " + str(self.name) + end_string + " Platoon"
         else:
-            return self.name
+            return str(self.name) + end_string + " Platoon"
+
+    def display_name(self):
+        end_string = "th"
+        if self.name % 10 == 1:
+            end_string = "st"
+        elif self.name % 10 == 2:
+            end_string = "nd"
+        elif self.name % 10 == 3:
+            end_string = "rd"
+        return str(self.name) + end_string + " Platoon"
 
     def set_platoon_commander(self, cadet):
         if self.platoon_commander:

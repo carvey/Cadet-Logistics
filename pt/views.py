@@ -149,7 +149,7 @@ class StatisticsView(View):
     def get(self, request):
         avg_pt_scores = {}
         pt_tests = PtTest.objects.all()
-        count=0
+
         for test_counter, pt_test in enumerate(pt_tests):
             pt_scores = PtScore.objects.filter(pt_test=pt_test)
             total_num = len(pt_scores)
@@ -160,13 +160,16 @@ class StatisticsView(View):
             avg_pt_scores[pt_test] = avg_score
 
 
-        company_scores = {}
+        company_test_scores = {}
+        company_detail_scores = {}
         for company in Company.objects.all():
+            company_scores = PtScore.objects.filter(cadet__company=company)
+
             test_dict = {}
             for test in PtTest.objects.all():
                 avg = test.get_average_score(company)
                 test_dict.update({test: avg})
-            company_scores[company] = test_dict
+            company_test_scores[company] = test_dict
 
 
         pushups = {}
@@ -182,13 +185,18 @@ class StatisticsView(View):
             situps.update({test: avg_situp_score})
             run.update({test: avg_run_score})
 
+        cadets = Cadet.objects.all()
+        top_cadets = PtScore.get_top_cadets(cadets)
+        worst_cadets = PtScore.get_worst_cadets(cadets)
 
         context = {
             'data' : avg_pt_scores,
-            'company_scores': company_scores,
+            'company_scores': company_test_scores,
             'pushup_test_scores': pushups,
             'situp_test_scores': situps,
             'run_test_scores': run,
+            'top_cadets': top_cadets,
+            'lowest_cadets': worst_cadets
 
         }
         return render(request, self.template_name, context)

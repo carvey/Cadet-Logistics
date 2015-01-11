@@ -1,12 +1,10 @@
 import os
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'eagletrack_project.settings')
 
-os.environ['DJANGO_SETTINGS_MODULE'] = 'eagletrack_project.settings'
 
-from django.test import TestCase
 from personnel.models import *
 from pt.models import *
 from pt.constants import *
-from attendance.models import *
 import sys, datetime, random
 
 sys.path.append(os.path.dirname(__file__))
@@ -552,6 +550,9 @@ def create_graders():
 if __name__ == '__main__':
     print "Starting Eagletrack Population script..."
     from personnel.models import Cadet, Company, Platoon, MsLevel
+
+    import django
+    django.setup()
 
     populate()
     print "Population script has ran successfully"

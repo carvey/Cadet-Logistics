@@ -35,7 +35,7 @@ TEMPLATE_DEBUG = True
 ALLOWED_HOSTS = []
 
 TEMPLATE_DIRS = (
-    TEMPLATE_PATH
+    TEMPLATE_PATH,
 )
 
 # Application definition
@@ -47,11 +47,10 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'south',
     'pt',
     'personnel',
-    'attendance',
-    'gear',
+    # 'attendance',
+    # 'gear',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -86,9 +85,9 @@ DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',
 #         'NAME': 'eagletrack',
-#         'USER': 'root',
-#        # 'PASSWORD': '',
-#         'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
+#         'USER': 'charles',
+#         'PASSWORD': 'shorefish',
+#         'HOST': 'savoysterhouse.cnkdqqk3dlt2.us-west-2.rds.amazonaws.com',
 #         'PORT': '3306',
 #     }
 # }

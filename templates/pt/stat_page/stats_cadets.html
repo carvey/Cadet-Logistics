@@ -29,7 +29,7 @@
 			<div class='panel-body top_list'>
 				<ol>
                     {% for score, cadet in top_cadets %}
-                        <li>{{ cadet.get_name }}: {{ score }}</li>
+                        <li><a href="{% url 'cadetpage' cadet.id %}">{{ cadet.get_name }}</a>: {{ score }}</li>
                     {% endfor %}
 				</ol>
 			</div>
@@ -44,7 +44,7 @@
 			<div class='panel-body top_list'>
 				<ol>
                     {% for score, cadet in lowest_cadets %}
-                        <li>{{ cadet.get_name }}: {{ score }}</li>
+                        <li><a href="{% url 'cadetpage' cadet.id %}">{{ cadet.get_name }}</a>: {{ score }}</li>
                     {% endfor %}
 				</ol>
 			</div>
@@ -81,63 +81,3 @@
          </div>
     </div>
 </div>
-
-<div class="row">
-
-
-    <div class='col-md-3'>
-		<div class='panel panel-default'>
-			<div class='panel-heading'>
-				Top Average PT Scores
-			</div>
-			<div class='panel-body'>
-
-			</div>
-		</div>
-	</div>
-
-    <div class='col-md-3'>
-		<div class='panel panel-default'>
-			<div class='panel-heading'>
-				Top Average PT Scores
-			</div>
-			<div class='panel-body'>
-
-			</div>
-		</div>
-	</div>
-
-
-</div>
-
-<div class="row">
-    <div class='col-md-3'>
-		<div class='panel panel-default'>
-			<div class='panel-heading'>
-				Top Average PT Scores
-			</div>
-			<div class='panel-body'>
-
-			</div>
-		</div>
-	</div>
-
-</div>
-
-<script>
-    $('#batallion_detail').on('click', function(){
-           if ($(this).is(':checked')){
-
-           } else {
-
-           }
-        });
-
-    $('#company_flot').on('click', function(){
-           if ($(this).is(':checked')){
-
-           } else {
-
-           }
-        });
-</script>

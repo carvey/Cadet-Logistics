@@ -62,7 +62,6 @@ class CadetPage(View):
         cadet = Cadet.objects.get(id=cadet_id)
         scores = PtScore.objects.filter(cadet=cadet_id)
         ordered_scores = scores.order_by('-pt_test')[:3]
-        score_values = Grader.objects.all()
 
         # initializing pt related vars to 0 ahead of time, in case the cadet has no pt tests yet
         max_score = min_score = avg_score = avg_pushups = avg_situps = avg_two_mile = 0

@@ -1,6 +1,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional// EN" "http://www.w3.org/TR/xhtml/DTD/xhtml-transitional.dtd">
 {% load staticfiles %}
+
 <html>
+
+    <title>
+        Eagletrack
+    </title>
 	<head>
 		<link rel="stylesheet" href="http://cdn.oesmith.co.uk/morris-0.4.3.min.css">
         <!-- Core Scripts - Include with every page -->
@@ -18,6 +23,8 @@
 	    <link href="{% static 'css/plugins/morris/morris-0.4.3.min.css' %}" rel="stylesheet">
 	    <link href="{% static 'css/plugins/timeline/timeline.css' %}" rel="stylesheet">
 
+        <link href="{% static 'css/eagletrack_styling.css' %}" rel="stylesheet">
+
 	    <!-- SB Admin CSS - Include with every page -->
 	    <link href="{% static 'css/sb-admin.css' %}" rel="stylesheet">
 		{% block head %}
@@ -25,6 +32,7 @@
 	</head>
 
 	<body>
+
 		{% block top_nav %}
 			<nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="margin-bottom: 0">
             <div class="navbar-header">
@@ -296,12 +304,6 @@
                             	</li>
                             	<li>
                             		<a href="/pt/cadets">Cadets</a>
-                            	</li>
-                            	<li>
-                            		<a href="/pt/company">Company</a>
-                            	</li>
-                            	<li>
-                            		<a href="/pt/ms">MS Level</a>
                             	</li>
                             </ul>
                         </li>

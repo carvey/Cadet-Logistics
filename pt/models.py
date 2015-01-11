@@ -294,7 +294,6 @@ class PtScore(models.Model):
         for score in scores:
             sum_situps += int(score.situps)
         avg = sum_situps / length
-        print "avg situps: %s" % avg
         return avg
 
     @staticmethod

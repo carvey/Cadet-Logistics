@@ -4,7 +4,7 @@
 
 body {
     padding-top: 100px;
-    background-color: #f8f8f8;
+    background-color: #3C3C3C;
 }
 
 @media(min-width:768px) {
@@ -16,6 +16,48 @@ body {
 /* Wrappers */
 
 /* ------------------------------- */
+
+.navbar {
+    background-color: #292929;
+}
+
+.navbar-fixed-top {
+    border-color: transparent;
+}
+
+#side-menu li {
+    border-color: #3C3C3C;
+}
+#side-menu li a {
+    color: #8a8a8a;
+}
+
+#side-menu li a:hover {
+    color: #ffffff;
+    background-color: darkgrey;
+}
+
+#search {
+    background-color: #3C3C3C;
+}
+
+#search-container {
+    background-color: transparent;
+    border: 1px #242424 solid;
+}
+
+#search li {
+    background-color: #3C3C3C;
+}
+
+#search-button {
+    border: 0;
+    background-color: transparent;
+}
+
+.fa-search {
+    color: #8a8a8a;
+}
 
 #wrapper {
     width: 100%;
@@ -52,6 +94,7 @@ body {
 }
 
 .navbar-top-links li a {
+    color: #8a8a8a;
     padding: 15px;
     min-height: 50px;
 }
@@ -105,6 +148,11 @@ body {
 
 .sidebar-search {
     padding: 15px;
+}
+
+.sidebar-search .input-group .form-control {
+    background-color: transparent;
+    border-color: transparent;
 }
 
 .arrow {

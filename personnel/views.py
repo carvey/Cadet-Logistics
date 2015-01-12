@@ -1,11 +1,35 @@
-from django.shortcuts import render
+from django.shortcuts import render, HttpResponseRedirect
 from django.views.generic import View
+from django.views.generic.edit import FormView
+from django.contrib.auth import authenticate, login
 from personnel.models import Cadet, Company, MsLevel, Platoon, SnapShot, Demographic
 from pt.models import PtScore, PtTest, Grader
 from personnel_utils import grouping_data
+from django.contrib.auth.decorators import login_required
+from personnel.forms import LoginForm
 
 # Create your views here.
 
+
+class Login(FormView):
+    template_name = 'auth/login.html'
+    form_class = LoginForm
+    success_url = '/'
+
+    def get(self, request, *args, **kwargs):
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        return self.render_to_response(self.get_context_data(form=form, next=self.request.GET.get('next')))
+
+    def form_valid(self, form):
+        user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
+        if not user:
+            return HttpResponseRedirect('/login')
+        login(self.request, user)
+        if self.request.POST.get('next') != 'None':
+            return HttpResponseRedirect(self.request.POST.get('next'))
+        else:
+            return super(Login, self).form_valid(form)
 
 class Index(View):
     template_name = "index.html"

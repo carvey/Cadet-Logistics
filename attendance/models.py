@@ -31,7 +31,7 @@ EVENT_TYPES = (
 class Attended(models.Model):
     attended_list = models.ManyToManyField('personnel.Cadet', default='', null=False)
     event = models.OneToOneField('Event', blank=False, null=True)
-    
+
     def __unicode__(self):
         return "Attendance: " + str(self.event)
 
@@ -41,7 +41,7 @@ class Event(models.Model):
     required_companies = models.ManyToManyField(Company, default='')
     required_ms_levels = models.ManyToManyField(MsLevel, default='')
     is_required = models.BooleanField(default=True)
-    
+
     def __unicode__(self):
         format = self.date.strftime('%d %b, %Y')
         return "%s: %s" % (self.event_type, format)

@@ -7,6 +7,8 @@ from pt.models import PtScore, PtTest, Grader
 from personnel_utils import grouping_data
 from django.contrib.auth.decorators import login_required
 from personnel.forms import LoginForm
+from django.contrib.auth.views import logout_then_login
+
 
 # Create your views here.
 
@@ -30,6 +32,11 @@ class Login(FormView):
             return HttpResponseRedirect(self.request.POST.get('next'))
         else:
             return super(Login, self).form_valid(form)
+
+
+def logout(request):
+    return logout_then_login(request, login_url='/login')
+
 
 class Index(View):
     template_name = "index.html"

@@ -32,6 +32,9 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
+LOGIN_URL = 'login'
+LOGOUT_URL = 'logout'
+
 ALLOWED_HOSTS = []
 
 TEMPLATE_DIRS = (
@@ -51,6 +54,7 @@ INSTALLED_APPS = (
     'personnel',
     # 'attendance',
     # 'gear',
+    'stronghold'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -60,6 +64,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'stronghold.middleware.LoginRequiredMiddleware',
 )
 
 ROOT_URLCONF = 'eagletrack_project.urls'
@@ -109,6 +114,7 @@ USE_TZ = True
 #A setting to allow django debug toolbar to work with wsgi interface
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
+STRONGHOLD_PUBLIC_NAMED_URLS = ()
 
 STATIC_ROOT = PROJECT_PATH + '/../static'
 STATIC_URL = '/static/'

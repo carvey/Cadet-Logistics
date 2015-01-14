@@ -67,24 +67,7 @@
 <script src="{% static 'js/plugins/dataTables/plugins/TableTools/dataTables.tableTools.js' %}"></script>
 <script> //This script initiates the table and sets up the ColVis, ColReorder, and TableTools plugins. Some styling is also done
     $(document).ready(function() {
-        $('#dataTables-example').dataTable({
-        	"dom": 'TCR<"clear">lfrtip',
-        	"tableTools": {
-                "sSwfPath": "{% static 'css/plugins/dataTables/plugins/TableTools/copy_csv_xls_pdf.swf' %}"
-            },
-
-        	"fnInitComplete": function() {
-        		$('.ColVis').appendTo("#panel_header");
-        		$('.DTTT_container').appendTo('#panel_header');
-        	},
-        	{% block datatables_extra_js %}
-        	"aoColumnDefs": [
-                 <!--Column indices that should be hidden by default go in the block within the brackets-->
-        	     {"bVisible": false, "aTargets": [{% block hide_column_index%}{% endblock %}]}
-        	 ]
-        	{% endblock %}
-
-        });
+        {% include 'datatables/init_script.txt' %}
     });
 </script>
 

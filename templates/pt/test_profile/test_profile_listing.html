@@ -1,0 +1,25 @@
+{% extends 'datatables/tabbed_datatable.html' %}
+
+{% block table_title %}
+	{% with scores|first as first_score %} {{first_score.pt_test}} {% endwith %}
+{% endblock %}
+
+{% block columns%}
+	<th>Last, First Name</th>
+	<th>Pushups</th>
+	<th>Sit-ups</th>
+	<th>Two Mile Time</th>
+	<th>Score</th>
+{% endblock %}
+
+{% block table_data %}
+	{% for score in scores %}
+		<tr class="odd gradeX">
+				<td><a href="/personnel/cadets/{{ score.cadet.id }}/pt/">{{score.cadet}}</a></td>
+				<td>{{score.pushups}}</td>
+				<td>{{score.situps}}</td>
+				<td>{{score.get_run_time_str}}</td> <!-- Not sorting properly. May have to do with creating in pop script -->
+				<td>{{score.score}}</td>
+		</tr>
+	{% endfor %}
+{% endblock %}

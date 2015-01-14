@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block page_header %}
+{{ test.date }} PT Test
+{% endblock %}
+
+{% block content %}
+	<ul class='nav nav-tabs'>
+		<li {% if tab == "stats" %}class="active"{% endif %} id="stats_tab"><a href="#stats" data-toggle="tab">Statistics</a></li>
+		<li {% if tab == "listing" %}class="active"{% endif %} id="listing_tab"><a href="#listing" data-toggle="tab">Listing</a></li>
+	</ul>
+	
+	<div class="tab-content">
+
+        {# the default tab is loaded with the page, while the second tab is loaded with ajax when the tab is clicked #}
+		<div class='tab-pane fade{% if tab == "stats" %} in active{% endif %}' id='stats'>
+			{% include 'pt/test_profile/test_profile_stats.html' %}
+		</div>
+
+        <div class='tab-pane fade{% if tab == "listing" %} in active{% endif %}' id='listing'>
+            {# listing content to go here via ajax #}
+		</div>
+
+        <script>
+            $(document).ready(function() {
+                $('#listing_tab').click(function() {
+                   $.get('/pt/tests/{{ test.id }}/listing', {}, function(data) {
+                       $('#listing').html(data);
+                    });
+                });
+            });
+        </script>
+
+	</div>
+{% endblock %}
+
+{% block page_scripts %}
+	<script src="{% static 'js/plugins/flot/jquery.flot.js' %}"></script>
+    <script src="{% static 'js/plugins/flot/jquery.flot.time.js'  %}"></script>
+	<script src="{% static 'js/plugins/flot/jquery.flot.tooltip.min.js' %}"></script>
+    <script src="{% static 'js/plugins/flot/jquery.flot.pie.js' %}"></script>
+
+{% endblock %}

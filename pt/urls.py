@@ -3,13 +3,11 @@ from pt.views import *
 
 urlpatterns = patterns('',
         
-        url(r'^tests/stats/?$', TestStatView.as_view(), name='pt-tests-stats'),
-        
-        url(r'^tests/listing/?$', TestListingView.as_view(), name='pt-tests-listing'),
-        
         url(r'^tests/scores/(?P<test_id>\d+)/?$', TestScoresView.as_view(), name='scores-by-test'),
         
         url(r'^tests/?$', TestListingView.as_view(), name='pt-tests-index'),
+        url(r'^tests/(?P<test_id>\d+)/$', TestProfiletView.as_view(), name='pt-test-profile'),
+        url(r'^tests/(?P<test_id>\d+)/(?P<tab>\w+)/$', TestProfiletView.as_view(), name='pt-test-profile'),
         
         url(r'^cadet/(?P<cadet_id>\d+)/?$', CadetDetailView.as_view(), name='cadet-detail-view'),
         

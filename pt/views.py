@@ -87,12 +87,31 @@ class TestView(View):
         return render(request, self.template_name, context)
 
 
-class TestStatView(View):
-    template_name = 'pt/test_stats.html'
+class TestProfiletView(View):
+    template_name = 'pt/test_profile/test_profile.html'
 
-    def get(self, request):
-        context = {
-        }
+    #each tab after stats (the first one) uses ajax to load
+    def get(self, request, test_id, tab='stats'):
+        context = {}
+        test = PtTest.objects.get(id=test_id)
+        #sitewide context
+        context.update(
+            {'test': test, 'tab': tab}
+        )
+
+        if tab == 'stats':
+            return render(request, self.template_name, context)
+
+        elif tab == 'listing':
+            template_name = 'pt/test_profile/test_profile_listing.html'
+            cadets = Cadet.objects.all()
+            scores = PtScore.objects.filter(pt_test=test)
+            context.update({
+                'scores': scores,
+                'cadets': cadets,
+            })
+            return render(request, template_name, context)
+
         return render(request, self.template_name, context)
 
 
@@ -146,7 +165,7 @@ class CadetsView(View):
 class StatisticsView(View):
     template_name = 'pt/stat_page/statistics.html'
 
-    def get(self, request):
+    def get(self, request, tab='cadets'):
         avg_pt_scores = {}
         pt_tests = PtTest.objects.all()
 
@@ -199,6 +218,7 @@ class StatisticsView(View):
         worst_cadets = PtScore.get_worst_cadets(cadets)
 
         context = {
+            'tab': tab,
             'data' : avg_pt_scores,
             'company_scores': company_test_scores,
             'pushup_test_scores': pushups,

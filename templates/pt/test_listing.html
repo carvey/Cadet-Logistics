@@ -14,7 +14,7 @@
             <div class="col-lg-4">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <a href="{{ test.getAddress }}">
+                        <a href="{% url 'pt-test-profile' test.id %}">
                         <h3 class="panel-title">{{ test }} <span class="glyphicon glyphicon-stats" style="float: right;"></span></h3>
                         </a>
                     </div>

@@ -1,6 +1,6 @@
 {% load static %}
 
-$('#datatables-instance').dataTable({
+var dt = $('#datatables-instance').dataTable({
         "dom": 'TCR<"clear">lfrtip',
         "tableTools": {
             "sSwfPath": "{% static 'css/plugins/dataTables/plugins/TableTools/copy_csv_xls_pdf.swf' %}"
@@ -19,3 +19,18 @@ $('#datatables-instance').dataTable({
          {% endblock %}
 });
 
+$('#datatables-instance tfoot td').each( function () {
+    var title = $('#datatables-instance tfoot td').eq( $(this).index() ).text();
+    $(this).html( '<input type="text" class="form-control" style="width:100%" placeholder="Search '+title+'" />' );
+});
+
+var table = dt.api();
+
+table.columns().eq( 0 ).each( function ( colIdx ) {
+    $( 'input', table.column( colIdx ).footer() ).on( 'keyup change', function () {
+        table
+            .column( colIdx )
+            .search( this.value )
+            .draw();
+    } );
+} );

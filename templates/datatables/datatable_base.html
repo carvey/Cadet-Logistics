@@ -38,6 +38,15 @@
                                 {% endblock %}
                             </tr>
                             </thead>
+
+                            <tfoot>
+                                <tr>
+                                    {% block table_footer %}
+                                        <td></td>
+                                    {% endblock %}
+                                </tr>
+                            </tfoot>
+
                             <tbody>
                             <!-- This block handles putting data into the datatable -->
                             <!-- Each td tag corresponds to its respective column header as listed in the columns block -->
@@ -92,6 +101,7 @@
         }
         {% include 'datatables/init_script.txt' %}
     });
+
     </script>
 
 {% endblock %}

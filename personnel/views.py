@@ -138,6 +138,7 @@ class CompanyDetail(View):
         groups = Platoon.objects.filter(company=company)
         link = "platoons"
         listing_template = 'personnel/group_pages/company_datatable_listing.html'
+        cadet_listing_template = 'personnel/group_pages/grouping_cadet_listing.html'
 
         context = {'tab': tab,
                    'company': company,
@@ -145,6 +146,7 @@ class CompanyDetail(View):
                    'groups': groups,
                    'link': link,
                    'listing_template': listing_template,
+                   'cadet_listing_template': cadet_listing_template
                    }
 
         #Additions to the context
@@ -181,13 +183,13 @@ class MSLevelDetail(View):
         group = "%s Class" % ms_level.name
         groups = Cadet.objects.filter(ms_level=ms_level)
         link = "/personnel/cadets"
-        listing_template = 'personnel/group_pages/grouping_listing.html'
+        cadet_listing_template = 'personnel/group_pages/grouping_listing.html'
 
         context = {'tab': tab,
                    'group': group,
                    'groups': groups,
                    'link': link,
-                   'listing_template': listing_template,
+                   'cadet_listing_template': cadet_listing_template,
                    }
         cadets = Cadet.objects.filter(ms_level=ms_level)
         context.update(grouping_data(cadets))
@@ -222,14 +224,14 @@ class PlatoonDetail(View):
         group = "%s Platoon" % platoon.name
         groups = Cadet.objects.filter(platoon=platoon)
         link = "/personnel/cadets"
-        listing_template = 'personnel/group_pages/grouping_listing.html'
+        cadet_listing_template = 'personnel/group_pages/grouping_listing.html'
 
         context = {'tab': tab,
                    'platoon': platoon,
                    'group': group,
                    'groups': groups,
                    'link': link,
-                   'listing_template': listing_template,
+                   'cadet_listing_template': cadet_listing_template,
                    }
         #Additons to the context
         cadets = Cadet.objects.filter(platoon=platoon)

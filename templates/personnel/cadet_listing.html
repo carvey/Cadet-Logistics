@@ -38,12 +38,8 @@
    {% endfor %}
 {% endblock %}
 
-<!--TODO consider changing this to show certain columns, as opposed to hiding certain columns-->
-<!-- A column index is all that is needed for this block to hide a column index. Use Commas to separate ints -->
-{% block hide_column_index %} 
-<!--0, 1--> <!-- This would hide the first two columns by default -->
-3,4,5,6
+<!-- A column index is all that is needed for this block to display a column index by default. Use Commas to separate ints -->
+{% block display_column_index %}
+<!--0, 1--> <!-- This would display the first two columns by default -->
+0, 1, 2
 {% endblock %}
-
-
-

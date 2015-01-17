@@ -1,0 +1,23 @@
+{% extends 'datatables/tabbed_datatable.html' %}
+{% load static %}
+
+{% block page_header %}
+
+{% endblock %}
+
+{% block table_title %}
+    {{ group }} Cadet Listing
+{% endblock %}
+
+{% block columns %}
+    <th>Name</th>
+{% endblock %}
+
+{% block table_data %}
+    {# a group can be an actual group (company) or a cadet #}
+    {% for cadet in cadets %}
+        <tr>
+            <td><a href="{% url 'cadetpage' cadet.id %}">{{ cadet }}</a></td>
+        </tr>
+    {% endfor %}
+{% endblock %}

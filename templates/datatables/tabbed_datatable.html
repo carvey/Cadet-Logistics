@@ -1,9 +1,12 @@
 {% load static %}
-
-<link href="{% static 'css/plugins/dataTables/dataTables.bootstrap.css' %}" rel="stylesheet">
-<link href="{% static 'css/plugins/dataTables/plugins/ColReorder/dataTables.colReorder.min.css' %}" rel="stylesheet">
-<link href="{% static 'css/plugins/dataTables/plugins/ColVis/dataTables.colVis.css' %}" rel="stylesheet">
-<link href="{% static 'css/plugins/dataTables/plugins/TableTools/dataTables.tableTools.css' %}" rel="stylesheet">
+<!--TODO: tabbed_datatable and datatable_base need to be given a parent/child relationship to reduce the amount of repeated code. It would make the most sense to have tabbed_datatable extend datatable_base-->
+{% block datatable-css %}
+    <link href="{% static 'css/plugins/dataTables/dataTables.bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'css/plugins/dataTables/plugins/ColReorder/dataTables.colReorder.min.css' %}"
+          rel="stylesheet">
+    <link href="{% static 'css/plugins/dataTables/plugins/ColVis/dataTables.colVis.css' %}" rel="stylesheet">
+    <link href="{% static 'css/plugins/dataTables/plugins/TableTools/dataTables.tableTools.css' %}" rel="stylesheet">
+{% endblock %}
 
 <div class="row">
     <div class="col-lg-12">
@@ -11,27 +14,32 @@
             <div class="panel-heading" id="panel_header">
                 <!-- The title of the datatable -->
                 {% block table_title %}DataTable{% endblock %}
+
+                <div class="{% block datatable-header-class %}right-panel-header {% endblock %}" style="float: right;">
+
+                </div>
             </div>
             <!-- /.panel-heading -->
             <div class="panel-body">
                 <div class="table-responsive">
-                    <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+                    <table class="table table-striped table-bordered table-hover"
+                           {% block datatable-id %}id="datatables-instance"{% endblock %}>
                         <thead>
-                            <tr>
-                                <!-- This block determines the columns in the datatable -->
-                                {% block columns %}
-                                    <th></th> <!-- Column name goes here -->
-                                {% endblock %}
-                            </tr>
+                        <tr>
+                            <!-- This block determines the columns in the datatable -->
+                            {% block columns %}
+                                <th></th> <!-- Column name goes here -->
+                            {% endblock %}
+                        </tr>
                         </thead>
                         <tbody>
-                            <!-- This block handles putting data into the datatable -->
-                            <!-- Each td tag corresponds to its respective column header as listed in the columns block -->
-                            {% block table_data %}
-                                <tr class="odd gradeX">
-                                    <td></td>
-                                </tr>
-                            {% endblock %}
+                        <!-- This block handles putting data into the datatable -->
+                        <!-- Each td tag corresponds to its respective column header as listed in the columns block -->
+                        {% block table_data %}
+                            <tr class="odd gradeX">
+                                <td></td>
+                            </tr>
+                        {% endblock %}
                         </tbody>
                     </table>
                 </div>
@@ -46,16 +54,34 @@
 
 <!-- Javscript files needed for datatables to function -->
 
+{% block datatable-scripts %}
+    <script src="{% static 'js/plugins/dataTables/jquery.dataTables.js' %}"></script>
+    <script src="{% static 'js/plugins/dataTables/dataTables.bootstrap.js' %}"></script>
+    <script src="{% static 'js/plugins/dataTables/plugins/ColReorder/dataTables.colReorder.js' %}"></script>
+    <script src="{% static 'js/plugins/dataTables/plugins/ColVis/dataTables.colVis.js' %}"></script>
+    <script src="{% static 'js/plugins/dataTables/plugins/TableTools/dataTables.tableTools.js' %}"></script>
+    <script>
 
-<script src="{% static 'js/plugins/dataTables/jquery.dataTables.js' %}"></script>
-<script src="{% static 'js/plugins/dataTables/dataTables.bootstrap.js' %}"></script>
-<script src="{% static 'js/plugins/dataTables/plugins/ColReorder/dataTables.colReorder.js' %}"></script>
-<script src="{% static 'js/plugins/dataTables/plugins/ColVis/dataTables.colVis.js' %}"></script>
-<script src="{% static 'js/plugins/dataTables/plugins/TableTools/dataTables.tableTools.js' %}"></script>
-<script>
+        $(document).ready(function () {
+            /*
+             This first block of code will check to see if the child template of this base file declares any column
+             indexes to show by default, and these are put in the show_list array. If this list has an index in it, it will
+             only show the columns with the indexes in show_list. If no indexes are supplied, hide_list is not populated and all
+             columns will show by default. This happens in the init_script under the "aoColumnDefs" block. This is not done
+             in that script since django renders the templates in the include statement and then inserts it into this file, so
+             child templates of datatable_base cannot access blocks in init_script
+             */
+            var show_list = [{% block display_column_index %}{% endblock %}];
+            var hide_list = [];
+            if (show_list.length > 0) {
+                $('#datatable-instance,th').each(function (index) {
+                    if ($.inArray(index, show_list) == -1) {
+                        hide_list.push(index);
+                    }
+                });
+            }
+            {% include 'datatables/init_script.txt' %}
+        });
 
-$(document).ready(function() {
-    {% include 'datatables/init_script.txt' %}
-});
-
-</script>
+    </script>
+{% endblock %}

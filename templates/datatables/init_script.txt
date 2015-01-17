@@ -1,20 +1,21 @@
 {% load static %}
 
-$('#dataTables-example').dataTable({
+$('#datatables-instance').dataTable({
         "dom": 'TCR<"clear">lfrtip',
         "tableTools": {
             "sSwfPath": "{% static 'css/plugins/dataTables/plugins/TableTools/copy_csv_xls_pdf.swf' %}"
         },
 
         "fnInitComplete": function() {
-            $('.ColVis').appendTo("#panel_header");
-            $('.DTTT_container').appendTo('#panel_header');
+            $('.ColVis').appendTo(".right-panel-header");
+            $('.DTTT_container').appendTo('.right-panel-header');
         },
-        {% block datatables_extra_js %}
-        "aoColumnDefs": [
-             <!--Column indices that should be hidden by default go in the block within the brackets-->
-             {"bVisible": false, "aTargets": [{% block hide_column_index%}{% endblock %}]}
-         ]
-        {% endblock %}
+        {% block extra_js %}
+            "aoColumnDefs": [
+                 <!--Column indices that should be hidden by default go in the block within the brackets-->
+                 {"bVisible": false, "aTargets": hide_list}
+
+             ]
+         {% endblock %}
 });
 

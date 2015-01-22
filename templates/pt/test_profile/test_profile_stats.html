@@ -12,10 +12,10 @@
     <div class="col-md-8">
         <div class="panel panel-default">
             <div class="panel-heading">
-                Attendance information
+                Company Comparison for this Test
             </div>
             <div class="panel-body">
-                <div class="flot-chart-content" id="flot-line-chart" style="height: 350px; width: 100%;"></div>
+                <div class="flot-chart-content" id="company_comparison" style="height: 350px; width: 100%;"></div>
             </div>
 
         </div>
@@ -24,124 +24,55 @@
     <div class="col-md-4">
         <div class="panel panel-default">
             <div class="panel-heading">
-                Heading Test
+                Test Information
             </div>
             <div class="panel-body">
-                <div><h3>Current Cadets: {{ cadets.count }}</h3></div>
-                <div><h3>Contracted cadets: {{ contracted_cadets.count }}</h3></div>
-                <div><h3>SMP Cadets: {{ smp_cadets.count }}</h3></div>
+                <p>Date: {{ test.date }}</p>
+                <p>MS1 Participation: {{ test.MsLevelOne }}</p>
+                <p>MS2 Participation: {{ test.MsLevelTwo }}</p>
+                <p>MS3 Participation: {{ test.MsLevelThree }}</p>
+                <p>MS4 Participation: {{ test.MsLevelFour }}</p>
+                <p>Diagnostic: {{ test.diagnostic }}</p>
+                <p>Record: {{ test.record }}</p>
             </div>
         </div>
     </div>
 
 
-
     <div class="col-md-4">
         <div class="panel panel-default">
             <div class="panel-heading">
-                Misc Data
+                Top Scores for this Test
             </div>
             <div class="panel-body">
-                <div><h3>Avg. GPA: {{ avg_gpa }}</h3></div>
-                <div><h3>At Risk Cadets: {{ at_risk_cadets.count }}</h3></div>
-                <div><h3>Profiles: {{ profiles.count }}</h3></div>
+
             </div>
         </div>
     </div>
 </div>
 
 <div class="row">
-    <div class='col-md-4'>
+    <div class='col-md-6'>
 		<div class='panel panel-default'>
 			<div class='panel-heading'>
-				Top Average PT Scores
+				Top
 			</div>
 			<div class='panel-body top_list'>
-				<ul>
-                    {% for score, cadet in top_scores %}
-                        <li>{{ cadet.get_name }}: {{ score }}</li>
-                    {% endfor %}
-				</ul>
+
 			</div>
 		</div>
 	</div>
 
-    <div class='col-md-4'>
+    <div class='col-md-6'>
 		<div class='panel panel-default'>
 			<div class='panel-heading'>
 				Highest GPAs
 			</div>
 			<div class='panel-body top_list'>
-				<ul>
-                    {% for gpa, cadet in top_gpas %}
-                        <li>{{ cadet.get_name }}: {{ gpa }}</li>
-                    {% endfor %}
-				</ul>
+
 			</div>
 		</div>
 	</div>
-
-    <div class="col-md-4">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                Least Events Missed
-            </div>
-            <div class="panel-body top_list">
-                <ul>
-                    <li>First Last: 0</li>
-                    <li>First Last: 0</li>
-                    <li>First Last: 1</li>
-                    <li>First Last: 2</li>
-                    <li>First Last: 5</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
-</div>
-
-
-<div class='row'>
-    <div class='col-md-4'>
-        <div class='panel panel-default'>
-            <div class='panel-heading'>
-                Gender Comparison
-            </div>
-            <div class='panel-body'>
-                <div class="flot-chart">
-                    <div class="flot-chart-content" id="gender_comparison"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
-    <div class='col-md-4'>
-        <div class='panel panel-default'>
-            <div class='panel-heading'>
-                Volunteer Hour Completion
-            </div>
-            <div class='panel-body'>
-                    <div class="flot-chart">
-                        <div class="flot-chart-content" id="volunteer_completion"></div>
-                    </div>
-            </div>
-        </div>
-    </div>
-
-    <div class='col-md-4'>
-        <div class='panel panel-default'>
-            <div class='panel-heading'>
-                MS Level Breakdown
-            </div>
-            <div class='panel-body'>
-                <div class="flot-chart">
-                    <div class="flot-chart-content" id="class_breakdown"></div>
-                </div>
-            </div>
-        </div>
-    </div>
 
 </div>
 

@@ -1,39 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.generic import View
+from django.db.models import Q
 
 from pt.models import PtTest, PtScore, Grader
 from personnel.models import Company, Cadet
-
-'''
-Returns a dictionary containing the average values of situps, pushups and two mile run times
-for the given Company object.
-Ex.
-    To access the average situp value from the returned dictionary, you would do <dict_name>['situps']
-'''
-
-
-def get_avg_scores_by_company(company):
-    try:
-        scores = PtScore.objects.filter(cadet__company=company)
-        avg_score = {}
-
-        situps = [score.get_situps() for score in scores]
-        avg_situps = sum(situps) / float(len(situps))
-
-        pushups = [score.get_pushups() for score in scores]
-        avg_pushups = sum(pushups) / float(len(pushups))
-
-        two_mile = [score.get_two_mile_min() for score in scores]
-        avg_two_mile = sum(two_mile) / float(len(two_mile))
-
-        return {
-            'situps': avg_situps,
-            'pushups': avg_pushups,
-            'two_mile': avg_two_mile
-        }
-    except:
-        pass
+from pt_utils import get_complete_average_scores_dict, get_avg_scores_by_company
 
 
 """
@@ -100,6 +72,10 @@ class TestProfiletView(View):
         )
 
         if tab == 'stats':
+            filter_expression = {'pt_test': test}
+            context.update(
+                get_complete_average_scores_dict(filter_expression)
+            )
             return render(request, self.template_name, context)
 
         elif tab == 'listing':
@@ -181,25 +157,23 @@ class StatisticsView(View):
 
         #most of the following code is used to get the average score for each pt event for each company
         #This block serves two purposes though. The other is to get the avg scores per company per pt test
-        company_test_scores = {}
-        company_avg_overall_scores = {}
-        company_avg_pushup_scores = {}
-        company_avg_situp_scores = {}
-        company_avg_run_scores = {}
+        test_scores = {}
+        avg_overall_scores = {}
+        avg_pushup_scores = {}
+        avg_situp_scores = {}
+        avg_run_scores = {}
         for company in Company.objects.all():
-            company_scores = PtScore.objects.filter(cadet__company=company)
-            company_avg_overall_scores.update({company: PtScore.get_avg_total_score(company_scores)})
-            company_avg_pushup_scores.update({company: PtScore.get_avg_pushup_score(company_scores)})
-            company_avg_situp_scores.update({company: PtScore.get_avg_situp_score(company_scores)})
-            company_avg_run_scores.update({company: PtScore.get_avg_run_score(company_scores)})
+            scores = PtScore.objects.filter(cadet__company=company)
+            avg_overall_scores.update({company: PtScore.get_avg_total_score(scores)})
+            avg_pushup_scores.update({company: PtScore.get_avg_pushup_score(scores)})
+            avg_situp_scores.update({company: PtScore.get_avg_situp_score(scores)})
+            avg_run_scores.update({company: PtScore.get_avg_run_score(scores)})
             #the following is used for getting the avg scores per company per pt test
             test_dict = {}
             for test in PtTest.objects.all():
                 avg = test.get_average_score(company)
                 test_dict.update({test: avg})
-            company_test_scores[company] = test_dict
-
-
+            test_scores[company] = test_dict
         pushups = {}
         situps = {}
         run = {}
@@ -219,17 +193,17 @@ class StatisticsView(View):
 
         context = {
             'tab': tab,
-            'data' : avg_pt_scores,
-            'company_scores': company_test_scores,
+            'data': avg_pt_scores,
+            'company_scores': test_scores,
             'pushup_test_scores': pushups,
             'situp_test_scores': situps,
             'run_test_scores': run,
             'top_cadets': top_cadets,
             'lowest_cadets': worst_cadets,
-            'company_overall_scores': company_avg_overall_scores,
-            'company_situp_scores': company_avg_situp_scores,
-            'company_pushup_scores': company_avg_pushup_scores,
-            'company_run_scores': company_avg_run_scores
+            'overall_scores': avg_overall_scores,
+            'situp_scores': avg_situp_scores,
+            'pushup_scores': avg_pushup_scores,
+            'run_scores': avg_run_scores
 
         }
         return render(request, self.template_name, context)

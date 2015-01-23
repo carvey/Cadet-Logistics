@@ -27,7 +27,6 @@
                 Test Information
             </div>
             <div class="panel-body">
-                <p>Date: {{ test.date }}</p>
                 <p>MS1 Participation: {{ test.MsLevelOne }}</p>
                 <p>MS2 Participation: {{ test.MsLevelTwo }}</p>
                 <p>MS3 Participation: {{ test.MsLevelThree }}</p>
@@ -42,9 +41,17 @@
     <div class="col-md-4">
         <div class="panel panel-default">
             <div class="panel-heading">
-                Top Scores for this Test
+                Cadets Taking this Test
             </div>
             <div class="panel-body">
+                <div style="float: left;">
+                    <p>Total (optimal): </p>
+                    <p>Total (actual): </p>
+                </div>
+                <div style="float: right">
+                    <p>Missing Records: </p>
+                     <p>Profiles: </p>
+                </div>
 
             </div>
         </div>
@@ -55,7 +62,7 @@
     <div class='col-md-6'>
 		<div class='panel panel-default'>
 			<div class='panel-heading'>
-				Top
+				Top Cadets for This Test
 			</div>
 			<div class='panel-body top_list'>
 

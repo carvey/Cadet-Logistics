@@ -21,6 +21,13 @@ def grouping_data(cadets):
 
     top_gpas = Cadet.get_top_gpa_cadets(cadets, 5)
 
+    ms_levels = {}
+    for cadet in cadets:
+        if cadet.ms_level in ms_levels:
+            ms_levels[cadet.ms_level] += 1
+        else:
+            ms_levels[cadet.ms_level] = 0
+    print ms_levels
     context = {
                'cadets': cadets,
                'contracted_cadets': contracted,
@@ -32,7 +39,8 @@ def grouping_data(cadets):
                'female_cadets': female_cadets,
                'completed_hours': completed_volunteer_hours,
                'top_scores': top_scores,
-               'top_gpas': top_gpas
+               'top_gpas': top_gpas,
+               'ms_levels': ms_levels
                }
     return context
 

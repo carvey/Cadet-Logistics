@@ -1,5 +1,4 @@
 from django import template
-from personnel.models import MsLevel
 import calendar
 
 register = template.Library()
@@ -7,29 +6,29 @@ register = template.Library()
 
 @register.filter(name='interpret_bool')
 def interpret_bool(value):
-    if value == True:
+    if value:
         return 'Yes'
-    elif value == False:
+    elif not value:
         return 'No'
 
 
 @register.filter(name='default_blank')
 def default_blank(value):
-    if value == None:
+    if value is None:
         return ' '
 
 
 @register.filter(name='active_cadet')
 def active_cadet(dropped, commissioned=False):
-    if dropped == False:
-        if commissioned == False:
+    if not dropped:
+        if not commissioned:
             return "Active"
-    if dropped == True:
+    if dropped:
         return "Dropped"
-    if commissioned == True:
+    if commissioned:
         return "Commissioned"
-    if dropped == True:
-        if commissioned == True:
+    if dropped:
+        if commissioned:
             return "Error: Dropped and Comissioned = True"
 
 
@@ -53,23 +52,22 @@ def phone_format(number):
         return '(%s)-%s-%s' % (number[:3], number[3:6], number[6:10])
 
 
-@register.filter(name='class_filter')
-def class_filter(cadets, ms_class):
-    ms = MsLevel.objects.get(name=ms_class)
-    return cadets.filter(ms_level=ms)
-
 @register.filter(name='timestamp')
 def timestamp(snap):
     return calendar.timegm(snap.timetuple()) * 1000
 
-@register.filter(name='demographics')
-def demographics(demos, key):
-    return demos.get(key)
-
 
 @register.filter(name='lookup')
-def display_ordereddict(list, index):
+def display_ordereddict(_list, index):
     if index % 2 == 0:
-        return list[0]
+        return _list[0]
     else:
-        return list[1]
+        return _list[1]
+
+
+@register.filter(name='is_list')
+def is_list(var):
+    if isinstance(var, list):
+        return True
+    else:
+        return False

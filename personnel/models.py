@@ -24,6 +24,7 @@ GENDER_CHOICES = (
 )
 
 
+
 class School(models.Model):
     name = models.CharField(max_length=100)
 
@@ -96,6 +97,17 @@ class Company(models.Model):
 class Cadet(Users):
     """Cadet is the model for cadets in the batallion.
     This model extends the Users abstract model. Each cadet should ideally be assigned to a company"""
+    BLOOD_TYPES = (
+        ('A+', 'A+'),
+        ('A-', 'A-'),
+        ('B+', 'B-'),
+        ('B-', 'B-'),
+        ('AB+', 'AB+'),
+        ('AB-', 'AB-'),
+        ('O+', 'O+'),
+        ('O-', 'O-')
+    )
+
     eagle_id = models.PositiveIntegerField(default=0, blank=False, null=True)
     gender = models.CharField(max_length=6, choices=GENDER_CHOICES, blank=False, null=True)
     school = models.ForeignKey(School, blank=True, null=True)
@@ -135,6 +147,11 @@ class Cadet(Users):
     # #
     ranger_challenge = models.BooleanField(default=False)
     color_guard = models.BooleanField(default=False)
+
+    # #
+    blood_type = models.CharField(max_length=5, choices=BLOOD_TYPES)
+    car_model = models.CharField(max_length=100)
+    car_tag = models.CharField(max_length=25)
     comments = models.TextField(max_length=1000, blank=True)
 
     def get_name(self):

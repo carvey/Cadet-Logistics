@@ -1,4 +1,5 @@
 {% load personnel_filters %}
+
 <style>
     .top_list {
         font-size: 20px;
@@ -59,7 +60,13 @@
 			<div class='panel-body top_list'>
 				<ol>
                     {% for score, cadet in top_scores %}
-                        <li>{{ cadet.get_name }}: {{ score }}</li>
+                        {% if cadet|is_list %}
+                            {% for c in cadet %}
+                                <li><a href="/personnel/cadets/{{ cadet.id }}">{{ c.get_name }}</a>: {{ score }}</li>
+                            {% endfor %}
+                        {% else %}
+                            <li><a href="/personnel/cadets/{{ cadet.id }}">{{ cadet.get_name }}</a>: {{ score }}</li>
+                        {% endif %}
                     {% endfor %}
 				</ol>
 			</div>

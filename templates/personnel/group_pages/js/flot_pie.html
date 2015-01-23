@@ -17,23 +17,12 @@ $(function() {
 
 
     var ms_data = [
-        {
-            label: "MS1's",
-            data: {{ cadets|class_filter:'ms1'|length }},
-            color: "#476B6B",
-        },
-        {
-            label: "MS2's",
-            data: {{ cadets|class_filter:'ms2'|length }},
-        },
-        {
-            label: "MS3's",
-            data: {{ cadets|class_filter:'ms3'|length }},
-        },
-        {
-            label: "MS4's",
-            data: {{ cadets|class_filter:'ms3'|length }},
-        },
+        {% for ms, count in ms_levels.items %}
+            {
+                label: "{{ ms }}",
+                data: {{ count }}
+            },
+        {% endfor %}
     ];
 
     var ms_graph = $.plot($("#class_breakdown"), ms_data, {

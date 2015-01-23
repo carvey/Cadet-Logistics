@@ -52,19 +52,16 @@ class Stats(View):
         cadets = Cadet.objects.all()
         current_cadets = cadets.filter(commissioned=False, dropped=False)
         nursing_contracted = cadets.filter(nurse_contracted=True)
-        demographics = Demographic.objects.all()
 
         snapshots = SnapShot.objects.all()
 
         demo_dict = {}
-        for demo in demographics:
-            demo_dict[demo.demographic] = 0
-
-        for cadet in cadets:
+        for cadet in current_cadets:
             if cadet.demographic:
-                demo_dict[cadet.demographic.demographic] += 1
-
-
+                if cadet.demographic not in demo_dict:
+                    demo_dict.update({cadet.demographic: 1})
+                else:
+                    demo_dict[cadet.demographic] += 1
 
         context = {
             'tab': tab,

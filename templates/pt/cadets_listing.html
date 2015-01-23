@@ -18,6 +18,14 @@ Cadets Listing
     <th>Avg. Total Score</th>
 {% endblock %}
 
+{% block table_footer %}
+	<td>Name</td>
+	<td>Avg. Pushup Score</td>
+	<td>Avg. Situp Score</td>
+    <td>Avg. Run Score</td>
+    <td>Avg. Total Score</td>
+{% endblock %}
+
 {% block table_data %}
 	{% for cadet in cadets %}
 	<tr>

@@ -33,7 +33,7 @@
                     max: 300         },
                 xaxis: {
                   mode: "categories",
-{#                  categories: [{% for key, value in data.items %}"{{ key }}", {% endfor %}]#}
+                  categories: [{% for key, value in avg_overall_scores.items %}"{{ key }}", {% endfor %}].sort()
                 },
                 tooltip: true,
                 tooltipOpts: {

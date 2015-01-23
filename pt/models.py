@@ -219,9 +219,14 @@ class PtScore(models.Model):
         # Call the actual save method to save the score in the database
         super(PtScore, self).save(*args, **kwargs)
 
-    #Get the cadets with the top average pt scores
     @staticmethod
     def get_top_cadets(cadets, n=5):
+        """
+        Get the cadets with the top average pt scores
+        :param cadets: the cadets (or subset of cadets) to be sorted and ranked
+        :param n: the number of top cadets to return. Default=5
+        :return: a sorted dict (descending order) of {score: cadet} or {score: [cadet, cadet, ...]} pairs
+        """
         all_scores = PtScore.objects.all()
         avg_scores = {}
         for cadet in cadets:
@@ -230,10 +235,21 @@ class PtScore(models.Model):
         avg_scores = collections.OrderedDict(reversed(sorted(avg_scores.items(), key=lambda t: t[1])))
         top_scores = collections.OrderedDict()
         count = 0
-        for x, y in avg_scores.items():
-            top_scores.update({y: x})
+        for cadet, score in avg_scores.items():
             count += 1
-            if count == n:  #the number of top cadets to get
+            #if there is a repeat score (ex: 1st and 2nd place cadets both have 300s)
+            if score in top_scores:
+                #if this value is already a list (more than 2 cadets with score score already), then append the cadet
+                if isinstance(top_scores[score], list):
+                    top_scores[score].append(cadet)
+                #if this is the first occurrence of repeated scores, then make a list out of the two cadets
+                else:
+                    top_scores[score] = [top_scores[score], cadet]
+            #no repeated scores, so just insert the score and cadet as a default key,value pair
+            else:
+                top_scores.update({score: cadet})
+            #the number of top cadets to get
+            if count == n:
                 break
         return reversed(sorted(top_scores.items()))
 
@@ -247,10 +263,22 @@ class PtScore(models.Model):
         avg_scores = collections.OrderedDict(sorted(avg_scores.items(), key=lambda t: t[1]))
         top_scores = collections.OrderedDict()
         count = 0
-        for x, y in avg_scores.items():
-            top_scores.update({y: x})
+        for cadet, score in avg_scores.items():
             count += 1
-            if count == n:  #the number of top cadets to get
+            #if there is a repeat score (ex: 1st and 2nd place cadets both have 300s)
+            if score in top_scores:
+                #if this value is already a list (more than 2 cadets with score score already), then append the cadet
+                if isinstance(top_scores[score], list):
+                    top_scores[score].append(cadet)
+                #if this is the first occurrence of repeated scores, then make a list out of the two cadets
+                else:
+                    top_scores[score] = [top_scores[score], cadet]
+            #no repeated scores, so just insert the score and cadet as a default key,value pair
+            else:
+                top_scores.update({score: cadet})
+
+            #the number of top cadets to get
+            if count == n:
                 break
         return sorted(top_scores.items())
 
@@ -341,11 +369,6 @@ class PtScore(models.Model):
             sum += int(score.score)
         avg = sum / length
         return avg
-
-    """
-    This method takes the two_mile info (CharField) of the cadet at hand and splits it into a list
-    So a time of 15:43 should return a list value of [15, 43]
-    """
 
     def get_run_time(self):
         """

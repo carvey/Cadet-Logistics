@@ -71,10 +71,10 @@ $(function() {
     {% if demographics %}
 $(function() {
         var demographics =
-                [   {% for demo in demographics %}
+                [   {% for key, value in demographics.items %}
                     {
-                        label: "{{ demo }}",
-                        data: {{ demographics|demographics:demo }},
+                        label: "{{ key }}",
+                        data: {{ value }},
                     },
                 {% endfor %}
                 ];
@@ -125,23 +125,12 @@ $(function() {
     //MS Level Breakdown ----------------------------
 $(function() {
     var ms_data = [
-        {
-            label: "MS1's",
-            data: {{ cadets|class_filter:'ms1'|length }},
-            color: "#476B6B",
-        },
-        {
-            label: "MS2's",
-            data: {{ cadets|class_filter:'ms2'|length }},
-        },
-        {
-            label: "MS3's",
-            data: {{ cadets|class_filter:'ms3'|length }},
-        },
-        {
-            label: "MS4's",
-            data: {{ cadets|class_filter:'ms3'|length }},
-        },
+        {% for ms, count in ms_levels.items %}
+            {
+                label: "{{ ms }}",
+                data: {{ count }}
+            },
+        {% endfor %}
     ];
 
 

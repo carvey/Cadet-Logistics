@@ -14,12 +14,13 @@ def get_complete_average_scores_dict(filter_expression=None):
     avg_situp_scores = {}
     avg_run_scores = {}
     for company in Company.objects.all():
-        scores = PtScore.objects.filter(cadet__company=company, **filter_expression)
+        scores = PtScore.objects.filter(cadet__company=company)
+        if filter_expression:
+            scores = scores.filter(**filter_expression)
         avg_overall_scores.update({company: PtScore.get_avg_total_score(scores)})
         avg_pushup_scores.update({company: PtScore.get_avg_pushup_score(scores)})
         avg_situp_scores.update({company: PtScore.get_avg_situp_score(scores)})
         avg_run_scores.update({company: PtScore.get_avg_run_score(scores)})
-        print avg_overall_scores
     context = \
         {
         'avg_overall_scores': avg_overall_scores,

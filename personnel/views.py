@@ -42,7 +42,10 @@ class Index(View):
     template_name = "index.html"
 
     def get(self, request):
-        print request.user
+        if hasattr(request.user, 'cadet'):
+            print "Welcome, Cadet %s" % request.user.cadet.get_name()
+        elif hasattr(request.user, 'cadre'):
+            print "Welcome, %s %s" % (request.user.cadre.rank, request.user.cadre.get_name())
         return render(request, self.template_name, {})
 
 

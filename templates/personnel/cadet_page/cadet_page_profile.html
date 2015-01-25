@@ -17,7 +17,7 @@
                         <p>Profile: {{ cadet.on_profile|interpret_bool }}</p>
                         <p>At Risk: {{ cadet.at_risk|interpret_bool }}</p>
 						<hr>
-						<p>Email: {{cadet.email}}</p>
+						<p>Email: {{cadet.user.email}}</p>
 						<p>Cell Number: {{cadet.cell_number|phone_format}}</p>
 					</div>
 				</div>

@@ -2,7 +2,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator, validat
 from django.db import models
 from django.contrib.auth.hashers import make_password
 from collections import OrderedDict
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, User
 
 
 '''Static variables'''
@@ -24,7 +24,6 @@ GENDER_CHOICES = (
 )
 
 
-
 class School(models.Model):
     name = models.CharField(max_length=100)
 
@@ -41,19 +40,15 @@ class Demographic(models.Model):
 
 class Users(models.Model):
     """Company is the model for the companies in the batallion"""
-    first_name = models.CharField(max_length=25)
-    last_name = models.CharField(max_length=30)
-    # pass this value to the set_password function get it hashed
-    password = models.CharField(max_length=128, blank=True, null=False)
-    age = models.PositiveIntegerField(blank=False)
-    email = models.EmailField(blank=True, validators=[validate_email])
+    user = models.OneToOneField(User)
+    age = models.PositiveIntegerField(blank=False, default=18)
     demographic = models.ForeignKey(Demographic, blank=True, null=True)
 
     def __unicode__(self):
-        return self.last_name + ", " + self.first_name
+        return self.user.last_name + ", " + self.user.first_name
 
-    def set_password(self, raw_passwd):
-        self.password = make_password(raw_passwd)
+    def get_name(self):
+        return '%s %s' % (self.user.first_name, self.user.last_name)
 
     class Meta:
         abstract = True
@@ -153,9 +148,6 @@ class Cadet(Users):
     car_model = models.CharField(max_length=100, blank=True)
     car_tag = models.CharField(max_length=25, blank=True)
     comments = models.TextField(max_length=1000, blank=True)
-
-    def get_name(self):
-        return '%s %s' % (self.first_name, self.last_name)
 
     #function used to return the avg gpa of a set of cadets
     @staticmethod

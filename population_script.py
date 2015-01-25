@@ -6,6 +6,7 @@ from personnel.models import *
 from pt.models import *
 from pt.constants import *
 import sys, datetime, random
+from django.contrib.auth.models import User
 
 sys.path.append(os.path.dirname(__file__))
 
@@ -266,7 +267,12 @@ def add_platoon(name, company):
 
 def add_cadet(first_name, last_name, age, ms_level, company, gender="Male", platoon=None, ms_grade=100, is_staff=False,
               is_company_staff=False, cc=False, fs=False, pc=False, ps=False):
-    c = Cadet.objects.get_or_create(first_name=first_name, last_name=last_name, age=age, gender=gender,
+
+    user = User.objects.get_or_create(username=(first_name+last_name).lower(), first_name=first_name, last_name=last_name)[0]
+    user.set_password('pass')
+    user.save()
+
+    c = Cadet.objects.get_or_create(user=user, age=age, gender=gender,
                                     ms_level=ms_level,
                                     company=company, platoon=platoon)[0]
 
@@ -352,7 +358,7 @@ def assign_cell_num():
 def assign_email():
     starting_num = 00000
     for cadet in cadets:
-        cadet.email = cadet.first_name[:1].lower() + cadet.last_name.lower() + str(starting_num) + '@georgiasouthern.edu'
+        cadet.user.email = cadet.user.first_name[:1].lower() + cadet.user.last_name.lower() + str(starting_num) + '@georgiasouthern.edu'
         starting_num += 75
         cadet.save()
 

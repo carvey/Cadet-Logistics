@@ -72,7 +72,6 @@ class TestProfiletView(View):
         )
 
         if tab == 'stats':
-            print test.get_cadets()
             top_scores = test.get_n_highest_scores(n=5)
 
             filter_expression = {'cadet__contracted': False}

@@ -2,7 +2,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator, validat
 from django.db import models
 from django.contrib.auth.hashers import make_password
 from collections import OrderedDict
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 
 
 '''Static variables'''

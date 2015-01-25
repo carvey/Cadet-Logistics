@@ -42,6 +42,7 @@ class Index(View):
     template_name = "index.html"
 
     def get(self, request):
+        print request.user
         return render(request, self.template_name, {})
 
 

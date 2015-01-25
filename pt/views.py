@@ -72,10 +72,18 @@ class TestProfiletView(View):
         )
 
         if tab == 'stats':
+            print test.get_cadets()
+            top_scores = test.get_n_highest_scores(n=5)
+
+            filter_expression = {'cadet__contracted': False}
+            top_non_contracted_scores = test.get_n_highest_scores(filter_expression=filter_expression, n=5)
+
+            context.update({'top_scores': top_scores,
+                            'top_non_contracted_scores': top_non_contracted_scores
+            })
+
             filter_expression = {'pt_test': test}
-            context.update(
-                get_complete_average_scores_dict(filter_expression)
-            )
+            context.update(get_complete_average_scores_dict(filter_expression))
             return render(request, self.template_name, context)
 
         elif tab == 'listing':

@@ -95,7 +95,6 @@ class CadetPage(View):
         max_score = min_score = avg_score = avg_pushups = avg_situps = avg_two_mile = 0
         avg_pushup_score = avg_situp_score = avg_two_mile_score = 0
 
-
         if scores:
             max_score = PtScore.get_max_score(scores)
             min_score = PtScore.get_min_score(scores)
@@ -144,9 +143,9 @@ class CompanyDetail(View):
                    'link': link,
                    'listing_template': listing_template,
                    'cadet_listing_template': cadet_listing_template
-                   }
+        }
 
-        #Additions to the context
+        # Additions to the context
         cadets = Cadet.objects.filter(company=company)
         context.update(grouping_data(cadets))
 
@@ -187,7 +186,7 @@ class MSLevelDetail(View):
                    'groups': groups,
                    'link': link,
                    'cadet_listing_template': cadet_listing_template,
-                   }
+        }
         cadets = Cadet.objects.filter(ms_level=ms_level)
         context.update(grouping_data(cadets))
 
@@ -229,8 +228,8 @@ class PlatoonDetail(View):
                    'groups': groups,
                    'link': link,
                    'cadet_listing_template': cadet_listing_template,
-                   }
-        #Additons to the context
+        }
+        # Additons to the context
         cadets = Cadet.objects.filter(platoon=platoon)
         context.update(grouping_data(cadets))
 

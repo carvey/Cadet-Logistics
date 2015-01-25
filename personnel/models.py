@@ -117,13 +117,13 @@ class Cadet(Users):
     platoon = models.ForeignKey('Platoon', blank=True, null=True)
     ms_level = models.ForeignKey('MsLevel', blank=False, null=False)
     gpa = models.DecimalField(default=4.0, max_digits=3, decimal_places=2, blank=True)
-    ms_grade = models.IntegerField(default=100)
+    ms_grade = models.IntegerField(default=100, blank=True)
     is_staff = models.BooleanField(default=False)
     is_company_staff = models.BooleanField(default=False)
     # #
     cell_number = models.CharField(max_length=14, blank=True)
     #the volunteer_hours_completed field is a measure of the amount of hours completed
-    volunteer_hours_completed = models.IntegerField(default=0)
+    volunteer_hours_completed = models.IntegerField(default=0, blank=True)
     #the volunteer_hours_status boolean is to tell whether a cadet has completed the minimum number of hours
     volunteer_hours_status = models.BooleanField(default=False)
     turned_in_104r = models.BooleanField(default=False)
@@ -149,9 +149,9 @@ class Cadet(Users):
     color_guard = models.BooleanField(default=False)
 
     # #
-    blood_type = models.CharField(max_length=5, choices=BLOOD_TYPES)
-    car_model = models.CharField(max_length=100)
-    car_tag = models.CharField(max_length=25)
+    blood_type = models.CharField(max_length=5, choices=BLOOD_TYPES, blank=True)
+    car_model = models.CharField(max_length=100, blank=True)
+    car_tag = models.CharField(max_length=25, blank=True)
     comments = models.TextField(max_length=1000, blank=True)
 
     def get_name(self):

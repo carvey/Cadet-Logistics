@@ -62,6 +62,11 @@ class PtTest(models.Model):
     def getAddress(self):
         return "/pt/tests/scores/%d" % self.id
 
+    #when implemented, should get the cadets associated with this test
+    #might need to use personnel snapshots
+    # def get_cadets(self):
+    #
+
     def getAvgTotalScore(self):
         pt_scores = PtScore.objects.filter(pt_test=self)
         num_of_scores = len(pt_scores)
@@ -97,16 +102,36 @@ class PtTest(models.Model):
         return {highest_scoring_cadet: highest_score}
 
     #returns the n highest scores over a set/subset of cadets
-    def get_n_highest_scores(self, cadets, scores, n):
-        winners = collections.OrderedDict()
+    def get_n_highest_scores(self, filter_expression=None, n=5):
+        """
+        Get the cadets with the top overall pt scores for this testF
+        :param n: the number of top cadets to return. Default=5
+        :return: a sorted dict (descending order) of {score: cadet} or {score: [cadet, cadet, ...]} pairs
+        """
+        scores = PtScore.objects.filter(pt_test=self)
+        if filter_expression:
+            scores = scores.filter(**filter_expression)
+        scores_dict = collections.OrderedDict()
+        #The following loop is to consolidate all of the scores into a dict - {score, cadet}
         for score in scores:
-            if score.cadet not in cadets:
-                scores = scores.exclude(id=score.id)
+            #if there is a repeat score (ex: 1st and 2nd place cadets both have 300s)
+            if score.score in scores_dict:
+                #if this value is already a list (more than 2 cadets with score score already), then append the cadet
+                if isinstance(scores_dict[score.score], list):
+                    scores_dict[score.score].append(score.cadet)
+                #if this is the first occurrence of repeated scores, then make a list out of the two cadets
+                else:
+                    scores_dict[score.score] = [scores_dict[score.score], score.cadet]
+            #no repeated scores, so just insert the score and cadet as a default key,value pair
+            else:
+                scores_dict.update({score.score: score.cadet})
+        #Get the highest scores from scores_dict and put them in a separate dict to be returned
+        top_scores = {}
         for count in range(0, n):
-            current_winner = self.get_highest_scoring_cadet(scores)
-            winners.update(current_winner)
-            scores = scores.exclude(id=current_winner.values()[0].id)
-        return winners
+            highest_score = max(scores_dict)
+            top_scores.update({highest_score: scores_dict[highest_score]})
+            scores_dict.pop(highest_score)
+        return reversed(sorted(top_scores.items()))
 
     def getLowestScore(self):
         scores = PtScore.objects.filter(pt_test=self)

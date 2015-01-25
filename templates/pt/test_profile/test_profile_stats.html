@@ -1,3 +1,4 @@
+{% load pt_filters %}
 
 <style>
     .top_list {
@@ -62,10 +63,26 @@
     <div class='col-md-6'>
 		<div class='panel panel-default'>
 			<div class='panel-heading'>
-				Top Cadets for This Test
+				Highest Scores for This Test (Overall)
 			</div>
 			<div class='panel-body top_list'>
-
+                <ol>
+                    {% for score, cadet in top_scores %}
+                        {% if cadet|is_list %}
+                            <li> {{ score }}:
+                                {% for c in cadet %}
+                                    {% if forloop.last %}
+                                        <a href="/personnel/cadets/{{ c.id }}">{{ c }}</a>
+                                    {% else %}
+                                        <a href="/personnel/cadets/{{ c.id }}">{{ c }};</a>
+                                    {% endif %}
+                                {% endfor %}
+                            </li>
+                        {% else %}
+                            <li>{{ score }}: <a href="/personnel/cadets/{{ cadet.id }}">{{ cadet }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                </ol>
 			</div>
 		</div>
 	</div>
@@ -73,10 +90,26 @@
     <div class='col-md-6'>
 		<div class='panel panel-default'>
 			<div class='panel-heading'>
-				Highest GPAs
+				Highest Scores for this Test (Non-Contracted Cadets)
 			</div>
 			<div class='panel-body top_list'>
-
+                <ol>
+                    {% for score, cadet in top_non_contracted_scores %}
+                        {% if cadet|is_list %}
+                            <li> {{ score }}:
+                                {% for c in cadet %}
+                                    {% if forloop.last %}
+                                        <a href="/personnel/cadets/{{ c.id }}">{{ c }}</a>
+                                    {% else %}
+                                        <a href="/personnel/cadets/{{ c.id }}">{{ c }};</a>
+                                    {% endif %}
+                                {% endfor %}
+                            </li>
+                        {% else %}
+                            <li>{{ score }}: <a href="/personnel/cadets/{{ cadet.id }}">{{ cadet }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                </ol>
 			</div>
 		</div>
 	</div>

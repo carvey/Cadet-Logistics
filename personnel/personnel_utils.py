@@ -27,7 +27,7 @@ def grouping_data(cadets):
             ms_levels[cadet.ms_level] += 1
         else:
             ms_levels[cadet.ms_level] = 0
-    print ms_levels
+
     context = {
                'cadets': cadets,
                'contracted_cadets': contracted,

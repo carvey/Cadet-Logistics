@@ -11,10 +11,10 @@ sys.path.append(os.path.dirname(__file__))
 
 # Create your tests here.
 cadets = Cadet.objects.all()
-
+#
 def clear_cadets():
-    for cadet in Cadet.objects.all():
-        cadet.delete()
+    for user in Users.objects.all():
+        user.delete()
 
 
 def populate():
@@ -268,8 +268,10 @@ def add_cadet(first_name, last_name, age, ms_level, company, gender="Male", plat
               is_company_staff=False, cc=False, fs=False, pc=False, ps=False):
     c = Cadet.objects.get_or_create(first_name=first_name, last_name=last_name, age=age, gender=gender,
                                     ms_level=ms_level,
-                                    company=company, platoon=platoon)[0]
+                                    company=company, platoon=platoon,
+                                    username=(first_name+last_name).lower())[0]
 
+    c.set_password('pass')
 
     if cc:
         company.set_commander(c)

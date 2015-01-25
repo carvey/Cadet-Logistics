@@ -15,6 +15,7 @@ class LoginForm(AuthenticationForm):
         if username and password:
             self.user_cache = authenticate(username=username,
                                            password=password)
+            print self.user_cache
             if self.user_cache is None:
                 raise forms.ValidationError(
                     self.error_messages['invalid_login'],

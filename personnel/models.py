@@ -39,24 +39,22 @@ class Demographic(models.Model):
         return self.demographic
 
 
-class Users(models.Model):
+class Users(AbstractUser):
     """Company is the model for the companies in the batallion"""
-    first_name = models.CharField(max_length=25)
-    last_name = models.CharField(max_length=30)
+    # first_name = models.CharField(max_length=25)
+    # last_name = models.CharField(max_length=30)
     # pass this value to the set_password function get it hashed
-    password = models.CharField(max_length=128, blank=True, null=False)
-    age = models.PositiveIntegerField(blank=False)
-    email = models.EmailField(blank=True, validators=[validate_email])
+    # password = models.CharField(max_length=128, blank=True, null=False)
+    age = models.PositiveIntegerField(blank=False, null=True)
+    # email = models.EmailField(blank=True, validators=[validate_email])
     demographic = models.ForeignKey(Demographic, blank=True, null=True)
 
     def __unicode__(self):
         return self.last_name + ", " + self.first_name
 
-    def set_password(self, raw_passwd):
-        self.password = make_password(raw_passwd)
+    # class Meta:
+    #     abstract = True
 
-    class Meta:
-        abstract = True
 
 
 class Company(models.Model):
@@ -118,8 +116,8 @@ class Cadet(Users):
     ms_level = models.ForeignKey('MsLevel', blank=False, null=False)
     gpa = models.DecimalField(default=4.0, max_digits=3, decimal_places=2, blank=True)
     ms_grade = models.IntegerField(default=100, blank=True)
-    is_staff = models.BooleanField(default=False)
-    is_company_staff = models.BooleanField(default=False)
+    staff = models.BooleanField(default=False)
+    company_staff = models.BooleanField(default=False)
     # #
     cell_number = models.CharField(max_length=14, blank=True)
     #the volunteer_hours_completed field is a measure of the amount of hours completed

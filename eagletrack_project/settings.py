@@ -71,6 +71,8 @@ ROOT_URLCONF = 'eagletrack_project.urls'
 
 WSGI_APPLICATION = 'eagletrack_project.wsgi.application'
 
+AUTH_USER_MODEL = 'personnel.Users'
+
 
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases

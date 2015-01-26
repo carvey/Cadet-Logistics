@@ -39,13 +39,15 @@ def logout(request):
 
 
 class Index(View):
-    template_name = "index.html"
+    template_name = "index/index.html"
 
     def get(self, request):
         if hasattr(request.user, 'cadet'):
-            print "Welcome, Cadet %s" % request.user.cadet.get_name()
+            cadet = request.user.cadet
+            if cadet.company.company_commander == cadet:
+                print cadet
         elif hasattr(request.user, 'cadre'):
-            print "Welcome, %s %s" % (request.user.cadre.rank, request.user.cadre.get_name())
+            pass
         return render(request, self.template_name, {})
 
 

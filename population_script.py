@@ -164,6 +164,12 @@ def populate():
     print "Done creating cadets"
     print "-----------------------"
 
+    print "Creating Cadre"
+    add_cadre(first_name="Roger", last_name="Smith", age=30, rank="Captain", position="XO")
+    print "Done create cadre"
+    print "-----------------------"
+
+
 
     print "Creating pt tests"
     add_pt_test(date=datetime.date(2014, 6, 1) + datetime.timedelta(days=2), ms_lvl_4=False)
@@ -288,6 +294,16 @@ def add_cadet(first_name, last_name, age, ms_level, company, gender="Male", plat
 
     return c
 
+
+def add_cadre(first_name, last_name, age, rank, position):
+
+    user = User.objects.get_or_create(username=(first_name+last_name).lower(), first_name=first_name, last_name=last_name)[0]
+    user.set_password('pass')
+    user.save()
+
+    c = Cadre.objects.get_or_create(user=user, age=age, rank=rank, position=position)
+
+    return c
 
 def add_mslevel(name):
     ms = MsLevel.objects.get_or_create(name=name)

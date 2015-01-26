@@ -71,3 +71,10 @@ def is_list(var):
         return True
     else:
         return False
+
+@register.filter(name='is_cadet')
+def is_cadet(user_obj):
+    if hasattr(user_obj, 'cadet'):
+        return True
+    else:
+        return False

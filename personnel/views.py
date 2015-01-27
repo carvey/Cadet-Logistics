@@ -42,13 +42,15 @@ class Index(View):
     template_name = "index/index.html"
 
     def get(self, request):
+        context = {}
+
         if hasattr(request.user, 'cadet'):
             cadet = request.user.cadet
-            if cadet.company.company_commander == cadet:
-                print cadet
+            context.update({'cadet': cadet})
         elif hasattr(request.user, 'cadre'):
             pass
-        return render(request, self.template_name, {})
+
+        return render(request, self.template_name, context)
 
 
 class Stats(View):

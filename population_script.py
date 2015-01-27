@@ -271,8 +271,8 @@ def add_platoon(name, company):
     return platoon
 
 
-def add_cadet(first_name, last_name, age, ms_level, company, gender="Male", platoon=None, ms_grade=100, is_staff=False,
-              is_company_staff=False, cc=False, fs=False, pc=False, ps=False):
+def add_cadet(first_name, last_name, age, ms_level, company, gender="Male", platoon=None, ms_grade=100,
+               cc=False, fs=False, pc=False, ps=False):
 
     user = User.objects.get_or_create(username=(first_name+last_name).lower(), first_name=first_name, last_name=last_name)[0]
     user.set_password('pass')

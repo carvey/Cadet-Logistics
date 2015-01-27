@@ -78,3 +78,8 @@ def is_cadet(user_obj):
         return True
     else:
         return False
+
+@register.filter(name='staff_position')
+def staff_position(cadet):
+    if hasattr(cadet, 'company_commander'):
+        return ""

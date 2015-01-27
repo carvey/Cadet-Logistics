@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load personnel_filters %}
 
 {% block head %}
     <link rel="stylesheet" href="{% static 'css/fullcalendar.min.css' %}" />
@@ -14,6 +15,27 @@
 
 
             <h2 style="margin-top: 1px; padding-top: 3px">Options</h2>
+
+            <div class = 'panel panel-default'>
+					<div class='panel-heading'>
+						Assignment Information
+					</div>
+					<div class='panel-body'>
+                        {% with commissioned=cadet.commissioned %}
+							<p>Cadet Status:
+								<span style="color: {{cadet.dropped|active_color:commissioned}}">
+									{{cadet.dropped|active_cadet:commissioned}}
+								</span>
+							</p>
+						{% endwith %}
+						<p>MS Class: {{cadet.ms_level}}</p>
+						<p>Company: {{cadet.company}}</p>
+                        <p>Platoon: {{ cadet.platoon.display_name }}</p>
+                        <hr>
+                        <p>Staff Position: {{ cadet.get_staff_position }}
+                        </p>
+					</div>
+				</div>
 
             <div class="panel panel-primary">
                 <div class="panel-heading">

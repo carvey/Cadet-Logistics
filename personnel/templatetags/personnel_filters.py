@@ -8,8 +8,15 @@ register = template.Library()
 def interpret_bool(value):
     if value:
         return 'Yes'
-    elif not value:
+    else:
         return 'No'
+
+@register.filter(name='interpret_none')
+def interpret_none(value):
+    if not value:
+        return 'None'
+    else:
+        return value
 
 
 @register.filter(name='default_blank')
@@ -78,8 +85,3 @@ def is_cadet(user_obj):
         return True
     else:
         return False
-
-@register.filter(name='staff_position')
-def staff_position(cadet):
-    if hasattr(cadet, 'company_commander'):
-        return ""

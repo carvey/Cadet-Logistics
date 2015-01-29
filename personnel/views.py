@@ -244,8 +244,17 @@ class PlatoonDetail(View):
         return render(request, self.template, context)
 
 
-class PlatoonListing(View):
-    template = ''
+class Search(View):
+    template = 'search/search_popup.html'
 
-    def get(self, request):
-        return render(request, self.template, {})
+    def get(self, request, query_string):
+        cadet_results = Cadet.objects.search(query_string, 'Cadet')
+        company_results = Company.objects.search(query_string, 'Company')
+        ms_level_results = MsLevel.objects.search(query_string, 'MS')
+        context = {
+            'query_string': query_string,
+            'cadet_results': cadet_results,
+            'company_results': company_results,
+            'ms_level_results': ms_level_results
+        }
+        return render(request, self.template, context)

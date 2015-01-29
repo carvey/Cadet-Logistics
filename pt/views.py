@@ -50,15 +50,6 @@ class Dashboard(View):
 """
 
 
-class TestView(View):
-    template_name = 'pt/tests.html'
-
-    def get(self, request):
-        context = {
-        }
-        return render(request, self.template_name, context)
-
-
 class TestProfiletView(View):
     template_name = 'pt/test_profile/test_profile.html'
 
@@ -132,15 +123,6 @@ class CadetDetailView(View):
         context = {
             'cadet': cadet[0],
             'scores': scores
-        }
-        return render(request, self.template_name, context)
-
-
-class CadetsView(View):
-    template_name = 'pt/cadets.html'
-
-    def get(self, request):
-        context = {
         }
         return render(request, self.template_name, context)
 
@@ -232,59 +214,5 @@ class CadetsListingView(View):
             'avg_situp_scores': avg_situp_scores,
             'avg_run_scores': avg_run_scores,
             'avg_scores': avg_scores
-        }
-        return render(request, self.template_name, context)
-
-
-class CompanyView(View):
-    template_name = 'pt/company.html'
-
-    def get(self, request):
-        context = {
-        }
-        return render(request, self.template_name, context)
-
-
-class CompanyStatView(View):
-    template_name = 'pt/company_stats.html'
-
-    def get(self, request):
-        context = {
-        }
-        return render(request, self.template_name, context)
-
-
-class CompanyListingView(View):
-    template_name = 'pt/company_listing.html'
-
-    def get(self, request):
-        context = {
-        }
-        return render(request, self.template_name, context)
-
-
-class MsLevelStatView(View):
-    template_name = 'pt/ms_stats.html'
-
-    def get(self, request):
-        context = {
-        }
-        return render(request, self.template_name, context)
-
-
-class MsLevelListingView(View):
-    template_name = 'pt/ms_listing.html'
-
-    def get(self, request):
-        context = {
-        }
-        return render(request, self.template_name, context)
-
-
-class MsLevelView(View):
-    template_name = 'pt/ms_level.html'
-
-    def get(self, request):
-        context = {
         }
         return render(request, self.template_name, context)

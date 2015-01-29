@@ -28,77 +28,89 @@
 								</span>
 							</p>
 						{% endwith %}
-						<p>MS Class: {{cadet.ms_level}}</p>
-						<p>Company: {{cadet.company}}</p>
-                        <p>Platoon: {{ cadet.platoon.display_name }}</p>
-                        <hr>
-                        <p>Staff Position: {{ cadet.get_staff_position }}
+						<p>MS Class: <a href='/personnel/ms-classes/{{ cadet.ms_level }}'>{{cadet.ms_level}}</a></p>
+						<p>Company:
+                            {% if cadet.company %}
+                                <a href='/personnel/companys/{{ cadet.company.id }}'>{{ cadet.company }}</a>
+                            {% else %}
+                                None
+                            {% endif %}
                         </p>
+                        <p>Platoon:
+                            {% if cadet.platoon %}
+                                <a href='/personnel/companys/{{ cadet.company }}/platoons/{{ cadet.platoon.id }}'>{{ cadet.platoon.display_name }}</a>
+                            {% else %}
+                                None
+                            {% endif %}
+                        </p>
+                        <p>Squad: {% if cadet.squad %}{{ cadet.squad.short_name }}{% else %}None{% endif %}</p>
+                        <hr>
+                        <p>Staff Position: {{ cadet.get_staff_position|interpret_none }}</p>
 					</div>
 				</div>
 
-            <div class="panel panel-primary">
-                <div class="panel-heading">
-                    <div class="row">
-                        <div class="col-xs-3">
-                            <i class="fa fa-comments fa-5x"></i>
-                        </div>
-                        <div class="col-xs-9 text-right">
-                            <div class="huge">26</div>
-                            <div>New Comments!</div>
-                        </div>
-                    </div>
-                </div>
-                <a href="#">
-                    <div class="panel-footer">
-                        <span class="pull-left">View Details</span>
-                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                        <div class="clearfix"></div>
-                    </div>
-                </a>
-            </div>
-
-            <div class="panel panel-green">
-                <div class="panel-heading">
-                    <div class="row">
-                        <div class="col-xs-3">
-                            <i class="fa fa-tasks fa-5x"></i>
-                        </div>
-                        <div class="col-xs-9 text-right">
-                            <div class="huge">12</div>
-                            <div>New Tasks!</div>
-                        </div>
-                    </div>
-                </div>
-                <a href="#">
-                    <div class="panel-footer">
-                        <span class="pull-left">View Details</span>
-                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                        <div class="clearfix"></div>
-                    </div>
-                </a>
-            </div>
-
-            <div class="panel panel-primary">
-                <div class="panel-heading">
-                    <div class="row">
-                        <div class="col-xs-3">
-                            <i class="fa fa-comments fa-5x"></i>
-                        </div>
-                        <div class="col-xs-9 text-right">
-                            <div class="huge">26</div>
-                            <div>New Comments!</div>
-                        </div>
-                    </div>
-                </div>
-                <a href="#">
-                    <div class="panel-footer">
-                        <span class="pull-left">View Details</span>
-                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                        <div class="clearfix"></div>
-                    </div>
-                </a>
-            </div>
+{#            <div class="panel panel-primary">#}
+{#                <div class="panel-heading">#}
+{#                    <div class="row">#}
+{#                        <div class="col-xs-3">#}
+{#                            <i class="fa fa-comments fa-5x"></i>#}
+{#                        </div>#}
+{#                        <div class="col-xs-9 text-right">#}
+{#                            <div class="huge">26</div>#}
+{#                            <div>New Comments!</div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <a href="#">#}
+{#                    <div class="panel-footer">#}
+{#                        <span class="pull-left">View Details</span>#}
+{#                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>#}
+{#                        <div class="clearfix"></div>#}
+{#                    </div>#}
+{#                </a>#}
+{#            </div>#}
+{##}
+{#            <div class="panel panel-green">#}
+{#                <div class="panel-heading">#}
+{#                    <div class="row">#}
+{#                        <div class="col-xs-3">#}
+{#                            <i class="fa fa-tasks fa-5x"></i>#}
+{#                        </div>#}
+{#                        <div class="col-xs-9 text-right">#}
+{#                            <div class="huge">12</div>#}
+{#                            <div>New Tasks!</div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <a href="#">#}
+{#                    <div class="panel-footer">#}
+{#                        <span class="pull-left">View Details</span>#}
+{#                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>#}
+{#                        <div class="clearfix"></div>#}
+{#                    </div>#}
+{#                </a>#}
+{#            </div>#}
+{##}
+{#            <div class="panel panel-primary">#}
+{#                <div class="panel-heading">#}
+{#                    <div class="row">#}
+{#                        <div class="col-xs-3">#}
+{#                            <i class="fa fa-comments fa-5x"></i>#}
+{#                        </div>#}
+{#                        <div class="col-xs-9 text-right">#}
+{#                            <div class="huge">26</div>#}
+{#                            <div>New Comments!</div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <a href="#">#}
+{#                    <div class="panel-footer">#}
+{#                        <span class="pull-left">View Details</span>#}
+{#                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>#}
+{#                        <div class="clearfix"></div>#}
+{#                    </div>#}
+{#                </a>#}
+{#            </div>#}
 
 
 

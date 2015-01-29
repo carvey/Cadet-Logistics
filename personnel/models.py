@@ -3,6 +3,7 @@ from django.db import models
 from django.contrib.auth.hashers import make_password
 from collections import OrderedDict
 from django.contrib.auth.models import AbstractUser, User
+from personnel.managers import SearchManager
 
 
 '''Static variables'''
@@ -62,6 +63,8 @@ class Users(models.Model):
 
 class Company(models.Model):
     """Company is the model for the companies in the batallion"""
+    objects = SearchManager()
+
     name = models.CharField(max_length=10, default="", help_text="Enter Name of the new company here")
     company_commander = models.OneToOneField('Cadet', db_index=False, related_name='company_commander',
                                              limit_choices_to={'is_company_staff': True}, blank=True, null=True,
@@ -79,7 +82,7 @@ class Company(models.Model):
     def set_first_sergeant(self, cadet):
         """
         This method removes a cadet from first sergeant, and replaces them with the cadet
-        passed in as a parameter. The is_company_staff attribute is adjusted accordingly
+        passed in as a parameter.
         :param cadet: the cadet to be set as the new first sergeant
         :return:
         """
@@ -93,16 +96,12 @@ class Company(models.Model):
 
     def set_commander(self, cadet):
         """
-        This method removes a cadet from platoon commander, and replaces them with the cadet
-        passed in as a parameter. The is_company_staff attribute is adjusted accordingly
+        This method removes a cadet from company commander, and replaces them with the cadet
+        passed in as a parameter.
         :param cadet: the cadet to be set as the new company commander
         :return:
         """
-        if self.company_commander:
-            self.company_commander.is_company_staff = False
-
         self.company_commander = cadet
-        cadet.is_company_staff = True
         cadet.save()
         self.save()
 
@@ -139,6 +138,7 @@ class Cadet(Users):
     # #
     company = models.ForeignKey(Company, blank=True, null=True)
     platoon = models.ForeignKey('Platoon', blank=True, null=True)
+    squad = models.ForeignKey('Squad', blank=True, null=True)
     ms_level = models.ForeignKey('MsLevel', blank=False, null=False)
     gpa = models.DecimalField(default=4.0, max_digits=3, decimal_places=2, blank=True)
     ms_grade = models.IntegerField(default=100, blank=True)
@@ -175,6 +175,8 @@ class Cadet(Users):
     car_model = models.CharField(max_length=100, blank=True)
     car_tag = models.CharField(max_length=25, blank=True)
     comments = models.TextField(max_length=1000, blank=True)
+
+    objects = SearchManager()
 
     def is_staff(self):
         """
@@ -277,30 +279,22 @@ class Platoon(models.Model):
     def set_platoon_commander(self, cadet):
         """
         This method removes a cadet from platoon commander, and replaces them with the cadet
-        passed in as a parameter. The is_company_staff attribute is adjusted accordingly
+        passed in as a parameter.
         :param cadet: the cadet to be set as the new platoon commander
         :return:
         """
-        if self.platoon_commander:
-            self.platoon_commander.is_company_staff = False
-
         self.platoon_commander = cadet
-        cadet.is_company_staff = True
         cadet.save()
         self.save()
 
     def set_platoon_sergeant(self, cadet):
         """
         This method removes a cadet from platoon sergeant, and replaces them with the cadet
-        passed in as a parameter. The is_company_staff attribute is adjusted accordingly
+        passed in as a parameter.
         :param cadet: the cadet to be set as the new platoon sergeant
         :return:
         """
-        if self.platoon_sergeant:
-            self.platoon_sergeant.is_company_staff = False
-
         self.platoon_sergeant = cadet
-        cadet.is_company_staff = True
         cadet.save()
         self.save()
 
@@ -322,12 +316,40 @@ class Squad(models.Model):
             end_string = "rd"
 
         if self.platoon:
-            return str(self.platoon) + " Platoon, " + str(self.name) + end_string + " Squad"
+            return str(self.platoon) + ", " + str(self.name) + end_string + " Squad"
         else:
             return str(self.name) + end_string + " Squad"
 
+    def short_name(self):
+        end_string = "th"
+        if self.name % 10 == 1:
+            end_string = "st"
+        elif self.name % 10 == 2:
+            end_string = "nd"
+        elif self.name % 10 == 3:
+            end_string = "rd"
+
+        return "%s%s Squad" % (self.name, end_string)
+
+    def set_squad_leader(self, cadet):
+        """
+        This method removes a cadet from squad leader, and replaces them with the cadet
+        passed in as a parameter.
+        :param cadet: the cadet to be set as the new platoon commander
+        :return:
+        """
+
+        self.platoon_commander = cadet
+        cadet.save()
+        self.save()
+
 
 class MsLevel(models.Model):
+    """
+    Model to represent each MS Level
+    """
+    objects = SearchManager()
+
     name = models.CharField(max_length=3, choices=MS_LEVEL_CHOICES, blank=False)
 
     def __unicode__(self):

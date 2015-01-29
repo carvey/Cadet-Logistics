@@ -2,3 +2,11 @@
 a {
     color: #0f1b4d;
 }
+
+#myModalLabel {
+    font-weight: bold;
+}
+
+#search-popup-container h3 {
+    text-decoration: underline;
+}

@@ -1,0 +1,23 @@
+
+<div id="search-popup-container">
+
+    <h3>Company Results</h3>
+    {% for company in company_results %}
+        <a href='/personnel/companys/{{ company }}'>{{ company }} Company</a>
+    {% endfor %}
+
+    <hr>
+
+    <h3>MS Level Results</h3>
+    {% for ms_level in ms_level_results %}
+        <p><a href='/personnel/ms-classes/{{ ms_level }}'>{{ms_level}} Class</a></p>
+    {% endfor %}
+
+    <hr>
+
+    <h3>Cadet Results</h3>
+    {% for cadet in cadet_results %}
+        <p><a href='/personnel/cadets/{{ cadet.id }}'>{{ cadet }}</a></p>
+    {% endfor %}
+
+</div>

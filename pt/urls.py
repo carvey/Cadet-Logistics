@@ -2,6 +2,8 @@ from django.conf.urls import patterns, url
 from pt.views import *
 
 urlpatterns = patterns('',
+
+        url(r'^input/', PTInfo.as_view(), name='pt-input'),
         
         url(r'^tests/scores/(?P<test_id>\d+)/?$', TestScoresView.as_view(), name='scores-by-test'),
         

@@ -14,7 +14,7 @@ from django.contrib.auth.views import logout_then_login
 
 
 class Login(FormView):
-    template_name = 'auth/login.html'
+    template_name = 'personnel/auth/login.html'
     form_class = LoginForm
     success_url = '/'
 
@@ -35,7 +35,7 @@ class Login(FormView):
 
 
 def logout(request):
-    return logout_then_login(request, login_url='/login')
+    return logout_then_login(request, login_url='/personnel/login')
 
 
 class Index(View):
@@ -257,4 +257,13 @@ class Search(View):
             'company_results': company_results,
             'ms_level_results': ms_level_results
         }
+        return render(request, self.template, context)
+
+
+class Input(View):
+    template = 'personnel/input_pages/personnel_input.html'
+
+    def get(self, request):
+        context = {}
+
         return render(request, self.template, context)

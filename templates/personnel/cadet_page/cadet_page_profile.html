@@ -7,18 +7,26 @@
 						Overview Information
 					</div>
 					<div class='panel-body'>
-						<p>Eagle ID: {{cadet.eagle_id}}</p>
-						<p>Gender: {{cadet.gender}}</p>
-						<p>Age: {{cadet.age}}</p>
-						<p>GPA: {{cadet.gpa}}</p>
-                        <p>Contracted: {{cadet.contracted|interpret_bool}}</p>
-						<p>SMP: {{cadet.smp|interpret_bool}}</p>
-                        <hr>
-                        <p>Profile: {{ cadet.on_profile|interpret_bool }}</p>
-                        <p>At Risk: {{ cadet.at_risk|interpret_bool }}</p>
-						<hr>
-						<p>Email: {{cadet.user.email}}</p>
-						<p>Cell Number: {{cadet.cell_number|phone_format}}</p>
+
+                        <div class="col-lg-6">
+                            <img src="http://localgroupride.com/css/img/profile.jpg"/>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <p>Eagle ID: {{cadet.eagle_id}}</p>
+                            <p>Gender: {{cadet.gender}}</p>
+                            <p>Age: {{cadet.age}}</p>
+                            <p>GPA: {{cadet.gpa}}</p>
+                            <p>Contracted: {{cadet.contracted|interpret_bool}}</p>
+                            <p>SMP: {{cadet.smp|interpret_bool}}</p>
+                            <hr>
+                            <p>Profile: {{ cadet.on_profile|interpret_bool }}</p>
+                            <p>At Risk: {{ cadet.at_risk|interpret_bool }}</p>
+                            <hr>
+                            <p>Email: {{cadet.user.email}}</p>
+                            <p>Cell Number: {{cadet.cell_number|phone_format}}</p>
+                        </div>
+
 					</div>
 				</div>
 			</div>
@@ -52,33 +60,6 @@
 				</div>
 			</div>
 </div>
-			
-		<!-- These next two col-lg-8's might need to be in the same row to commpensate for a long col-lg-4 on the side -->
-		<div class='row'>
-		
-			<div class='col-lg-8'>
-				<div class='panel panel-default'>
-					<div class='panel-heading'>
-						Attendance
-					</div>
-					<div class='panel-body'>
-						Attendance Things
-					</div>
-				</div>
-			</div>
-			
-			<div class='col-lg-4'>
-				<div class='panel panel-default'>
-					<div class='panel-heading'>
-						Misc
-					</div>
-					<div class='panel-body'>
-						Notifications
-					</div>
-				</div>
-			</div>
-			
-		</div>
 		
 			
 		<div class='row'>

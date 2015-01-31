@@ -216,3 +216,11 @@ class CadetsListingView(View):
             'avg_scores': avg_scores
         }
         return render(request, self.template_name, context)
+
+
+class PTInfo(View):
+    template = 'pt/input_pages/pt_input.html'
+
+    def get(self, request):
+        context = {}
+        return render(request, self.template, context)

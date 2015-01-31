@@ -27,3 +27,7 @@ class LoginForm(AuthenticationForm):
                     code='inactive',
                 )
         return self.cleaned_data
+
+
+class Registration(forms.Form):
+    pass

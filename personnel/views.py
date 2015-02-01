@@ -2,7 +2,7 @@ from django.shortcuts import render, HttpResponseRedirect
 from django.views.generic import View
 from django.views.generic.edit import FormView
 from django.contrib.auth import authenticate, login
-from personnel.models import Cadet, Company, MsLevel, Platoon, SnapShot, Demographic
+from personnel.models import Cadet, Company, MsLevel, Platoon, SnapShot, Demographic, Squad
 from pt.models import PtScore, PtTest, Grader
 from personnel_utils import grouping_data
 from django.contrib.auth.decorators import login_required
@@ -133,6 +133,65 @@ class CadetPage(View):
         return render(request, self.template_name, context)
 
 
+class CompanyListing(View):
+    template_name = 'personnel/company_listing.html'
+
+    companies = Company.objects.all()
+    platoons = Platoon.objects.all()
+
+    def get(self, request):
+        return render(request, self.template_name, {'companies': self.companies, 'platoons': self.platoons})
+
+
+class CompanyCadetListing(View):
+    template_name = 'personnel/company_cadet_listing.html'
+
+    def get(self, request, company_name):
+        company = Company.objects.get(name=company_name)
+        cadets = Cadet.objects.filter(company=company)
+        return render(request, self.template_name, {'company': company, 'cadets': cadets})
+
+
+class MSlevelListing(View):
+    template_name = 'personnel/ms_listing.html'
+
+    ms_classes = MsLevel.objects.all()
+
+    def get(self, request):
+        return render(request, self.template_name, {'ms_classes': self.ms_classes})
+
+
+class MScadetListing(View):
+    template_name = 'personnel/ms_cadet_listing.html'
+
+    def get(self, request, ms_class):
+        ms_class = MsLevel.objects.get(name=ms_class)
+        cadets = Cadet.objects.filter(ms_level=ms_class)
+        return render(request, self.template_name, {'ms_class': ms_class, 'cadets': cadets})
+
+
+class MSLevelDetail(View):
+    template = 'personnel/group_pages/grouping_profile.html'
+
+    def get(self, request, ms_class, tab='stats'):
+        ms_level = MsLevel.objects.get(name=ms_class)
+        group = "%s Class" % ms_level.name
+        groups = Cadet.objects.filter(ms_level=ms_level)
+        link = "/personnel/cadets"
+        cadet_listing_template = 'personnel/group_pages/grouping_listing.html'
+
+        context = {'tab': tab,
+                   'group': group,
+                   'groups': groups,
+                   'link': link,
+                   'cadet_listing_template': cadet_listing_template,
+        }
+        cadets = Cadet.objects.filter(ms_level=ms_level)
+        context.update(grouping_data(cadets))
+
+        return render(request, self.template, context)
+
+
 class CompanyDetail(View):
     template = 'personnel/group_pages/grouping_profile.html'
 
@@ -160,85 +219,52 @@ class CompanyDetail(View):
         return render(request, self.template, context)
 
 
-class CompanyListing(View):
-    template_name = 'personnel/company_listing.html'
-
-    companies = Company.objects.all()
-    platoons = Platoon.objects.all()
-
-    def get(self, request):
-        return render(request, self.template_name, {'companies': self.companies, 'platoons': self.platoons})
-
-
-class CompanyCadetListing(View):
-    template_name = 'personnel/company_cadet_listing.html'
-
-    def get(self, request, company_name):
-        company = Company.objects.get(name=company_name)
-        cadets = Cadet.objects.filter(company=company)
-        return render(request, self.template_name, {'company': company, 'cadets': cadets})
-
-
-class MSLevelDetail(View):
-    template = 'personnel/group_pages/grouping_profile.html'
-
-    def get(self, request, ms_class, tab='stats'):
-        ms_level = MsLevel.objects.get(name=ms_class)
-        group = "%s Class" % ms_level.name
-        groups = Cadet.objects.filter(ms_level=ms_level)
-        link = "/personnel/cadets"
-        cadet_listing_template = 'personnel/group_pages/grouping_listing.html'
-
-        context = {'tab': tab,
-                   'group': group,
-                   'groups': groups,
-                   'link': link,
-                   'cadet_listing_template': cadet_listing_template,
-        }
-        cadets = Cadet.objects.filter(ms_level=ms_level)
-        context.update(grouping_data(cadets))
-
-        return render(request, self.template, context)
-
-
-class MSlevelListing(View):
-    template_name = 'personnel/ms_listing.html'
-
-    ms_classes = MsLevel.objects.all()
-
-    def get(self, request):
-        return render(request, self.template_name, {'ms_classes': self.ms_classes})
-
-
-class MScadetListing(View):
-    template_name = 'personnel/ms_cadet_listing.html'
-
-    def get(self, request, ms_class):
-        ms_class = MsLevel.objects.get(name=ms_class)
-        cadets = Cadet.objects.filter(ms_level=ms_class)
-        return render(request, self.template_name, {'ms_class': ms_class, 'cadets': cadets})
-
-
 class PlatoonDetail(View):
     template = 'personnel/group_pages/grouping_profile.html'
 
-    def get(self, request, company_name, platoon_id, tab='stats'):
+    def get(self, request, company_name, platoon_num, tab='stats'):
         company = Company.objects.get(name=company_name)
-        platoon = Platoon.objects.get(id=platoon_id, company=company)
-        group = "%s Platoon" % platoon.name
-        groups = Cadet.objects.filter(platoon=platoon)
-        link = "/personnel/cadets"
-        cadet_listing_template = 'personnel/group_pages/grouping_listing.html'
+        platoon = Platoon.objects.get(name=platoon_num, company=company)
+        group = "%s Company, %s Platoon" % (company, platoon.name)
+        groups = Squad.objects.filter(platoon=platoon)
+        link = "squads"
+        listing_template = "personnel/group_pages/platoon_group_listing.html"
+        cadet_listing_template = 'personnel/group_pages/grouping_cadet_listing.html'
 
         context = {'tab': tab,
                    'platoon': platoon,
                    'group': group,
                    'groups': groups,
                    'link': link,
+                   'listing_template': listing_template,
                    'cadet_listing_template': cadet_listing_template,
         }
         # Additons to the context
         cadets = Cadet.objects.filter(platoon=platoon)
+        context.update(grouping_data(cadets))
+
+        return render(request, self.template, context)
+
+
+class SquadDetail(View):
+    template = 'personnel/group_pages/grouping_profile.html'
+
+    def get(self, request, company_name, platoon_num, squad_num, tab='stats'):
+        company = Company.objects.get(name=company_name)
+        platoon = Platoon.objects.get(name=platoon_num, company=company)
+        squad = Squad.objects.get(name=squad_num, platoon=platoon)
+        group = squad.__unicode__()
+        groups = Cadet.objects.filter(squad=squad)
+        cadet_listing_template = 'personnel/group_pages/grouping_listing.html'
+
+        context = {'tab': tab,
+                   'squad': squad,
+                   'group': group,
+                   'groups': groups,
+                   'cadet_listing_template': cadet_listing_template,
+        }
+        # Additons to the context
+        cadets = Cadet.objects.filter(squad=squad)
         context.update(grouping_data(cadets))
 
         return render(request, self.template, context)

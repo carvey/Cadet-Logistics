@@ -339,7 +339,7 @@ class Squad(models.Model):
         :return:
         """
 
-        self.platoon_commander = cadet
+        self.squad_leader = cadet
         cadet.save()
         self.save()
 

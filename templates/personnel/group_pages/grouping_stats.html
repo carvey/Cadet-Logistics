@@ -10,20 +10,21 @@
 <div class="row">
     <div class="col-md-8">
         <div class="panel panel-default">
-            <div class="panel-heading">
-                Attendance information
-            </div>
-            <div class="panel-body">
-                <div class="flot-chart-content" id="flot-line-chart" style="height: 350px; width: 100%;"></div>
-            </div>
-
-        </div>
+             <div class="panel-heading">
+                 PT Detail Data by Test
+             </div>
+             <div class="panel-body">
+                 <div class="flot-chart">
+                     <div class="flot-chart-content" id="test_score_graph"></div>
+                 </div>
+             </div>
+         </div>
     </div>
 
     <div class="col-md-4">
         <div class="panel panel-default">
             <div class="panel-heading">
-                Heading Test
+                Cadet Count
             </div>
             <div class="panel-body">
                 <div><h3>Current Cadets: {{ cadets.count }}</h3></div>

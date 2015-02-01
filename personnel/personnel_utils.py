@@ -1,5 +1,5 @@
 from personnel.models import Cadet
-from pt.models import PtScore
+from pt.models import PtScore, PtTest
 from django.core.exceptions import ObjectDoesNotExist
 import collections
 
@@ -28,6 +28,17 @@ def grouping_data(cadets):
         else:
             ms_levels[cadet.ms_level] = 0
 
+    scores_by_test = {}
+    tests = PtTest.objects.all()
+    for test in tests:
+        scores = PtScore.objects.filter(pt_test=test, cadet__in=cadets)
+        test_dict = {}
+        test_dict.update({'pushups': PtScore.get_avg_pushup_score(scores),
+                          'situps': PtScore.get_avg_situp_score(scores),
+                          'run': PtScore.get_avg_run_score(scores),
+                          'total': PtScore.get_avg_total_score(scores)})
+        scores_by_test.update({test: test_dict})
+
     context = {
                'cadets': cadets,
                'contracted_cadets': contracted,
@@ -40,7 +51,8 @@ def grouping_data(cadets):
                'completed_hours': completed_volunteer_hours,
                'top_scores': top_scores,
                'top_gpas': top_gpas,
-               'ms_levels': ms_levels
+               'ms_levels': ms_levels,
+               'scores_by_test': scores_by_test,
                }
     return context
 

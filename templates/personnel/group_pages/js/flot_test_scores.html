@@ -1,0 +1,77 @@
+
+<script>
+
+
+    //Flot Line Chart
+    $(document).ready(function() {
+        var offset = 0;
+        plot();
+
+        function plot() {
+            var situps = [];
+            var run = [];
+            var total = [];
+            var pushups = [];
+
+            {% for test, scores in scores_by_test.items %}
+                {% for event, score in scores.items %}
+                    {% ifequal event 'pushups' %}
+                        pushups.push(["{{ test }}", {{ score }}]);
+                    {% endifequal %}
+
+                    {% ifequal event 'situps' %}
+                        situps.push(["{{ test }}", {{ score }}]);
+                    {% endifequal %}
+
+                    {% ifequal event 'run' %}
+                        run.push(["{{ test }}", {{ score }}]);
+                    {% endifequal %}
+
+                    {% ifequal event 'total' %}
+                        total.push(["{{ test }}", {{ score }}]);
+                    {% endifequal %}
+
+                {% endfor %}
+            {% endfor %}
+
+            var options = {
+                series: {
+                    lines: {
+                        show: true
+                    },
+                    points: {
+                        show: true
+                    }
+                },
+                grid: {
+                    hoverable: true //IMPORTANT! this is needed for tooltip to work
+                },
+                yaxis: {
+                    min: 0,
+                    max: 300
+                },
+                xaxis: {
+                  mode: "categories"
+                },
+                tooltip: true,
+                tooltipOpts: {
+                    content: "'%s' average score for this PT test: %y.4",
+                    shifts: {
+                        x: -60,
+                        y: 25
+                    }
+                }
+            };
+
+            var data = [
+                {data: pushups, label: "Pushups"},
+                {data: situps, label: "Situps"},
+                {data: run, label: "Two Mile Run"},
+                {data: total, label: "Total"}
+            ];
+
+            var plotObj = $.plot($("#test_score_graph"), data, options);
+
+        }
+    });
+</script>

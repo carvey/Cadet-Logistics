@@ -1,0 +1,24 @@
+{% extends 'datatables/standard_table.html' %}
+
+
+{% block table_title %}
+	Squad Listing
+{% endblock %}
+
+{% block columns %}
+    <th>Name</th>
+	<th>Squad Leader</th>
+{% endblock %}
+
+{% block table_data %}
+	{% for group in groups %}
+        <tr>
+            <td><a href="{{ link }}/{{ group.name }}">{{ group }}</a></td>
+            {% if group.squad_leader %}
+                <td><a href="/personnel/cadets/{{ group.squad_leader.id }}">{{ group.squad_leader }}</a></td>
+            {% else %}
+                <td>None</td>
+            {% endif %}
+        </tr>
+    {% endfor %}
+{% endblock %}

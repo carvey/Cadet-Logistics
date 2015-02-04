@@ -17,12 +17,23 @@ MS_LEVEL_CHOICES = (
     (THREE, 'MS3'),
     (FOUR, 'MS4'),
 )
-male = 'Male'
-female = 'Female'
+male = 'male'
+female = 'female'
 GENDER_CHOICES = (
     (male, 'Male'),
     (female, 'Female')
 )
+
+BLOOD_TYPES = (
+        ('A+', 'A+'),
+        ('A-', 'A-'),
+        ('B+', 'B-'),
+        ('B-', 'B-'),
+        ('AB+', 'AB+'),
+        ('AB-', 'AB-'),
+        ('O+', 'O+'),
+        ('O-', 'O-')
+    )
 
 # The functionality to use this class is not yet implemented
 class School(models.Model):
@@ -44,11 +55,23 @@ class Demographic(models.Model):
     def __unicode__(self):
         return self.demographic
 
+    @staticmethod
+    def to_list():
+        """
+        Gets a list of all the demographics, and compiles them into a list
+        :return: A list of all demographics
+        """
+        #The vallues_list() method on the queryset will return a list of tuples like: (id, demo)
+        demo_list = Demographic.objects.all().values_list()
+        #The second value (the demographic) is what we need
+        return [(demo[1], demo[1]) for demo in demo_list]
+
 
 class Users(models.Model):
     """Company is the model for the companies in the batallion"""
     user = models.OneToOneField(User)
     age = models.PositiveIntegerField(blank=False, default=18)
+    gender = models.CharField(max_length=6, choices=GENDER_CHOICES, blank=False, null=True)
     demographic = models.ForeignKey(Demographic, blank=True, null=True)
 
     def __unicode__(self):
@@ -112,17 +135,6 @@ class Cadet(Users):
     This model extends the Users abstract model. Each cadet should ideally be assigned to a company, platoon, and squad
     """
 
-    BLOOD_TYPES = (
-        ('A+', 'A+'),
-        ('A-', 'A-'),
-        ('B+', 'B-'),
-        ('B-', 'B-'),
-        ('AB+', 'AB+'),
-        ('AB-', 'AB-'),
-        ('O+', 'O+'),
-        ('O-', 'O-')
-    )
-
     """
     This is a dict of related_name's (keys) of all the current possible staff positions a cadet can have, as well their
     more readable name (values). Register the related_names in this list for the Cadet model helper methods to iterate through
@@ -132,7 +144,6 @@ class Cadet(Users):
                        'squad_leader': 'Squad Leader'}
 
     eagle_id = models.PositiveIntegerField(default=0, blank=False, null=True)
-    gender = models.CharField(max_length=6, choices=GENDER_CHOICES, blank=False, null=True)
     school = models.ForeignKey(School, blank=True, null=True)
 
     # #
@@ -150,6 +161,7 @@ class Cadet(Users):
     volunteer_hours_status = models.BooleanField(default=False)
     turned_in_104r = models.BooleanField(default=False)
     # #
+    #TODO consider a profile model in the pt app instead of this field?
     on_profile = models.BooleanField(default=False)
     profile_reason = models.CharField(max_length=250, blank=True)
     events_missed = models.PositiveIntegerField(default=0, blank=True)

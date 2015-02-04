@@ -375,7 +375,7 @@ def assign_email():
     for cadet in cadets:
         cadet.user.email = cadet.user.first_name[:1].lower() + cadet.user.last_name.lower() + str(starting_num) + '@georgiasouthern.edu'
         starting_num += 75
-        cadet.save()
+        cadet.user.save()
 
 
 def assign_gpa():

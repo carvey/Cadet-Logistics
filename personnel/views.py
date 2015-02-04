@@ -6,7 +6,7 @@ from personnel.models import Cadet, Company, MsLevel, Platoon, SnapShot, Demogra
 from pt.models import PtScore, PtTest, Grader
 from personnel_utils import grouping_data
 from django.contrib.auth.decorators import login_required
-from personnel.forms import LoginForm
+from personnel.forms import LoginForm, EditCadet
 from django.contrib.auth.views import logout_then_login
 
 
@@ -94,6 +94,9 @@ class CadetListing(View):
 class CadetPage(View):
     template_name = 'personnel/cadet_page/cadet_page.html'
 
+    def post(self, request):
+        print "posted"
+
     def get(self, request, cadet_id, tab='overview'):
         cadet = Cadet.objects.get(id=cadet_id)
         scores = PtScore.objects.filter(cadet=cadet_id)
@@ -116,7 +119,12 @@ class CadetPage(View):
             avg_situp_score = PtScore.get_avg_situp_score(scores)
             avg_two_mile_score = PtScore.get_avg_run_score(scores)
 
+        edit_cadet_form = EditCadet(initial={'first_name': cadet.user.first_name, 'last_name': cadet.user.last_name, 'eagle_id': cadet.eagle_id,
+                                             'blood_type': cadet.blood_type, 'gender': cadet.gender, 'demographic': cadet.demographic,
+                                             'cell_number': cadet.cell_number, 'car_model': cadet.car_model, 'car_tag': cadet.car_tag})
+
         context = {
+            'tab': tab,
             'cadet': cadet,
             'scores': ordered_scores,
             'max_score': max_score,
@@ -128,7 +136,7 @@ class CadetPage(View):
             'avg_pushup_score': avg_pushup_score,
             'avg_situp_score': avg_situp_score,
             'avg_two_mile_score': avg_two_mile_score,
-            'tab': tab,
+            'edit_cadet_form': edit_cadet_form,
         }
         return render(request, self.template_name, context)
 

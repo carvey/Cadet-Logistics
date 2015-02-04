@@ -47,11 +47,10 @@
 						{% endwith %}
 						<p>MS Class: {{cadet.ms_level}}</p>
 						<p>Company: {{cadet.company}}</p>
-                        <p>Platoon: {{ cadet.platoon.display_name }}</p>
+                        <p>Platoon: {{ cadet.platoon.display_name|interpret_none }}</p>
+                        <p>Squad: {% if cadet.squad %}{{ cadet.squad.short_name }}{% else %}None{% endif %}</p>
                         <hr>
-						<p>Company Staff: {{cadet.is_company_staff|interpret_bool}}</p>
-                        <!--TODO Need a way to get staff position that a cadet has-->
-                        <p>Staff Position: </p>
+                        <p>Staff Position: {{ cadet.get_staff_position|interpret_none }}</p>
                         <hr>
                         <p>Nursing Cadet: {{ cadet.nurse|interpret_bool }}</p>
                         <p>Ranger Challenge: {{ cadet.ranger_challenge|interpret_bool }}</p>

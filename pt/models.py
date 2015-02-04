@@ -141,8 +141,10 @@ class PtTest(models.Model):
                 lowest_score = score.score
         return lowest_score
 
-    def get_average_score(self, company):
-        scores = PtScore.objects.filter(pt_test=self, cadet__company=company)
+    def get_average_score(self, company=None):
+        scores = PtScore.objects.filter(pt_test=self)
+        if company:
+            score = scores.filter(cadet__company=company)
         return PtScore.get_avg_total_score(scores)
 
     class Meta:

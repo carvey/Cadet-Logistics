@@ -21,7 +21,7 @@
     <ul class='nav nav-tabs'>
         <li {% if tab == "overview" %}class="active"{% endif %}><a href="#overview" data-toggle="tab">Overview</a></li>
         <li {% if tab == "pt" %}class="active"{% endif %}><a href="#pt" data-toggle="tab">PT Details</a></li>
-        {% if user|is_owner:cadet %}
+        {% if user|has_permission:cadet %}
             <li {% if tab == "edit" %}class="active"{% endif %}><a href="#edit" data-toggle="tab">Edit Information</a></li>
         {% endif %}
     </ul>
@@ -35,7 +35,7 @@
             {% include 'personnel/cadet_page/cadet_page_pt.html' %}
         </div>
 
-        {% if user|is_owner:cadet %}
+        {% if user|has_permission:cadet %}
             <div class='tab-pane fade{% if tab == "edit" %} in active{% endif %} ' id='edit'>
                 {% include 'personnel/cadet_page/cadet_page_edit.html' %}
             </div>

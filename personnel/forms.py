@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate
-from personnel.models import Demographic, GENDER_CHOICES, BLOOD_TYPES
+from personnel.models import Demographic, GENDER_CHOICES, BLOOD_TYPES, Cadet
 
 
 class LoginForm(AuthenticationForm):
@@ -33,14 +33,37 @@ class LoginForm(AuthenticationForm):
 class Registration(forms.Form):
     pass
 
-class EditCadet(forms.Form):
-    eagle_id = forms.IntegerField(widget=forms.TextInput(attrs={'placeholder': 'Eagle Id'}))
-    first_name = forms.CharField()
-    last_name = forms.CharField()
-    gender = forms.TypedChoiceField(choices=GENDER_CHOICES)
-    cell_number = forms.CharField()
-    blood_type = forms.TypedChoiceField(choices=tuple([(u'', "-----")] + list(BLOOD_TYPES)))
-    car_model = forms.CharField()
-    car_tag = forms.CharField()
-    demographic = forms.TypedChoiceField(choices=Demographic.to_list())
 
+class EditCadet(forms.ModelForm):
+
+    class Meta():
+        model = Cadet
+        fields = ['eagle_id', 'cell_number', 'blood_type', 'car_model', 'car_tag']
+
+
+class EditCadetFull(forms.ModelForm):
+
+    # def __init__(self, *args, **kwargs):
+    #     super(EditCadetFull, self).__init__(*args, **kwargs)
+    #
+    #     for field in self.fields:
+    #         self.fields[field].required = False
+
+    class Meta():
+        model = Cadet
+        exclude = ['objects', 'user', 'events_missed', 'class_events_missed',
+                   'lab_events_missed', 'pt_missed', 'attendance_rate', 'school']
+
+
+class EditCadetUser(forms.ModelForm):
+
+    # def __init__(self, *args, **kwargs):
+    #     super(EditCadetUser, self).__init__(*args, **kwargs)
+    #
+    #     for field in self.fields:
+    #         self.fields[field].required = False
+
+    class Meta():
+        model = User
+        exclude = ['date_joined', 'last_login', 'superuser_status', 'password', 'groups', 'user_permissions',
+                   'is_staff', 'is_active', 'is_superuser']

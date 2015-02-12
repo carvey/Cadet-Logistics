@@ -13,15 +13,14 @@
                         </div>
 
                         <div class="col-lg-6">
+                            <p>Username: {{ cadet.user.username }}</p>
                             <p>Eagle ID: {{cadet.eagle_id}}</p>
                             <p>Gender: {{cadet.gender}}</p>
+                            <p>Demographic: {{ cadet.demographic }}</p>
                             <p>Age: {{cadet.age}}</p>
                             <p>GPA: {{cadet.gpa}}</p>
                             <p>Contracted: {{cadet.contracted|interpret_bool}}</p>
                             <p>SMP: {{cadet.smp|interpret_bool}}</p>
-                            <hr>
-                            <p>Profile: {{ cadet.on_profile|interpret_bool }}</p>
-                            <p>At Risk: {{ cadet.at_risk|interpret_bool }}</p>
                             <hr>
                             <p>Email: {{cadet.user.email}}</p>
                             <p>Cell Number: {{cadet.cell_number|phone_format}}</p>
@@ -94,5 +93,23 @@
 					</div>
 				</div>
 			</div>
+
+            <div class='col-lg-4'>
+				<div class='panel panel-default'>
+					<div class='panel-heading'>
+						Miscellaneous Information
+					</div>
+					<div class='panel-body'>
+                        <p>Profile: {{ cadet.on_profile|interpret_bool }}</p>
+                        <p>At Risk: {{ cadet.at_risk|interpret_bool }}</p>
+                        <p>Blood Type: {{ cadet.blood_type }}</p>
+                        <hr>
+                        <p>Car Model: {{ cadet.car_model }}</p>
+                        <p>Car Tag: {{ cadet.car_tag }}</p>
+					</div>
+				</div>
+			</div>
 		</div>
+
+
 {% endblock %}

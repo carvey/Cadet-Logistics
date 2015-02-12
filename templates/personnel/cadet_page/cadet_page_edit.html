@@ -16,8 +16,38 @@
 
             <div class="panel-body">
                 <div class="col-md-6">
-                    {{ edit_cadet_form.as_p }}
+                    <form action="/personnel/cadets/{{ cadet.id }}/" method="post">
+                        {% csrf_token %}
+                        {% if form.errors %}
+                            {{ form.errors }}
+                        {% endif %}
+                        {{ form.as_p }}
+
+                        <span style="float: left; padding-top: 10px">
+                            <input class="btn btn-sm btn-success" type="submit" value="Submit" />
+                        </span>
+
                 </div>
+
+
+                {% if user_form %}
+                    <div class="col-md-6">
+                        <form action="/personnel/cadets/{{ cadet.id }}/" method="post">
+                            {% csrf_token %}
+                            {% if user_form.errors %}
+                                {{ user_form.errors }}
+                            {% endif %}
+                            {{ user_form.as_p }}
+
+                            <span style="float: left; padding-top: 10px">
+                                <input class="btn btn-sm btn-success" type="submit" value="Submit" />
+                            </span>
+                        </form>
+                    </div>
+                {% endif %}
+                </form>
+
+
             </div>
         </div>
 
@@ -25,12 +55,8 @@
 
     <script>
         $(document).ready(function() {
-            $("input,select").addClass("form-control");
-{#            $("select").each(function() {#}
-{#                console.log(this);#}
-{#                $(this).append("<option>---</option>");#}
-{#                #}
-{#            });#}
+            $("select,:text,:input[type='number'],:input[type='email']").addClass("form-control");
+            $(":checkbox").addClass("checkbox");
         });
     </script>
 

@@ -6,7 +6,7 @@ from personnel.models import Cadet, Company, MsLevel, Platoon, SnapShot, Demogra
 from pt.models import PtScore, PtTest, Grader
 from personnel_utils import grouping_data
 from django.contrib.auth.decorators import login_required
-from personnel.forms import LoginForm, EditCadet
+from personnel.forms import LoginForm, EditCadet, EditCadetFull, EditCadetUser
 from django.contrib.auth.views import logout_then_login
 
 
@@ -91,39 +91,38 @@ class CadetListing(View):
         return render(request, self.template_name, {'cadets': self.cadets})
 
 
-class CadetPage(View):
+def cadet_page(request, cadet_id, tab='overview'):
     template_name = 'personnel/cadet_page/cadet_page.html'
+    form = None
+    user_form = None
+    cadet = Cadet.objects.get(id=cadet_id)
 
-    def post(self, request):
-        print "posted"
+    print "cadet: %s" % cadet
+    print "user: %s" % cadet.user
 
-    def get(self, request, cadet_id, tab='overview'):
-        cadet = Cadet.objects.get(id=cadet_id)
-        scores = PtScore.objects.filter(cadet=cadet_id)
-        ordered_scores = scores.order_by('-pt_test')[:3]
+    context = {}
 
-        # initializing pt related vars to 0 ahead of time, in case the cadet has no pt tests yet
-        max_score = min_score = avg_score = avg_pushups = avg_situps = avg_two_mile = 0
-        avg_pushup_score = avg_situp_score = avg_two_mile_score = 0
+    scores = PtScore.objects.filter(cadet=cadet_id)
+    ordered_scores = scores.order_by('-pt_test')[:3]
 
-        if scores:
-            max_score = PtScore.get_max_score(scores)
-            min_score = PtScore.get_min_score(scores)
-            avg_score = PtScore.get_avg_total_score(scores)
+    # initializing pt related vars to 0 ahead of time, in case the cadet has no pt tests yet
+    max_score = min_score = avg_score = avg_pushups = avg_situps = avg_two_mile = 0
+    avg_pushup_score = avg_situp_score = avg_two_mile_score = 0
 
-            avg_pushups = PtScore.get_avg_pushups(scores)
-            avg_situps = PtScore.get_avg_situps(scores)
-            avg_two_mile = PtScore.get_avg_run_time(scores)
+    if scores:
+        max_score = PtScore.get_max_score(scores)
+        min_score = PtScore.get_min_score(scores)
+        avg_score = PtScore.get_avg_total_score(scores)
 
-            avg_pushup_score = PtScore.get_avg_pushup_score(scores)
-            avg_situp_score = PtScore.get_avg_situp_score(scores)
-            avg_two_mile_score = PtScore.get_avg_run_score(scores)
+        avg_pushups = PtScore.get_avg_pushups(scores)
+        avg_situps = PtScore.get_avg_situps(scores)
+        avg_two_mile = PtScore.get_avg_run_time(scores)
 
-        edit_cadet_form = EditCadet(initial={'first_name': cadet.user.first_name, 'last_name': cadet.user.last_name, 'eagle_id': cadet.eagle_id,
-                                             'blood_type': cadet.blood_type, 'gender': cadet.gender, 'demographic': cadet.demographic,
-                                             'cell_number': cadet.cell_number, 'car_model': cadet.car_model, 'car_tag': cadet.car_tag})
+        avg_pushup_score = PtScore.get_avg_pushup_score(scores)
+        avg_situp_score = PtScore.get_avg_situp_score(scores)
+        avg_two_mile_score = PtScore.get_avg_run_score(scores)
 
-        context = {
+        context.update({
             'tab': tab,
             'cadet': cadet,
             'scores': ordered_scores,
@@ -136,9 +135,37 @@ class CadetPage(View):
             'avg_pushup_score': avg_pushup_score,
             'avg_situp_score': avg_situp_score,
             'avg_two_mile_score': avg_two_mile_score,
-            'edit_cadet_form': edit_cadet_form,
-        }
-        return render(request, self.template_name, context)
+            'form': form,
+            'user_form': user_form
+        })
+
+    #on request post, check if the user is cadre or not to determine whether the EditCadetFull and EditCadetUser
+    # forms should be used, or just the more simple EditCadet form
+    if request.method == 'POST':
+        #if the cadet is cadre/superuser submitting form or user_form
+        if hasattr(request.user, 'cadre') or request.user.is_superuser:
+            form = EditCadetFull(request.POST or None, instance=cadet)
+            user_form = EditCadetUser(request.POST or None, instance=cadet.user)
+            if user_form.is_valid():
+                user_form.save()
+        #If the user is not cadre/superuser (does not include the user_form)
+        else:
+            form = EditCadet(request.POST or None, instance=cadet)
+
+        if form.is_valid():
+            form.save()
+
+    elif request.method == "GET":
+        if hasattr(request.user, 'cadre') or request.user.is_superuser:
+            form = EditCadetFull(instance=cadet)
+            user_form = EditCadetUser(instance=cadet.user)
+
+        else:
+            form = EditCadet(instance=cadet)
+
+    context.update({'form': form, 'user_form': user_form})
+
+    return render(request, template_name, context)
 
 
 class CompanyListing(View):

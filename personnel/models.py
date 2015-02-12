@@ -17,8 +17,8 @@ MS_LEVEL_CHOICES = (
     (THREE, 'MS3'),
     (FOUR, 'MS4'),
 )
-male = 'male'
-female = 'female'
+male = 'Male'
+female = 'Female'
 GENDER_CHOICES = (
     (male, 'Male'),
     (female, 'Female')
@@ -70,8 +70,8 @@ class Demographic(models.Model):
 class Users(models.Model):
     """Company is the model for the companies in the batallion"""
     user = models.OneToOneField(User)
-    age = models.PositiveIntegerField(blank=False, default=18)
-    gender = models.CharField(max_length=6, choices=GENDER_CHOICES, blank=False, null=True)
+    age = models.PositiveIntegerField(blank=False, null=True, default=18)
+    gender = models.CharField(max_length=6, choices=GENDER_CHOICES, blank=False, default='male')
     demographic = models.ForeignKey(Demographic, blank=True, null=True)
 
     def __unicode__(self):
@@ -150,13 +150,13 @@ class Cadet(Users):
     company = models.ForeignKey(Company, blank=True, null=True)
     platoon = models.ForeignKey('Platoon', blank=True, null=True)
     squad = models.ForeignKey('Squad', blank=True, null=True)
-    ms_level = models.ForeignKey('MsLevel', blank=False, null=False)
-    gpa = models.DecimalField(default=4.0, max_digits=3, decimal_places=2, blank=True)
-    ms_grade = models.IntegerField(default=100, blank=True)
+    ms_level = models.ForeignKey('MsLevel', blank=False, null=True)
+    gpa = models.DecimalField(default=4.0, max_digits=3, decimal_places=2, blank=True, null=True)
+    ms_grade = models.IntegerField(default=100, blank=True, null=True)
     # #
     cell_number = models.CharField(max_length=14, blank=True)
     #the volunteer_hours_completed field is a measure of the amount of hours completed
-    volunteer_hours_completed = models.IntegerField(default=0, blank=True)
+    volunteer_hours_completed = models.IntegerField(default=0, blank=True, null=True)
     #the volunteer_hours_status boolean is to tell whether a cadet has completed the minimum number of hours
     volunteer_hours_status = models.BooleanField(default=False)
     turned_in_104r = models.BooleanField(default=False)

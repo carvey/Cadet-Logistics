@@ -4,7 +4,7 @@ Created on Apr 27, 2014
 @author: carvey
 '''
 from django.conf.urls import patterns, url
-from personnel.views import Index, Stats, CadetListing, CadetPage, CompanyDetail, CompanyListing, \
+from personnel.views import Index, Stats, CadetListing, cadet_page, CompanyDetail, CompanyListing, \
     CompanyCadetListing, MSlevelListing, MScadetListing, MSLevelDetail, PlatoonDetail, Input, Login, logout, SquadDetail
 
 urlpatterns = patterns('',
@@ -21,8 +21,8 @@ urlpatterns = patterns('',
 
                        #Cadet Page
                        url(r'^cadets/$', CadetListing.as_view(), name='cadetlisting'),
-                       url(r'^cadets/(?P<cadet_id>[0-9]+)/$', CadetPage.as_view(), name='cadetpage'),
-                       url(r'^cadets/(?P<cadet_id>[0-9]+)/(?P<tab>\w+)/$', CadetPage.as_view(), name='cadetpage'),
+                       url(r'^cadets/(?P<cadet_id>[0-9]+)/$', cadet_page, name='cadetpage'),
+                       url(r'^cadets/(?P<cadet_id>[0-9]+)/(?P<tab>\w+)/$', cadet_page, name='cadetpage'),
 
                        #Company/Platoon/Squad Pages
                        url(r'^companys/$', CompanyListing.as_view(), name='companylisting'),

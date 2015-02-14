@@ -16,7 +16,7 @@
 
         {# the default tab is loaded with the page, while the second tab is loaded with ajax when the tab is clicked #}
 		<div class='tab-pane fade{% if tab == "stats" %} in active{% endif %}' id='stats'>
-			{% include 'pt/test_profile/test_profile_stats.html' %}
+			{% include 'pt/pt_tests/test_profile_stats.html' %}
 		</div>
 
         <div class='tab-pane fade{% if tab == "listing" %} in active{% endif %}' id='listing'>
@@ -44,6 +44,6 @@
     <script src="{% static 'js/plugins/flot/jquery.flot.categories.min.js' %}"></script>
     <script src="{% static 'js/plugins/flot/jquery.flot.orderBars.js' %}"></script>
 
-    {% include 'pt/test_profile/js/flot_company_scores.html' %}
+    {% include 'pt/pt_tests/js/flot_company_scores.html' %}
 
 {% endblock %}

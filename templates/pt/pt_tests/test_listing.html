@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load personnel_filters %}
+{% load permission_filters %}
+
+{% block page_header %}
+    <div style="display: inline-block"> PT Test Listing Page</div>
+    {% if user|super_permissions %}
+        <div style="display: inline-block; float: right">
+            <a class="btn btn-default btn-md" href="{% url 'add_pt_test' %}" role="button">Add PT Test</a>
+        </div>
+    {% endif %}
+
+    <style type="text/css">
+        {% include 'pt/css/test_listing_page.css' %}
+    </style>
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div>
+                <h3>Upcoming PT Tests</h3>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Test Date</th>
+                            <th>MS Levels</th>
+                            <th>Record</th>
+                            <th>Diagnostic</th>
+                            {% if user|super_permissions %}
+                                <th></th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                           {% for test in future_tests %}
+                               <tr>
+                                    <td>{{ test }}</td>
+                                    <td>
+                                        {% for level in test.ms_levels.all %}
+                                            {% if not forloop.last %}
+                                                <span>{{ level }},</span>
+                                            {% else %}
+                                                <span>{{ level }}</span>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                    <td>{{ test.record }}</td>
+                                    <td>{{ test.diagnostic }}</td>
+                                    {% if user|super_permissions %}
+                                        <td>
+                                            <a class="btn btn-default btn-sm" href="{% url 'add_pt_test' %}" role="button">Edit Test</a>
+                                        </td>
+                                    {% endif %}
+                               </tr>
+                            {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4">
+            <h3>Past PT Tests</h3>
+        </div>
+    </div>
+
+    <div class="row">
+        {% for test in tests %}
+            {% with avgScore=test.getAvgTotalScore %}
+                <div class="col-lg-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <a href="{% url 'pt-test-profile' test.id %}" style="display: inline-block">
+                                <h3 class="panel-title">{{ test }}</h3>
+                            </a>
+                            {% if user|super_permissions %}
+                                <a href="#" style="display: inline-block; float: right">
+                                    <h3 class="panel-title">
+                                    <span class="glyphicon glyphicon-edit" style="float: right;"> Edit</span>
+                                    </h3>
+                                </a>
+                            {% endif %}
+                        </div>
+                        <div class="panel-body">
+                            <div class="flot-chart" style="height: 200px;">
+                                <div class="flot-chart-content" id="test-{{ test.id }}"></div>
+                            </div>
+
+                            <div class="panel-test-list">MS Classes<span class="test-list-value">
+                            {% for level in test.ms_levels.all %}
+                                {% if not forloop.last %}
+                                    <span>{{ level }},</span>
+                                {% else %}
+                                    <span>{{ level }}</span>
+                                {% endif %}
+                            {% endfor %}
+                        </span></div>
+                            {% if test.has_scores %}
+                                <div class="panel-test-list">Highest score <span
+                                        class="test-list-value">{{ test.getHighestScore }}</span></div>
+                                <div class="panel-test-list">Record <span
+                                        class="test-list-value">{{ test.record|interpret_bool }}</span></div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {# This is the script for displaying the pie charts #}
+                {% include 'pt/js/pt_test_pie_chart' %}
+            {% endwith %}
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block page_scripts %}
+    <script src="{% static 'js/plugins/jquery-browser-plugin/jquery.browser.min.js' %}"></script>
+    <script src="{% static 'js/plugins/flot/jquery.flot.js' %}"></script>
+    <script src="{% static 'js/plugins/flot/jquery.flot.time.js' %}"></script>
+    <script src="{% static 'js/plugins/flot/jquery.flot.tooltip.min.js' %}"></script>
+    <script src="{% static 'js/plugins/flot/jquery.flot.pie.js' %}"></script>
+{% endblock %}

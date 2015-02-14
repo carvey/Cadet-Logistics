@@ -1,57 +1,17 @@
-from django.shortcuts import render
+from django.shortcuts import render, HttpResponseRedirect
 from django.http import HttpResponse
 from django.views.generic import View
 from django.db.models import Q
+from django.core.urlresolvers import reverse
 
 from pt.models import PtTest, PtScore, Grader
 from personnel.models import Company, Cadet
 from pt_utils import get_complete_average_scores_dict, get_avg_scores_by_company
-
-
-"""
-Might be useful for in the future
----------
-class Dashboard(View):
-    template_name = 'pt/dashboard.html'
-    
-    '''
-    Creates a dictionary of all the pt scores for each company. Accessed using company name.
-    '''
-    def company_pt_scores(self):
-        companies = Company.objects.all()
-        scores_by_company = {}
-        for company in companies:
-            scores_by_company[company.name] = get_avg_scores_by_company(company)
-    
-        return scores_by_company
-        try:
-            companies = Company.objects.all()
-            scores_by_company = {}
-            for company in companies:
-                scores_by_company[company.name] = get_avg_scores_by_company(company)
-            
-            return scores_by_company
-        except:
-            return None
-    
-    def get(self, request):
-        pt_tests = PtTest.objects.all()
-        pt_scores = PtScore.objects.all()
-        scores_by_company = self.company_pt_scores()
-        companies = Company.objects.all()
-    
-        context = {
-                   'tests':pt_tests,
-                   'companies':companies,
-                   'company_scores':scores_by_company,
-                   }
-    
-        return render(request, self.template_name, context)
-"""
+from pt.forms import *
 
 
 class TestProfiletView(View):
-    template_name = 'pt/test_profile/test_profile.html'
+    template_name = 'pt/pt_tests/test_profile.html'
 
     #each tab after stats (the first one) uses ajax to load
     def get(self, request, test_id, tab='stats'):
@@ -77,7 +37,7 @@ class TestProfiletView(View):
             return render(request, self.template_name, context)
 
         elif tab == 'listing':
-            template_name = 'pt/test_profile/test_profile_listing.html'
+            template_name = 'pt/pt_tests/test_profile_listing.html'
             cadets = Cadet.objects.all()
             scores = PtScore.objects.filter(pt_test=test)
             context.update({
@@ -89,12 +49,30 @@ class TestProfiletView(View):
         return render(request, self.template_name, context)
 
 
-class TestListingView(View):
-    template_name = 'pt/test_listing.html'
+class AddTest(View):
+    template = 'pt/pt_tests/add_test.html'
+
+    def post(self, request):
+        test_form = AddTestForm(request.POST)
+        if test_form.is_valid():
+            test_form.save()
+        return HttpResponseRedirect(reverse("pt-tests-listing"))
 
     def get(self, request):
-        pt_tests = PtTest.objects.all()
+        test_form = AddTestForm()
+
+        context = {'test_form': test_form}
+        return render(request, self.template, context)
+
+
+class TestListingView(View):
+    template_name = 'pt/pt_tests/test_listing.html'
+
+    def get(self, request):
+        pt_tests = PtTest.objects.all().order_by('-date')
+        future_tests = PtTest.future_tests.all()
         context = {
+            'future_tests': future_tests,
             'tests': pt_tests,
         }
         return render(request, self.template_name, context)

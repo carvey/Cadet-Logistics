@@ -39,7 +39,7 @@
 						<p><span class="panel-info-p">MS Class</span>: <a href='/personnel/ms-classes/{{ cadet.ms_level }}'>{{cadet.ms_level}}</a></p>
 						<p><span class="panel-info-p">Company</span>:
                             {% if cadet.company %}
-                                <a href='/personnel/companys/{{ cadet.company.id }}'>{{ cadet.company }}</a>
+                                <a href='/personnel/companys/{{ cadet.company.name }}'>{{ cadet.company }}</a>
                             {% else %}
                                 None
                             {% endif %}

@@ -19,3 +19,22 @@ def has_permission(user, user_from_request):
     if user == user_from_request.user or hasattr(user, 'cadre') or user.is_superuser:
         return True
     return False
+
+@register.filter(name='super_permissions')
+def super_permissions(user):
+    if hasattr(user, 'cadre') or user.is_superuser:
+        return True
+    return False
+
+@register.filter(name='is_cadet')
+def is_cadet(user_obj):
+    if hasattr(user_obj, 'cadet'):
+        return True
+    else:
+        return False
+
+@register.filter(name='is_cadre')
+def is_cadre(user):
+    if hasattr(user, 'cadre'):
+        return True
+    return False

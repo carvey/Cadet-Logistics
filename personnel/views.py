@@ -97,9 +97,6 @@ def cadet_page(request, cadet_id, tab='overview'):
     user_form = None
     cadet = Cadet.objects.get(id=cadet_id)
 
-    print "cadet: %s" % cadet
-    print "user: %s" % cadet.user
-
     context = {}
 
     scores = PtScore.objects.filter(cadet=cadet_id)

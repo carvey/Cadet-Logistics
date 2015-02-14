@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+    <script src="{% static 'css/less/bootstrap-datepicker/js/bootstrap-datepicker.js' %}"></script>
+    <link href="{% static 'css/less/bootstrap-datepicker/datepicker.css' %}" rel="stylesheet">
+
+
+{% endblock %}
+
+{% block page_header %}
+    Add PT Test
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-6">
+
+            <form action="{% url 'add_pt_test' %}" method="post">
+                {% for field in test_form %}
+                    {% csrf_token %}
+
+                    <div class="row" style="margin: 25px 0;">
+
+                        <div class="col-md-2">
+                            <div style="display: inline-block; float: left">{{ field.label_tag }}</div>
+                        </div>
+                        <div class="col-md-6">
+                            <div style="display: inline-block">{{ field }}</div>
+                        </div>
+
+                    </div>
+                {% endfor %}
+                <input class="btn btn-sm btn-success" type="submit" value="Submit" />
+            </form>
+
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $("select,:text,:input[type='number'],:input[type='email']").addClass("form-control");
+            $(":checkbox").addClass("checkbox");
+
+            $("#id_date").addClass("date");
+            $(".date").datepicker({
+                format: 'yyyy-mm-dd'
+            });
+        });
+    </script>
+
+
+
+{% endblock %}

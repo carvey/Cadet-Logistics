@@ -4,10 +4,11 @@ from itertools import cycle
 
 from django.db import models
 from datetime import datetime
-from personnel.models import Cadet
+from personnel.models import Cadet, MsLevel
 from django.core.validators import RegexValidator
 from population_script import add_pt_test
 from decimal import Decimal
+from pt.managers import TestManager, FutureTestManager
 
 male = 'Male'
 female = 'Female'
@@ -43,17 +44,17 @@ ACTIVITY_CHOICES = (
     (two_mile, 'Two-mile run')
 )
 
+
 # This class handles the pt test itself, identified by a date
 class PtTest(models.Model):
     date = models.DateField(default=datetime.today(), blank=False)
-    MsLevelFour = models.BooleanField(default=False,
-                                      help_text='Check this box if the MS4 class will be taking this test')
-    MsLevelThree = models.BooleanField(default=True,
-                                       help_text='Check this box if the MS3 class will be taking this test')
-    MsLevelTwo = models.BooleanField(default=True, help_text='Check this box is the MS2 class will be taking this test')
-    MsLevelOne = models.BooleanField(default=True, help_text='Check this box if the MS1 class will be taking this test')
-    diagnostic = models.BooleanField(default=False)
+    ms_levels = models.ManyToManyField(MsLevel)
     record = models.BooleanField(default=False)
+    diagnostic = models.BooleanField(default=False)
+
+    objects = TestManager()
+    all_tests = models.Manager()
+    future_tests = FutureTestManager()
 
     def __unicode__(self):
         format_date = self.date.strftime('%d %b, %Y')
@@ -61,6 +62,11 @@ class PtTest(models.Model):
 
     def getAddress(self):
         return "/pt/tests/scores/%d" % self.id
+
+    def has_scores(self):
+        if self.ptscore_set.all():
+            return True
+        return False
 
     #when implemented, should get the cadets associated with this test
     #might need to use personnel snapshots

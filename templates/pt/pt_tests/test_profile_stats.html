@@ -28,10 +28,15 @@
                 Test Information
             </div>
             <div class="panel-body">
-                <p>MS1 Participation: {{ test.MsLevelOne }}</p>
-                <p>MS2 Participation: {{ test.MsLevelTwo }}</p>
-                <p>MS3 Participation: {{ test.MsLevelThree }}</p>
-                <p>MS4 Participation: {{ test.MsLevelFour }}</p>
+                <p class="panel-test-list">MS Classes: <span class="test-list-value">
+                    {% for level in test.ms_levels.all %}
+                        {% if not forloop.last %}
+                            <span>{{ level }},</span>
+                        {% else %}
+                            <span>{{ level }}</span>
+                        {% endif %}
+                    {% endfor %}
+                </span></p>
                 <p>Diagnostic: {{ test.diagnostic }}</p>
                 <p>Record: {{ test.record }}</p>
             </div>

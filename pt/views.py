@@ -16,7 +16,7 @@ class TestProfiletView(View):
     #each tab after stats (the first one) uses ajax to load
     def get(self, request, test_id, tab='stats'):
         context = {}
-        test = PtTest.objects.get(id=test_id)
+        test = PtTest.filtered_tests.get(id=test_id)
         #sitewide context
         context.update(
             {'test': test, 'tab': tab}
@@ -50,18 +50,39 @@ class TestProfiletView(View):
 
 
 class AddTest(View):
-    template = 'pt/pt_tests/add_test.html'
+    template = 'pt/pt_tests/test_form.html'
 
     def post(self, request):
-        test_form = AddTestForm(request.POST)
+        test_form = TestForm(request.POST)
         if test_form.is_valid():
             test_form.save()
         return HttpResponseRedirect(reverse("pt-tests-listing"))
 
     def get(self, request):
-        test_form = AddTestForm()
-
+        test_form = TestForm()
+        print test_form.is_bound
         context = {'test_form': test_form}
+        return render(request, self.template, context)
+
+
+class EditTest(View):
+    template = 'pt/pt_tests/test_form.html'
+
+    def post(self, request, test_id):
+        test = PtTest.future_tests.get(id=test_id)
+        form = TestForm(request.POST or None, instance=test)
+        context = {}
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/pt/tests/')
+        else:
+            context.update({'test_form': form})
+            return render(request, self.template, context)
+
+    def get(self, request, test_id):
+        test = PtTest.future_tests.get(id=test_id)
+        form = TestForm(instance=test)
+        context = {'test_form': form}
         return render(request, self.template, context)
 
 
@@ -69,7 +90,7 @@ class TestListingView(View):
     template_name = 'pt/pt_tests/test_listing.html'
 
     def get(self, request):
-        pt_tests = PtTest.objects.all().order_by('-date')
+        pt_tests = PtTest.filtered_tests.all().order_by('-date')
         future_tests = PtTest.future_tests.all()
         context = {
             'future_tests': future_tests,
@@ -83,7 +104,7 @@ class TestScoresView(View):
 
     def get(self, request, test_id):
         cadets = Cadet.objects.all()
-        test = PtTest.objects.get(id=test_id)
+        test = PtTest.filtered_tests.get(id=test_id)
         scores = PtScore.objects.filter(pt_test=test)
         context = {
             'scores': scores,
@@ -110,7 +131,7 @@ class StatisticsView(View):
 
     def get(self, request, tab='cadets'):
         avg_pt_scores = {}
-        pt_tests = PtTest.objects.all()
+        pt_tests = PtTest.filtered_tests.all()
 
         for test_counter, pt_test in enumerate(pt_tests):
             pt_scores = PtScore.objects.filter(pt_test=pt_test)
@@ -125,7 +146,7 @@ class StatisticsView(View):
         test_scores = {}
         for company in Company.objects.all():
             test_dict = {}
-            for test in PtTest.objects.all():
+            for test in PtTest.filtered_tests.all():
                 avg = test.get_average_score(company)
                 test_dict.update({test: avg})
             test_scores[company] = test_dict
@@ -133,7 +154,7 @@ class StatisticsView(View):
         pushups = {}
         situps = {}
         run = {}
-        for test in PtTest.objects.all():
+        for test in PtTest.filtered_tests.all():
             scores = PtScore.objects.filter(pt_test=test)
             avg_pushup_score = PtScore.get_avg_pushup_score(scores)
             avg_situp_score = PtScore.get_avg_situp_score(scores)

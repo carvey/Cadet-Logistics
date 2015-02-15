@@ -167,9 +167,9 @@ def populate():
 
 
     print "Creating pt tests"
-    add_pt_test(date=datetime.date(2014, 6, 1) + datetime.timedelta(days=2), ms_lvl_4=False)
-    add_pt_test(date=datetime.date(2014, 6, 1) + datetime.timedelta(days=5), ms_lvl_4=False)
-    add_pt_test(date=datetime.date(2014, 6, 1) + datetime.timedelta(days=7), ms_lvl_4=True)
+    add_pt_test(date=datetime.date(2014, 6, 1) + datetime.timedelta(days=2))
+    add_pt_test(date=datetime.date(2014, 6, 1) + datetime.timedelta(days=5))
+    add_pt_test(date=datetime.date(2014, 6, 1) + datetime.timedelta(days=7))
     print "Done adding pt tests"
     print "-----------------------"
 
@@ -309,8 +309,8 @@ def add_mslevel(name):
     return ms
 
 
-def add_pt_test(date, ms_lvl_4):
-    pt_test = PtTest.objects.get_or_create(date=date, MsLevelFour=ms_lvl_4)
+def add_pt_test(date):
+    pt_test = PtTest.objects.get_or_create(date=date)
     return pt_test
 
 def add_demographic(demographic):

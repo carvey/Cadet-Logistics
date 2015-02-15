@@ -9,7 +9,11 @@
 {% endblock %}
 
 {% block page_header %}
-    Add PT Test
+    {% if test_form.is_bound %}
+        {{ test_form.instance }}
+    {% else %}
+        Add PT Test
+    {% endif %}
 {% endblock %}
 
 {% block content %}
@@ -17,7 +21,13 @@
     <div class="row">
         <div class="col-md-6">
 
-            <form action="{% url 'add_pt_test' %}" method="post">
+            <form method="post"
+                {% if test_form.is_bound %}
+                action="/pt/tests/edit/{{ test_form.instance.id }}"
+                {% else %}
+                action="{% url 'add_pt_test' %}"
+                {% endif %}
+            >
                 {% for field in test_form %}
                     {% csrf_token %}
 

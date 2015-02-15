@@ -8,7 +8,7 @@ from personnel.models import Cadet, MsLevel
 from django.core.validators import RegexValidator
 from population_script import add_pt_test
 from decimal import Decimal
-from pt.managers import TestManager, FutureTestManager
+from pt.managers import FilteredTestManager, FutureTestManager
 
 male = 'Male'
 female = 'Female'
@@ -52,8 +52,8 @@ class PtTest(models.Model):
     record = models.BooleanField(default=False)
     diagnostic = models.BooleanField(default=False)
 
-    objects = TestManager()
-    all_tests = models.Manager()
+    objects = models.Manager()
+    filtered_tests = FilteredTestManager()
     future_tests = FutureTestManager()
 
     def __unicode__(self):

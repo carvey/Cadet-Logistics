@@ -29,7 +29,7 @@ def grouping_data(cadets):
             ms_levels[cadet.ms_level] = 0
 
     scores_by_test = {}
-    tests = PtTest.objects.all()
+    tests = PtTest.filtered_tests.all()
     for test in tests:
         scores = PtScore.objects.filter(pt_test=test, cadet__in=cadets)
         test_dict = {}

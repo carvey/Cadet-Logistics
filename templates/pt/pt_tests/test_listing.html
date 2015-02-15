@@ -20,7 +20,7 @@
 {% block content %}
 
     <div class="row">
-        <div class="col-lg-6">
+        <div class="col-lg-8">
             <div>
                 <h3>Upcoming PT Tests</h3>
                 <table class="table table-hover">
@@ -31,6 +31,7 @@
                             <th>Record</th>
                             <th>Diagnostic</th>
                             {% if user|super_permissions %}
+                                <th></th>
                                 <th></th>
                             {% endif %}
                         </tr>
@@ -53,7 +54,10 @@
                                     <td>{{ test.diagnostic }}</td>
                                     {% if user|super_permissions %}
                                         <td>
-                                            <a class="btn btn-default btn-sm" href="{% url 'add_pt_test' %}" role="button">Edit Test</a>
+                                            <a class="btn btn-default btn-sm" href="{% url 'edit_pt_test' test.id %}" role="button">Edit Test</a>
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-default btn-sm" href="{% url 'add_pt_test' %}" role="button">Input Scores</a>
                                         </td>
                                     {% endif %}
                                </tr>

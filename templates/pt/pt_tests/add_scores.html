@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+    <script src="{% static 'js/plugins/autocomplete/jQuery-Autocomplete/src/jquery.autocomplete.js' %}"></script>
+{% endblock %}
+
+{% block page_header %}
+    Add Scores for: {{ test }}
+{% endblock %}
+
+{% block content %}
+
+    <style>
+        .form-row {
+            margin: 10px 0;
+        }
+
+        .autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }
+        .autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
+        .autocomplete-selected { background: #F0F0F0; }
+        .autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
+        .autocomplete-group { padding: 2px 5px; }
+        .autocomplete-group strong { display: block; border-bottom: 1px solid #000; }
+    </style>
+
+    <form action="{% url 'input_test_scores' test.id %}" method="post">
+        {% for form in score_formset %}
+        <div class="row form-row">
+            <div class="col-md-2 cadet-field">
+                {{ form.cadet }}
+            </div>
+
+            <div class="col-md-3 situps-field">
+                {{ form.situps.label }} {{ form.situps }}
+            </div>
+
+            <div class="col-md-3 pushups-field">
+                {{ form.pushups.label }} {{ form.pushups }}
+            </div>
+
+            <div class="col-md-3 run-field">
+                {{ form.two_mile.label }} {{ form.two_mile }}
+            </div>
+
+            <div class="col-md-1">
+                Score: <span class="total-score">0</span>
+            </div>
+        </div>
+        {% endfor %}
+    </form>
+
+    <script>
+
+        $(document).ready(function() {
+
+{#            $(":input[type='text']").addClass("form-control");#}
+
+            $('.cadet-field input').each(function() {
+                $(this).attr("placeholder", "Cadet");
+            });
+
+            $('.run-field input').each(function() {
+                $(this).val("00:00");
+            });
+
+            var cadet_object_list = [];
+            var cadets = {};
+            {% for cadet in cadets %}
+                cadet_object_list.push({value: "{{ cadet }}", data: "{{ cadet.id }}"});
+            {% endfor %}
+            $('.cadet-field input').autocomplete({
+                lookup: cadet_object_list,
+                onSelect: function(suggestion)
+                {
+                    cadets[suggestion.value] = suggestion.data;
+                }
+            });
+
+            $("input:not(input[placeholder='Cadet'])").change(function() {
+                var parent = $(this).parent().parent();
+                var cadet = $(parent).find(".cadet-field input").val();
+                var id = cadets[cadet];
+                var situps = $(parent).find(".situps-field input").val();
+                var pushups = $(parent).find(".pushups-field input").val();
+                var two_mile = $(parent).find(".run-field input").val();
+                var score_node = $(parent).find(".total-score");
+                if (cadet)
+                {
+                    if (!situps) situps = 0;
+                    if (!pushups) pushups = 0;
+                    if (!two_mile) two_mile = "00:00";
+
+                    var query_string = "/pt/tests/input-scores/" + id + "/" + situps + "/" + pushups + "/" + two_mile + "/";
+                    $.get(query_string, {}, function(data) {
+                        score_node.html(data);
+                    });
+                }
+
+            });
+
+        });
+
+    </script>
+
+{% endblock %}

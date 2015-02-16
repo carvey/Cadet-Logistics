@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.views.generic import View
 from django.db.models import Q
 from django.core.urlresolvers import reverse
+from django.forms.formsets import formset_factory
 
 from pt.models import PtTest, PtScore, Grader
 from personnel.models import Company, Cadet
@@ -60,7 +61,6 @@ class AddTest(View):
 
     def get(self, request):
         test_form = TestForm()
-        print test_form.is_bound
         context = {'test_form': test_form}
         return render(request, self.template, context)
 
@@ -86,12 +86,41 @@ class EditTest(View):
         return render(request, self.template, context)
 
 
+class InputTestScores(View):
+    template = 'pt/pt_tests/add_scores.html'
+
+    def post(self, request, test_id):
+        pass
+
+    def get(self, request, test_id):
+        test = PtTest.objects.get(id=test_id)
+        cadets = Cadet.objects.all()
+        num_cadets = len(cadets)
+        score_formset = formset_factory(ScoreForm, min_num=num_cadets)
+        context={
+            'test': test,
+            'score_formset': score_formset,
+            'cadets': cadets
+        }
+        return render(request, self.template, context)
+
+
+def calculate_score(request, cadet_id, situps, pushups, two_mile):
+    """
+    A view to be used with ajax to calculate pt scores as they are being entered
+    :param request:
+    :return:
+    """
+    score = PtScore.calculate_score(cadet_id, situps, pushups, two_mile)
+    return HttpResponse(score)
+
+
 class TestListingView(View):
     template_name = 'pt/pt_tests/test_listing.html'
 
     def get(self, request):
         pt_tests = PtTest.filtered_tests.all().order_by('-date')
-        future_tests = PtTest.future_tests.all()
+        future_tests = PtTest.future_tests.all().order_by('date')
         context = {
             'future_tests': future_tests,
             'tests': pt_tests,

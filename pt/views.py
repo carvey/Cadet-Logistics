@@ -10,6 +10,7 @@ from personnel.models import Company, Cadet
 from pt_utils import get_complete_average_scores_dict, get_avg_scores_by_company
 from pt.forms import *
 
+import json
 
 class TestProfiletView(View):
     template_name = 'pt/pt_tests/test_profile.html'
@@ -112,7 +113,8 @@ def calculate_score(request, cadet_id, situps, pushups, two_mile):
     :return:
     """
     score = PtScore.calculate_score(cadet_id, situps, pushups, two_mile)
-    return HttpResponse(score)
+
+    return HttpResponse(json.dumps(score), content_type='application/json')
 
 
 class TestListingView(View):

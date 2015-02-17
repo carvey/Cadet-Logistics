@@ -12,8 +12,8 @@
 									<thead>
 										<tr>
 											<th>PT Test</th>
+                                            <th>Situps</th>
 											<th>Pushups</th>
-											<th>Situps</th>
 											<th>Two Mile time</th>
 											<th>Score</th>
 										</tr>
@@ -22,8 +22,8 @@
 										{% for score in scores %}
 										<tr class="odd gradeX">
 											<td>{{score.pt_test.date}}</td>
+                                            <td>{{score.get_situps}}</td>
 											<td>{{score.get_pushups}}</td>
-											<td>{{score.get_situps}}</td>
 											<td>{{score.get_run_time_str}}</td>
 											<td>{{score.score}}</td>
 										</tr>

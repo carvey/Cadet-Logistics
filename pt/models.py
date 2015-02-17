@@ -161,7 +161,7 @@ class PtTest(models.Model):
 class PtScore(models.Model):
     cadet = models.ForeignKey('personnel.Cadet', related_name='cadet_score', blank=False)
     pt_test = models.ForeignKey(PtTest, default='', blank=False, null=False)
-    grader = models.ForeignKey('personnel.Cadet', related_name='grader', blank=False, null=True)
+    grader = models.ForeignKey('personnel.Cadet', related_name='grader', blank=True, null=True)
     cadre_grader = models.ForeignKey('personnel.Cadre', blank=True, null=True)
 
     pushups = models.PositiveIntegerField(default=0)
@@ -179,16 +179,24 @@ class PtScore(models.Model):
     situps_score = models.PositiveIntegerField(default=0)
     run_score = models.PositiveIntegerField(default=0)
 
+    passing = models.BooleanField(default=False)
+
 
     def __unicode__(self):
         format_date = self.pt_test.date.strftime('%d %b, %Y')
         return 'PT Score %s for cadet: %s' % (format_date, self.cadet)
 
 
+    #TODO need to consider using the same functionality but possibly setting self to a ptscore instance
     @staticmethod
-    def calculate_score(cadet_id, pushups, situps, run_time):
+    def calculate_score(cadet_id, situps, pushups, run_time):
         cadet = Cadet.objects.get(id=cadet_id)
-        score_object = PtScore(cadet=cadet, pushups=int(pushups), situps=int(situps), two_mile=str(run_time))
+
+        pushups = int(pushups)
+        situps = int(situps)
+        run_time = str(run_time)
+
+        score_object = PtScore(cadet=cadet, pushups=pushups, situps=situps, two_mile=run_time)
 
         age_group = score_object.get_age_group()
         # Gets the graders for the cadet
@@ -245,10 +253,17 @@ class PtScore(models.Model):
                 score_object.score += score_object.situps_score
 
         # Calculate the two-mile score
-        score_object.run_score = int(score_object.get_run_score(two_mile_grader))
+        if score_object.empty_run_time():  # checks to see whether a value has been entered
+            score_object.run_score = 0
+        else:
+            score_object.run_score = int(score_object.get_run_score(two_mile_grader))
         score_object.score += score_object.run_score
-        return score_object.score
 
+        if score_object.situps_score >= 60 and score_object.pushups_score >= 60 and score_object.run_score >= 60:
+                score_object.passing = True
+
+        return {'score': score_object.score,
+                'passing': score_object.passing}
 
     def save(self, *args, **kwargs):
         try:
@@ -310,12 +325,27 @@ class PtScore(models.Model):
             self.run_score = int(self.get_run_score(two_mile_grader))
             self.score += self.run_score
 
+            #determine whether the score is passing or not, and set the field accordingly
+            if self.situps_score >= 60 and self.pushups_score >= 60 and self.run_score >= 60:
+                self.passing = True
+
+
         except IndexError:
             #this will catch an index error to avoid errors when running scripted db population
             pass
 
         # Call the actual save method to save the score in the database
         super(PtScore, self).save(*args, **kwargs)
+
+    def empty_run_time(self):
+        time = self.two_mile
+        for char in time:
+            try:
+                if int(char) != 0:
+                    return False
+            except ValueError:  # this means the char is most likely :
+                pass
+        return True
 
     @staticmethod
     def get_top_cadets(cadets, n=5):

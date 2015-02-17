@@ -16,6 +16,11 @@
             margin: 10px 0;
         }
 
+        .btn
+        {
+            margin: 10px;
+        }
+
         .autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }
         .autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
         .autocomplete-selected { background: #F0F0F0; }
@@ -24,31 +29,39 @@
         .autocomplete-group strong { display: block; border-bottom: 1px solid #000; }
     </style>
 
-    <form action="{% url 'input_test_scores' test.id %}" method="post">
-        {% for form in score_formset %}
-        <div class="row form-row">
-            <div class="col-md-2 cadet-field">
-                {{ form.cadet }}
-            </div>
+    <div id="form-container">
+        <form action="{% url 'input_test_scores' test.id %}" method="post">
+            {% csrf_token %}
 
-            <div class="col-md-3 situps-field">
-                {{ form.situps.label }} {{ form.situps }}
-            </div>
+            {% for form in score_formset %}
+            <div class="row form-row">
+                <div class="col-md-2 cadet-field">
+                    {{ form.cadet }}
+                </div>
 
-            <div class="col-md-3 pushups-field">
-                {{ form.pushups.label }} {{ form.pushups }}
-            </div>
+                <div class="col-md-3 situps-field">
+                    {{ form.situps.label }} {{ form.situps }}
+                </div>
 
-            <div class="col-md-3 run-field">
-                {{ form.two_mile.label }} {{ form.two_mile }}
-            </div>
+                <div class="col-md-3 pushups-field">
+                    {{ form.pushups.label }} {{ form.pushups }}
+                </div>
 
-            <div class="col-md-1">
-                Score: <span class="total-score">0</span>
+                <div class="col-md-3 run-field">
+                    {{ form.two_mile.label }} {{ form.two_mile }}
+                </div>
+
+                <div class="col-md-1">
+                    Score: <span class="total-score">0</span>
+                </div>
             </div>
-        </div>
-        {% endfor %}
-    </form>
+            {% endfor %}
+
+            <input class="btn btn-sm btn-success" type="submit" value="Submit" />
+        </form>
+    </div>
+
+
 
     <script>
 
@@ -93,7 +106,18 @@
 
                     var query_string = "/pt/tests/input-scores/" + id + "/" + situps + "/" + pushups + "/" + two_mile + "/";
                     $.get(query_string, {}, function(data) {
-                        score_node.html(data);
+                        score_node.html(data.score);
+                        var passing = Boolean(data.passing);
+                        if (!passing)
+                        {
+                            score_node.parent().css('backgroundColor', '#7A0000');
+                            score_node.parent().css('color', 'white');
+                        }
+                        else
+                        {
+                            score_node.parent().css('backgroundColor', 'white');
+                            score_node.parent().css('color', 'black');
+                        }
                     });
                 }
 

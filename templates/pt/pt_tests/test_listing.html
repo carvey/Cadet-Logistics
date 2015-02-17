@@ -109,10 +109,9 @@
                             {% endfor %}
                         </span></div>
                             {% if test.has_scores %}
-                                <div class="panel-test-list">Highest score <span
-                                        class="test-list-value">{{ test.getHighestScore }}</span></div>
-                                <div class="panel-test-list">Record <span
-                                        class="test-list-value">{{ test.record|interpret_bool }}</span></div>
+                                <div class="panel-test-list">Highest score <span class="test-list-value">{{ test.getHighestScore }}</span></div>
+                                <div class="panel-test-list">Pass Rate <span class="test-list-value"></span></div>
+                                <div class="panel-test-list">Record <span class="test-list-value">{{ test.record|interpret_bool }}</span></div>
                             {% endif %}
                         </div>
                     </div>

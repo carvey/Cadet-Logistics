@@ -181,155 +181,124 @@ class PtScore(models.Model):
 
     passing = models.BooleanField(default=False)
 
-
     def __unicode__(self):
         format_date = self.pt_test.date.strftime('%d %b, %Y')
         return 'PT Score %s for cadet: %s' % (format_date, self.cadet)
 
-
-    #TODO need to consider using the same functionality but possibly setting self to a ptscore instance
     @staticmethod
-    def calculate_score(cadet_id, situps, pushups, run_time):
-        cadet = Cadet.objects.get(id=cadet_id)
+    def calculate_score(cadet_id=None, raw_situps=None, raw_pushups=None, run_time=None, instance=None):
+        """
+        Static method that will calculate the PT score based on given arguments, or a specific pt instance that
+        already has the three raw scores assigned.
+        However if an instance is given, this method does not save that instance to the database.\n
+        --
+        Params should be given in the following combinations:
+            1- cadet_id, raw_situps, raw_pushups, and run time\n
+            2- instance
+        Any other combination of args will result in an error
 
-        pushups = int(pushups)
-        situps = int(situps)
-        run_time = str(run_time)
+        :param cadet_id: a cadet id of the cadet to calculate the score for
+        :type cadet_id: int
+        :param raw_situps: the num of situps to calculate the score for
+        :type raw_situps: int
+        :param raw_pushups: the num of pushups to calulate the score for
+        :type raw_pushups: int
+        :param run_time: the two mile time to calculate the score for (mm:ss format)
+        :type run_time: str
+        :param instance: the instance to calculate the score on
+        :type instance: PtScore
+        :return: {'score': calculated_score, 'passing': True/False'}
+        :type return: dict
+        """
+        #check which arg combination was given
+        arg_combination1 = cadet_id and raw_situps and raw_pushups and run_time and not instance
+        arg_combination2 = not cadet_id and not raw_situps and not raw_pushups and instance
 
-        score_object = PtScore(cadet=cadet, pushups=pushups, situps=situps, two_mile=run_time)
+        #if neither arg combination given, raise an error
+        if arg_combination1 or arg_combination2:
+            pass
+        else:
+            raise Exception("Invalid argument contents or mix. Check method docs for proper usage")
 
-        age_group = score_object.get_age_group()
+        # if arg_combination1 is true, then create a ptscore instance with the given values for the given cadet
+        if arg_combination1:
+            cadet = Cadet.objects.get(id=cadet_id)
+            raw_pushups = int(raw_pushups)
+            raw_situps = int(raw_situps)
+            run_time = str(run_time)
+            instance = PtScore(cadet=cadet, pushups=raw_pushups, situps=raw_situps, two_mile=run_time)
+
+        age_group = instance.get_age_group()
         # Gets the graders for the cadet
-        pushups_grader = Grader.objects.filter(age_group=age_group, gender=score_object.cadet.gender, activity='Pushups')[0]
-        situps_grader = Grader.objects.filter(age_group=age_group, gender=score_object.cadet.gender, activity='Situps')[0]
-        two_mile_grader = Grader.objects.filter(age_group=age_group, gender=score_object.cadet.gender, activity='Two-mile run')[0]
+        pushups_grader = Grader.objects.filter(age_group=age_group, gender=instance.cadet.gender, activity='Pushups')[0]
+        situps_grader = Grader.objects.filter(age_group=age_group, gender=instance.cadet.gender, activity='Situps')[0]
+        two_mile_grader = Grader.objects.filter(age_group=age_group, gender=instance.cadet.gender, activity='Two-mile run')[0]
 
         # Sets the score to zero to prevent the score increasing each time the object
         # is saved, if there is already a score
-        score_object.score = 0
+        instance.score = 0
 
         # Get the score dictionary from the pushups grader object
         pushups_score_dict = pushups_grader.get_ordered_dict()
         # Format the value to have a leading 0 if it is a single digit
         # This is the key used to check if the value is in the dictionary of grades
-        string_pushups = "%02d" % score_object.pushups
+        string_pushups = "%02d" % instance.pushups
         # Check to see if the number of pushups for the PtScore object is
         # in the list of keys. If it is then we use the pushups value as the key to get the grade.
         if string_pushups in pushups_score_dict.keys():
             score_from_dict = int(pushups_score_dict[string_pushups])
-            score_object.pushups_score = score_from_dict
-            score_object.score += score_from_dict
+            instance.pushups_score = score_from_dict
+            instance.score += score_from_dict
         # The value of pushups was not found in the keys so we determine if it was below the lowest
         # or above the highest pushups value
         else:
-            if float(score_object.pushups) < float(pushups_grader.get_first()):
-                score_object.pushups_score = 0
-                score_object.score += score_object.pushups_score
-            elif float(score_object.pushups) > float(pushups_grader.get_last()):
-                score_object.pushups_score = 100
-                score_object.score += score_object.pushups_score
+            if float(instance.pushups) < float(pushups_grader.get_first()):
+                instance.pushups_score = 0
+                instance.score += instance.pushups_score
+            elif float(instance.pushups) > float(pushups_grader.get_last()):
+                instance.pushups_score = 100
+                instance.score += instance.pushups_score
 
         # Get the score dictionary from the situps grader object
         situps_score_dict = situps_grader.get_ordered_dict()
 
         # Format the value to have a leading 0 if it is a single digit
         # This is the key used to check if the value is in the dictionary of grades
-        string_situps = "%02d" % score_object.situps
+        string_situps = "%02d" % instance.situps
         # Check to see if the number of situps for the PtScore object is
         # in the list of keys. If it is then we use the situps value as the key to get the grade.
         if string_situps in situps_score_dict.keys():
             score_from_dict = int(situps_score_dict[string_situps])
-            score_object.situps_score = score_from_dict
-            score_object.score += score_object.situps_score
+            instance.situps_score = score_from_dict
+            instance.score += instance.situps_score
 
         # The value of situps was not found in the keys so we determine if it was below the lowest
         # or above the highest situps value
         else:
-            if float(score_object.situps) < float(situps_grader.get_first()):
-                score_object.situps_score = 0
-                score_object.score += score_object.situps_score
-            elif float(score_object.situps) > float(pushups_grader.get_last()):
-                score_object.situps_score = 100
-                score_object.score += score_object.situps_score
+            if float(instance.situps) < float(situps_grader.get_first()):
+                instance.situps_score = 0
+                instance.score += instance.situps_score
+            elif float(instance.situps) > float(pushups_grader.get_last()):
+                instance.situps_score = 100
+                instance.score += instance.situps_score
 
         # Calculate the two-mile score
-        if score_object.empty_run_time():  # checks to see whether a value has been entered
-            score_object.run_score = 0
+        if instance.empty_run_time():  # checks to see whether a value has been entered
+            instance.run_score = 0
         else:
-            score_object.run_score = int(score_object.get_run_score(two_mile_grader))
-        score_object.score += score_object.run_score
+            instance.run_score = int(instance.get_run_score(two_mile_grader))
+        instance.score += instance.run_score
 
-        if score_object.situps_score >= 60 and score_object.pushups_score >= 60 and score_object.run_score >= 60:
-                score_object.passing = True
+        if instance.situps_score >= 60 and instance.pushups_score >= 60 and instance.run_score >= 60:
+                instance.passing = True
 
-        return {'score': score_object.score,
-                'passing': score_object.passing}
+
+        return {'score': instance.score,
+                'passing': instance.passing}
 
     def save(self, *args, **kwargs):
         try:
-            age_group = self.get_age_group()
-            # Gets the graders for the cadet
-            pushups_grader = Grader.objects.filter(age_group=age_group, gender=self.cadet.gender, activity='Pushups')[0]
-            situps_grader = Grader.objects.filter(age_group=age_group, gender=self.cadet.gender, activity='Situps')[0]
-            two_mile_grader = Grader.objects.filter(age_group=age_group, gender=self.cadet.gender, activity='Two-mile run')[0]
-
-            # Sets the score to zero to prevent the score increasing each time the object
-            # is saved, if there is already a score
-            self.score = 0
-
-            # Get the score dictionary from the pushups grader object
-            pushups_score_dict = pushups_grader.get_ordered_dict()
-            # Format the value to have a leading 0 if it is a single digit
-            # This is the key used to check if the value is in the dictionary of grades
-            string_pushups = "%02d" % self.pushups
-            # Check to see if the number of pushups for the PtScore object is
-            # in the list of keys. If it is then we use the pushups value as the key to get the grade.
-            if string_pushups in pushups_score_dict.keys():
-                score_from_dict = int(pushups_score_dict[string_pushups])
-                self.pushups_score = score_from_dict
-                self.score += score_from_dict
-            # The value of pushups was not found in the keys so we determine if it was below the lowest
-            # or above the highest pushups value
-            else:
-                if float(self.pushups) < float(pushups_grader.get_first()):
-                    self.pushups_score = 0
-                    self.score += self.pushups_score
-                elif float(self.pushups) > float(pushups_grader.get_last()):
-                    self.pushups_score = 100
-                    self.score += self.pushups_score
-
-            # Get the score dictionary from the situps grader object
-            situps_score_dict = situps_grader.get_ordered_dict()
-
-            # Format the value to have a leading 0 if it is a single digit
-            # This is the key used to check if the value is in the dictionary of grades
-            string_situps = "%02d" % self.situps
-            # Check to see if the number of situps for the PtScore object is
-            # in the list of keys. If it is then we use the situps value as the key to get the grade.
-            if string_situps in situps_score_dict.keys():
-                score_from_dict = int(situps_score_dict[string_situps])
-                self.situps_score = score_from_dict
-                self.score += self.situps_score
-
-            # The value of situps was not found in the keys so we determine if it was below the lowest
-            # or above the highest situps value
-            else:
-                if float(self.situps) < float(situps_grader.get_first()):
-                    self.situps_score = 0
-                    self.score += self.situps_score
-                elif float(self.situps) > float(pushups_grader.get_last()):
-                    self.situps_score = 100
-                    self.score += self.situps_score
-
-            # Calculate the two-mile score
-            self.run_score = int(self.get_run_score(two_mile_grader))
-            self.score += self.run_score
-
-            #determine whether the score is passing or not, and set the field accordingly
-            if self.situps_score >= 60 and self.pushups_score >= 60 and self.run_score >= 60:
-                self.passing = True
-
-
+            PtScore.calculate_score(instance=self)
         except IndexError:
             #this will catch an index error to avoid errors when running scripted db population
             pass

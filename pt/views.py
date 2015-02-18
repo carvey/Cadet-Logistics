@@ -112,8 +112,7 @@ def calculate_score(request, cadet_id, situps, pushups, two_mile):
     :param request:
     :return:
     """
-    score = PtScore.calculate_score(cadet_id, situps, pushups, two_mile)
-
+    score = PtScore.calculate_score(cadet_id=cadet_id, raw_situps=situps, raw_pushups=pushups, run_time=two_mile)
     return HttpResponse(json.dumps(score), content_type='application/json')
 
 

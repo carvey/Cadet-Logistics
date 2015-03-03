@@ -83,6 +83,17 @@ class PtTest(models.Model):
             total += pt_score.score
         return total / num_of_scores
 
+    def passing_rate(self):
+        """
+        This method calculates the passing rate for a particular instance
+        :return: a percantage of the passing rate
+        :type return: Decimal
+        """
+        passing = Decimal(PtScore.objects.filter(pt_test=self, passing=True).count())
+        failing = Decimal(PtScore.objects.filter(pt_test=self, passing=False).count())
+        rate = (passing/failing * 100).quantize(Decimal(10) ** -2)
+
+        return rate
 
     def getNumberOfScores(self):
         return len(PtScore.objects.filter(pt_test=self))
@@ -134,9 +145,14 @@ class PtTest(models.Model):
         #Get the highest scores from scores_dict and put them in a separate dict to be returned
         top_scores = {}
         for count in range(0, n):
-            highest_score = max(scores_dict)
-            top_scores.update({highest_score: scores_dict[highest_score]})
-            scores_dict.pop(highest_score)
+            # this conditional will break the loop if scores_dict runs out of scores
+            # this would happen, and cause errors, when n > len(scores)
+            if scores_dict:
+                highest_score = max(scores_dict)
+                top_scores.update({highest_score: scores_dict[highest_score]})
+                scores_dict.pop(highest_score)
+            else:
+                break
         return reversed(sorted(top_scores.items()))
 
     def getLowestScore(self):
@@ -413,7 +429,11 @@ class PtScore(models.Model):
         avg_pushup_score = 0
         for score in scores:
             avg_pushup_score += score.pushups_score
-        return avg_pushup_score / scores.count()
+        if scores.count():
+            avg = avg_pushup_score / scores.count()
+        else:
+            avg = 0
+        return avg
 
     @staticmethod
     def get_avg_situps(scores):
@@ -422,7 +442,10 @@ class PtScore(models.Model):
         length = len(scores)
         for score in scores:
             sum_situps += int(score.situps)
-        avg = sum_situps / length
+        if length:
+            avg = sum_situps / length
+        else:
+            avg = 0
         return avg
 
     @staticmethod
@@ -433,7 +456,11 @@ class PtScore(models.Model):
         avg_situp_score = 0
         for score in scores:
             avg_situp_score += score.situps_score
-        return avg_situp_score / scores.count()
+        if scores.count():
+            avg = avg_situp_score / scores.count()
+        else:
+            avg = 0
+        return avg
 
     @staticmethod
     def get_avg_run_time(scores):
@@ -454,7 +481,11 @@ class PtScore(models.Model):
         avg_run_score = 0
         for score in scores:
             avg_run_score += score.run_score
-        return avg_run_score / scores.count()
+        if scores.count():
+            avg = avg_run_score / scores.count()
+        else:
+            avg = 0
+        return avg
 
 
     @staticmethod
@@ -464,7 +495,10 @@ class PtScore(models.Model):
         length = len(scores)
         for score in scores:
             sum += int(score.score)
-        avg = sum / length
+        if length:
+            avg = sum / length
+        else:
+            avg = 0
         return avg
 
     def get_run_time(self):

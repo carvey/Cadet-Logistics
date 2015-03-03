@@ -4,6 +4,7 @@ from django.views.generic import View
 from django.db.models import Q
 from django.core.urlresolvers import reverse
 from django.forms.formsets import formset_factory
+from django.template.context import RequestContext
 
 from pt.models import PtTest, PtScore, Grader
 from personnel.models import Company, Cadet
@@ -71,7 +72,7 @@ class EditTest(View):
 
     def post(self, request, test_id):
         test = PtTest.future_tests.get(id=test_id)
-        form = TestForm(request.POST or None, instance=test)
+        form = TestForm(request.POST, instance=test)
         context = {}
         if form.is_valid():
             form.save()
@@ -83,25 +84,50 @@ class EditTest(View):
     def get(self, request, test_id):
         test = PtTest.future_tests.get(id=test_id)
         form = TestForm(instance=test)
-        context = {'test_form': form}
+        context = {'test_form': form, 'edit': True}
         return render(request, self.template, context)
 
 
+# TODO: only need to supply cadets to autocomplete that fall under the MS class listed in the pt test passed in
+# TODO: also need verification of cadets to scores so scores cant be entered twice for the same cadet. This should also limit autocomplete choices
 class InputTestScores(View):
     template = 'pt/pt_tests/add_scores.html'
 
+    score_formset = formset_factory(ScoreForm, extra=2, can_delete=True)
+    cadets = Cadet.objects.all()
+
     def post(self, request, test_id):
-        pass
+        formset = self.score_formset(request.POST, request.FILES)
+        test = PtTest.objects.get(id=test_id)
+        if formset.is_valid():
+            for form in formset.cleaned_data:
+                # Empty rows are sent back as an empty dict, so these can be skipped
+                if form:
+                    cadet = Cadet.objects.get(id=int(form.get('cadet_id')))
+                    score = PtScore()
+                    score.pt_test = test
+                    score.cadet = cadet
+                    score.pushups = form['pushups']
+                    score.situps = form['situps']
+                    score.two_mile = form['two_mile']
+                    score.save()
+
+            return HttpResponseRedirect('/pt/tests')
+        else:
+            context = {
+                'test': test,
+                'score_formset': formset,
+                'cadets': self.cadets
+            }
+            return render(request, self.template, context)
 
     def get(self, request, test_id):
         test = PtTest.objects.get(id=test_id)
-        cadets = Cadet.objects.all()
-        num_cadets = len(cadets)
-        score_formset = formset_factory(ScoreForm, min_num=num_cadets)
+
         context={
             'test': test,
-            'score_formset': score_formset,
-            'cadets': cadets
+            'score_formset': self.score_formset,
+            'cadets': self.cadets
         }
         return render(request, self.template, context)
 
@@ -116,6 +142,7 @@ def calculate_score(request, cadet_id, situps, pushups, two_mile):
     return HttpResponse(json.dumps(score), content_type='application/json')
 
 
+# TODO: Need to filter current/past/present tests by data rather than the number of pt scores
 class TestListingView(View):
     template_name = 'pt/pt_tests/test_listing.html'
 

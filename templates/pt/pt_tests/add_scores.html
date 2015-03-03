@@ -3,6 +3,7 @@
 
 {% block head %}
     <script src="{% static 'js/plugins/autocomplete/jQuery-Autocomplete/src/jquery.autocomplete.js' %}"></script>
+    <script src="{% static 'js/plugins/jquery.formset.js' %}"></script>
 {% endblock %}
 
 {% block page_header %}
@@ -19,6 +20,11 @@
         .btn-success
         {
             margin: 10px;
+            float: left;
+        }
+
+        .add-row {
+            display: inline-block;
         }
 
         .autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }
@@ -35,8 +41,14 @@
 
             {% for form in score_formset %}
             <div class="row form-row">
+                {% if form.errors %}
+                    <div class="row">
+                        {{ form.errors }}
+                    </div>
+                {% endif %}
                 <div class="col-md-2 cadet-field">
                     {{ form.cadet }}
+                    {{ form.cadet_id }}
                 </div>
 
                 <div class="col-md-3 situps-field">
@@ -52,12 +64,17 @@
                 </div>
 
                 <div class="col-md-1">
-                    Score: <span class="total-score">0</span>
+                    <div class="row">
+                        Score: <span class="total-score">0</span>
+                        {{ form.DELETE }}
+                    </div>
+
                 </div>
             </div>
             {% endfor %}
 
-            <input class="btn btn-sm btn-success" type="submit" value="Submit" />
+            {{ score_formset.management_form }}
+            <input class="btn btn-sm btn-success" type="submit" value="Submit" /> <span id="add_span"></span>
         </form>
     </div>
 
@@ -67,30 +84,8 @@
 
         $(document).ready(function() {
 
-{#            $(":input[type='text']").addClass("form-control");#}
-
-            $('.cadet-field input').each(function() {
-                $(this).attr("placeholder", "Cadet");
-            });
-
-            $('.run-field input').each(function() {
-                $(this).val("00:00");
-            });
-
-            var cadet_object_list = [];
-            var cadets = {};
-            {% for cadet in cadets %}
-                cadet_object_list.push({value: "{{ cadet }}", data: "{{ cadet.id }}"});
-            {% endfor %}
-            $('.cadet-field input').autocomplete({
-                lookup: cadet_object_list,
-                onSelect: function(suggestion)
-                {
-                    cadets[suggestion.value] = suggestion.data;
-                }
-            });
-
-            $("input:not(input[placeholder='Cadet'])").change(function() {
+            function handle_ajax() {
+                $("input:not(input[placeholder='Cadet'])").change(function() {
                 var parent = $(this).parent().parent();
                 var cadet = $(parent).find(".cadet-field input").val();
                 var id = cadets[cadet];
@@ -100,6 +95,7 @@
                 var score_node = $(parent).find(".total-score");
                 if (cadet)
                 {
+
                     if (!situps) situps = 0;
                     if (!pushups) pushups = 0;
                     if (!two_mile) two_mile = "00:00";
@@ -122,6 +118,60 @@
                 }
 
             });
+            }
+
+            $(".add-row").appendTo("#add_span");
+
+            $(".form-row").formset({
+                prefix: '{{ score_formset.prefix }}',
+                addText: 'Add Another Cadet',
+                deleteText: "Remove",
+                added: function(row)
+                {
+                    row.find('.cadet-field input').each(function() {
+                        $(this).attr("placeholder", "Cadet");
+                    });
+
+                    row.find('.pushups-field input, .situps-field input, .run-field input').each(function() {
+                        $(this).val();
+                    });
+
+                    row.find('.cadet-field input').autocomplete({
+                        lookup: cadet_object_list,
+                        onSelect: function(suggestion)
+                        {
+                            cadets[suggestion.value] = suggestion.data;
+                            row.find(".cadet_id input").val(suggestion.data);
+                        }
+                    });
+
+                    handle_ajax();
+                }
+            });
+
+            $('.cadet-field input').each(function() {
+                $(this).attr("placeholder", "Cadet");
+            });
+
+            $('.run-field input, .pushups-field input, .situps-field input').each(function() {
+                $(this).val();
+            });
+
+            var cadet_object_list = [];
+            var cadets = {};
+            {% for cadet in cadets %}
+                cadet_object_list.push({value: "{{ cadet }}", data: "{{ cadet.id }}"});
+            {% endfor %}
+            $('.cadet-field input').autocomplete({
+                lookup: cadet_object_list,
+                onSelect: function(suggestion)
+                {
+                    cadets[suggestion.value] = suggestion.data;
+                    $(this).parent().find(".cadet_id").val(suggestion.data);
+                }
+            });
+
+            handle_ajax();
 
         });
 

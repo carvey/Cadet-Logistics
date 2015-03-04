@@ -91,6 +91,8 @@ class PtTest(models.Model):
         """
         passing = Decimal(PtScore.objects.filter(pt_test=self, passing=True).count())
         failing = Decimal(PtScore.objects.filter(pt_test=self, passing=False).count())
+        if failing == 0 and passing == 0:
+            return 0
         rate = (passing/failing * 100).quantize(Decimal(10) ** -2)
 
         return rate
@@ -101,6 +103,8 @@ class PtTest(models.Model):
 
     def getHighestScore(self):
         scores = PtScore.objects.filter(pt_test=self)
+        if not scores:
+            return 0
         highest_score = scores[0].score
         for score in scores:
             if score.score > highest_score:

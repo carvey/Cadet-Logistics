@@ -7,7 +7,7 @@ from django.forms.formsets import formset_factory
 from django.template.context import RequestContext
 
 from pt.models import PtTest, PtScore, Grader
-from personnel.models import Company, Cadet
+from personnel.models import Company, Cadet, MsLevel
 from pt_utils import get_complete_average_scores_dict, get_avg_scores_by_company
 from pt.forms import *
 
@@ -88,17 +88,18 @@ class EditTest(View):
         return render(request, self.template, context)
 
 
-# TODO: only need to supply cadets to autocomplete that fall under the MS class listed in the pt test passed in
-# TODO: also need verification of cadets to scores so scores cant be entered twice for the same cadet. This should also limit autocomplete choices
+# TODO: also need verification of cadets to scores so scores cant be entered twice for the same cadet. If a score does exist (despite not being in autocomplete), the score should be overitten
+# TODO: Need to account for names spelled incorrectly or just not in the database at all (need to check out fuzzywuzzy on github)
 class InputTestScores(View):
     template = 'pt/pt_tests/add_scores.html'
 
     score_formset = formset_factory(ScoreForm, extra=2, can_delete=True)
-    cadets = Cadet.objects.all()
 
     def post(self, request, test_id):
         formset = self.score_formset(request.POST, request.FILES)
         test = PtTest.objects.get(id=test_id)
+        cadets = self.get_cadets(test)
+
         if formset.is_valid():
             for form in formset.cleaned_data:
                 # Empty rows are sent back as an empty dict, so these can be skipped
@@ -117,19 +118,29 @@ class InputTestScores(View):
             context = {
                 'test': test,
                 'score_formset': formset,
-                'cadets': self.cadets
+                'cadets': cadets
             }
             return render(request, self.template, context)
 
     def get(self, request, test_id):
         test = PtTest.objects.get(id=test_id)
+        cadets = self.get_cadets(test)
 
         context={
             'test': test,
             'score_formset': self.score_formset,
-            'cadets': self.cadets
+            'cadets': cadets
         }
         return render(request, self.template, context)
+
+    @staticmethod
+    def get_cadets(test):
+        test_levels = [x for x in test.ms_levels.all()]
+        cadets = Cadet.objects.filter(ms_level__in=test_levels)
+        scores = test.ptscore_set.all()
+        scores = [score.cadet.id for score in scores]
+        cadets = cadets.exclude(id__in=scores)
+        return cadets
 
 
 def calculate_score(request, cadet_id, situps, pushups, two_mile):
@@ -142,7 +153,6 @@ def calculate_score(request, cadet_id, situps, pushups, two_mile):
     return HttpResponse(json.dumps(score), content_type='application/json')
 
 
-# TODO: Need to filter current/past/present tests by data rather than the number of pt scores
 class TestListingView(View):
     template_name = 'pt/pt_tests/test_listing.html'
 

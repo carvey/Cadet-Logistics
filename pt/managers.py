@@ -1,4 +1,10 @@
+import datetime
+# from pytz import timezone
 from django.db import models
+# from django.conf import settings
+
+# tz = timezone(settings.TIME_ZONE)
+
 
 class FilteredTestManager(models.Manager):
 
@@ -9,16 +15,15 @@ class FilteredTestManager(models.Manager):
         :return type: Queryset
         """
         query = super(FilteredTestManager, self).get_queryset()
-        score_set = [x.id for x in query if x.ptscore_set.all()]
-        query = query.filter(id__in=score_set)
+        today = datetime.date.today()
+        query = query.filter(date__lt=today)
         return query
 
 
 class FutureTestManager(models.Manager):
 
     def get_queryset(self):
-
         query = super(FutureTestManager, self).get_queryset()
-        score_set = [x.id for x in query if x.ptscore_set.all()]
-        query = query.exclude(id__in=score_set)
+        today = datetime.date.today()
+        query = query.filter(date__gte=today)
         return query

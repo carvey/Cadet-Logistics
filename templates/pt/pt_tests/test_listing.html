@@ -79,6 +79,7 @@
 
     <div class="row">
         {% for test in tests %}
+
             {% with avgScore=test.getAvgTotalScore %}
                 <div class="col-lg-4">
                     <div class="panel panel-default">
@@ -108,11 +109,11 @@
                                 {% endif %}
                             {% endfor %}
                         </span></div>
-                            {% if test.has_scores %}
+
                                 <div class="panel-test-list">Highest score <span class="test-list-value">{{ test.getHighestScore }}</span></div>
                                 <div class="panel-test-list">Pass Rate <span class="test-list-value">{{ test.passing_rate }}%</span></div>
                                 <div class="panel-test-list">Record <span class="test-list-value">{{ test.record|interpret_bool }}</span></div>
-                            {% endif %}
+
                         </div>
                     </div>
                 </div>

@@ -67,6 +67,11 @@ MIDDLEWARE_CLASSES = (
     'stronghold.middleware.LoginRequiredMiddleware',
 )
 
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.core.context_processors.request',
+    'django.contrib.auth.context_processors.auth',
+)
+
 ROOT_URLCONF = 'eagletrack_project.urls'
 
 WSGI_APPLICATION = 'eagletrack_project.wsgi.application'
@@ -103,7 +108,7 @@ DATABASES = {
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'US/Eastern'
 
 USE_I18N = True
 

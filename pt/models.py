@@ -327,13 +327,33 @@ class PtScore(models.Model):
         super(PtScore, self).save(*args, **kwargs)
 
     def empty_run_time(self):
+        """
+        Checks if the time contains only zeros
+        :return:
+        """
         time = self.two_mile
         for char in time:
-            try:
+            if char != ':':
                 if int(char) != 0:
                     return False
-            except ValueError:  # this means the char is most likely :
-                pass
+        return True
+
+    @staticmethod
+    def valid_run_time(run_string):
+        """
+        To be used when a run string needs to be input by the user
+        :param run_string:
+        :return:
+        """
+        if not ':' in run_string or run_string.count(':') != 1:
+            return False
+
+        for char in run_string:
+            if char != ':':
+                try:
+                    int(char)
+                except ValueError:
+                    return False
         return True
 
     @staticmethod

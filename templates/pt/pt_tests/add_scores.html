@@ -84,6 +84,66 @@
 
         $(document).ready(function() {
 
+
+            $(".add-row").appendTo("#add_span");
+
+            $(".form-row").formset({
+                prefix: '{{ score_formset.prefix }}',
+                addText: 'Add Another Cadet',
+                deleteText: "Remove",
+                added: function(row)
+                {
+                    row.find('.cadet-field input').each(function() {
+                        $(this).attr("placeholder", "Cadet");
+                    });
+
+                    row.find('.pushups-field input, .situps-field input, .run-field input').each(function() {
+                        $(this).val();
+                    });
+
+                    row.find('.cadet-field input').autocomplete({
+                        lookup: cadet_object_list,
+                        onSelect: function(suggestion)
+                        {
+                            cadets[suggestion.value] = suggestion.data;
+                            copy_id(row, suggestion);
+                        }
+                    });
+
+                    handle_ajax();
+                }
+            });
+
+            $('.cadet-field input').each(function() {
+                $(this).attr("placeholder", "Cadet");
+            });
+
+            $('.run-field input, .pushups-field input, .situps-field input').each(function() {
+                $(this).val();
+            });
+
+            var cadet_object_list = [];
+            var cadets = {};
+            {% for cadet in filtered_cadets %}
+                cadet_object_list.push({value: "{{ cadet }}", data: "{{ cadet.id }}"});
+            {% endfor %}
+            $('.cadet-field input').autocomplete({
+                lookup: cadet_object_list,
+                onSelect: function(suggestion)
+                {
+                    cadets[suggestion.value] = suggestion.data;
+                    copy_id($(this).parent(), suggestion);
+                }
+            });
+
+            handle_ajax();
+
+            function copy_id(parent, suggestion)
+            {
+                parent.find(".cadet_id").val(suggestion.data);
+            }
+
+
             function handle_ajax() {
                 $("input:not(input[placeholder='Cadet'])").change(function() {
                 var parent = $(this).parent().parent();
@@ -93,7 +153,7 @@
                 var pushups = $(parent).find(".pushups-field input").val();
                 var two_mile = $(parent).find(".run-field input").val();
                 var score_node = $(parent).find(".total-score");
-                if (cadet)
+                if (cadet && id)
                 {
 
                     if (!situps) situps = 0;
@@ -119,59 +179,6 @@
 
             });
             }
-
-            $(".add-row").appendTo("#add_span");
-
-            $(".form-row").formset({
-                prefix: '{{ score_formset.prefix }}',
-                addText: 'Add Another Cadet',
-                deleteText: "Remove",
-                added: function(row)
-                {
-                    row.find('.cadet-field input').each(function() {
-                        $(this).attr("placeholder", "Cadet");
-                    });
-
-                    row.find('.pushups-field input, .situps-field input, .run-field input').each(function() {
-                        $(this).val();
-                    });
-
-                    row.find('.cadet-field input').autocomplete({
-                        lookup: cadet_object_list,
-                        onSelect: function(suggestion)
-                        {
-                            cadets[suggestion.value] = suggestion.data;
-                            row.find(".cadet_id input").val(suggestion.data);
-                        }
-                    });
-
-                    handle_ajax();
-                }
-            });
-
-            $('.cadet-field input').each(function() {
-                $(this).attr("placeholder", "Cadet");
-            });
-
-            $('.run-field input, .pushups-field input, .situps-field input').each(function() {
-                $(this).val();
-            });
-
-            var cadet_object_list = [];
-            var cadets = {};
-            {% for cadet in cadets %}
-                cadet_object_list.push({value: "{{ cadet }}", data: "{{ cadet.id }}"});
-            {% endfor %}
-            $('.cadet-field input').autocomplete({
-                lookup: cadet_object_list,
-                onSelect: function(suggestion)
-                {
-                    cadets[suggestion.value] = suggestion.data;
-                    $(this).parent().find(".cadet_id").val(suggestion.data);
-                }
-            });
-
-            handle_ajax();
 
         });
 

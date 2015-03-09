@@ -99,7 +99,7 @@ def cadet_page(request, cadet_id, tab='overview'):
 
     context = {}
 
-    scores = PtScore.objects.filter(cadet=cadet_id)
+    scores = PtScore.objects.filter(cadet=cadet_id).order_by('-pt_test')
     ordered_scores = scores.order_by('-pt_test')[:3]
 
     # initializing pt related vars to 0 ahead of time, in case the cadet has no pt tests yet
@@ -122,7 +122,8 @@ def cadet_page(request, cadet_id, tab='overview'):
         context.update({
             'tab': tab,
             'cadet': cadet,
-            'scores': ordered_scores,
+            'scores': scores,
+            'ordered_scores': ordered_scores,
             'max_score': max_score,
             'min_score': min_score,
             'avg_score': avg_score,

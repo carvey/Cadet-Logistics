@@ -5,6 +5,7 @@ from django.db.models import Q
 from django.core.urlresolvers import reverse
 from django.forms.formsets import formset_factory
 from django.template.context import RequestContext
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 
 from pt.models import PtTest, PtScore, Grader
 from personnel.models import Company, Cadet, MsLevel
@@ -98,14 +99,19 @@ class InputTestScores(View):
     def post(self, request, test_id):
         formset = self.score_formset(request.POST, request.FILES)
         test = PtTest.objects.get(id=test_id)
-        cadets = self.get_cadets(test)
+        filtered_cadets = self.get_cadets(test)
 
         if formset.is_valid():
             for form in formset.cleaned_data:
                 # Empty rows are sent back as an empty dict, so these can be skipped
-                if form:
+                if form and not form.get('DELETE'):
                     cadet = Cadet.objects.get(id=int(form.get('cadet_id')))
-                    score = PtScore()
+                    try:
+                        # if a score for this cadet has already been submitted for this test
+                        score = PtScore.objects.get(pt_test=test, cadet=cadet)
+                    except ObjectDoesNotExist:
+                        # if this is the first time a score is being created for this cadet for this test
+                        score = PtScore()
                     score.pt_test = test
                     score.cadet = cadet
                     score.pushups = form['pushups']
@@ -118,29 +124,31 @@ class InputTestScores(View):
             context = {
                 'test': test,
                 'score_formset': formset,
-                'cadets': cadets
+                'filtered_cadets': filtered_cadets
             }
             return render(request, self.template, context)
 
     def get(self, request, test_id):
         test = PtTest.objects.get(id=test_id)
-        cadets = self.get_cadets(test)
+        cadets = Cadet.objects.all()
+        filtered_cadets = self.get_cadets(test)
 
         context={
             'test': test,
             'score_formset': self.score_formset,
-            'cadets': cadets
+            'filtered_cadets': filtered_cadets
         }
         return render(request, self.template, context)
 
     @staticmethod
     def get_cadets(test):
         test_levels = [x for x in test.ms_levels.all()]
-        cadets = Cadet.objects.filter(ms_level__in=test_levels)
-        scores = test.ptscore_set.all()
-        scores = [score.cadet.id for score in scores]
-        cadets = cadets.exclude(id__in=scores)
-        return cadets
+        filtered_cadets = Cadet.objects.filter(ms_level__in=test_levels)
+        # commenting filtered auto-suggestions out until a better way to pass cadet id's in the form can be worked out
+        # scores = test.ptscore_set.all()
+        # scores = [score.cadet.id for score in scores]
+        # filtered_cadets = filtered_cadets.exclude(id__in=scores)
+        return filtered_cadets
 
 
 def calculate_score(request, cadet_id, situps, pushups, two_mile):

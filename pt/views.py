@@ -89,8 +89,7 @@ class EditTest(View):
         return render(request, self.template, context)
 
 
-# TODO: also need verification of cadets to scores so scores cant be entered twice for the same cadet. If a score does exist (despite not being in autocomplete), the score should be overitten
-# TODO: Need to account for names spelled incorrectly or just not in the database at all (need to check out fuzzywuzzy on github)
+# TODO: Would be nice to have suggesstions on misspelled cadet names for the error message. Fuzzywuzzy on github might be good for this
 class InputTestScores(View):
     template = 'pt/pt_tests/add_scores.html'
 

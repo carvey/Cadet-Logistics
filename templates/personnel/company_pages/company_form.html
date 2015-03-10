@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+    <script src="{% static 'css/less/bootstrap-datepicker/js/bootstrap-datepicker.js' %}"></script>
+    <link href="{% static 'css/less/bootstrap-datepicker/datepicker.css' %}" rel="stylesheet">
+
+
+{% endblock %}
+
+{% block page_header %}
+    {% if edit %}
+        Edit {{ company }} Company
+    {% else %}
+        Add Company
+    {% endif %}
+
+    {% if edit %}
+        <div style="display: inline-block; float: right">
+            <a class="btn btn-danger btn-md" onclick="$('#deleteModal').modal()" role="button">Delete Company</a>
+        </div>
+    {% endif %}
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-6">
+            <form method="post"
+                {% if edit %}
+                action="{% url 'edit_company' company.id %}"
+                {% else %}
+                action="{% url 'add_company' %}"
+                {% endif %}
+            >
+                {% for field in form %}
+                    {% csrf_token %}
+
+                    <div class="row" style="margin: 25px 0;">
+
+                        <div class="col-md-2">
+                            <div style="display: inline-block; float: left">{{ field.label_tag }}</div>
+                        </div>
+                        <div class="col-md-6">
+                            <div style="display: inline-block">{{ field }}</div>
+                        </div>
+
+                    </div>
+                {% endfor %}
+                <input class="btn btn-sm btn-success" type="submit" value="Submit" />
+            </form>
+
+        {% if edit %}
+            <!-- Delete Modal -->
+            <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form action="{% url 'delete_company' company.pk %}" method="post">
+                            {% csrf_token %}
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myModalLabel">Company to delete: <span id="query-string"></span></h4>
+                            </div>
+                            <div class="modal-body" id="delete-modal-body">
+
+                                <p>Are you sure you wish to delete {{ company }} Company?</p>
+                                <p>
+                                    -By deleting this company, all platoons and squads associated with {{ company }} company
+                                     will also be deleted.
+                                </p>
+                                <p>
+                                    -All cadets associated with {{ company }} company will no longer be assigned to a company, platoon, or squad
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal" style="float: left">Close</button>
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $("select,:text,:input[type='number'],:input[type='email']").addClass("form-control");
+            $(":checkbox").addClass("checkbox");
+
+            $("#id_date").addClass("date");
+            $(".date").datepicker({
+                format: 'yyyy-mm-dd'
+            });
+        });
+    </script>
+
+
+
+{% endblock %}

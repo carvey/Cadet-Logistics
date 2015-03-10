@@ -1,32 +1,65 @@
-{% extends 'datatables/datatable_base.html' %}
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load personnel_filters %}
+{% load permission_filters %}
 
 {% block page_header %}
-Company Listing
+    <div style="display: inline-block">Company Listing Page</div>
+    {% if user|super_permissions %}
+        <div style="display: inline-block; float: right">
+            <a class="btn btn-default btn-md" href="{% url 'add_company' %}" role="button">Add Company</a>
+        </div>
+    {% endif %}
+
+    <style type="text/css">
+        {% include 'pt/css/test_listing_page.css' %}
+    </style>
+
 {% endblock %}
 
-{% block table_title %}
-	Company Listing - DataTable
+{% block content %}
+
+    <div class="row">
+        {% for company in companies %}
+            {% with avgScore=test.getAvgTotalScore %}
+                <div class="col-lg-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <a href="/personnel/companys/{{ company.id }}/" style="display: inline-block">
+                                <h3 class="panel-title">{{ company }} Company</h3>
+                            </a>
+                            {% if user|super_permissions %}
+                                <a href="{% url 'edit_company' company.id %}" style="display: inline-block; float: right">
+                                    <h3 class="panel-title">
+                                    <span class="glyphicon glyphicon-edit" style="float: right;"> Edit</span>
+                                    </h3>
+                                </a>
+                            {% endif %}
+                        </div>
+                        <div class="panel-body">
+                            <div style="font-size: 150px; height: 200px; text-align: center">{{ company.get_initial }}</div>
+
+                                <div class="panel-test-list">Commanding Officer
+                                    <a href="/personnel/cadets/{{ company.company_commander.id }}">
+                                        <span class="test-list-value">{{ company.company_commander }}</span>
+                                    </a>
+                                </div>
+                                <div class="panel-test-list">First Sergeant <span class="test-list-value">{{ company.first_sergeant }}</span></div>
+                                <div class="panel-test-list">Executive Officer <span class="test-list-value">{{ company.executive_officer }}</span></div>
+                                <div class="panel-test-list">Cadet Count <span class="test-list-value">{{ company.count }}</span></div>
+
+                        </div>
+                    </div>
+                </div>
+                {# This is the script for displaying the pie charts #}
+                {% include 'pt/js/pt_test_pie_chart' %}
+            {% endwith %}
+        {% endfor %}
+    </div>
 {% endblock %}
 
-{% block columns %}
-	<th>Companies</th>
-	<th>Commander</th>
-	<th>First Sergeant</th>
-{% endblock %}
-
-{% block table_footer %}
-	 <td>Companies</td>
-	<td>Commander</td>
-	<td>First Sergeant</td>
-{% endblock %}
-
-
-{% block table_data %}
-	{% for company in companies %}
-		<tr class="odd gradeX">
-			<td><a href = "/personnel/companys/{{company.name}}">{{company.name}}</a></td>
-			<td><a href="/personnel/cadets/{{ company.company_commander.id }}">{{company.company_commander}}</a></td>
-			<td><a href="/personnel/cadets/{{ company.first_sergeant.id }}">{{company.first_sergeant}}</a></td>
-		</tr>
-	{% endfor %}
+{% block page_scripts %}
+    <script src="{% static 'js/plugins/jquery-browser-plugin/jquery.browser.min.js' %}"></script>
+    <script src="{% static 'js/plugins/flot/jquery.flot.js' %}"></script>
+    <script src="{% static 'js/plugins/flot/jquery.flot.pie.js' %}"></script>
 {% endblock %}

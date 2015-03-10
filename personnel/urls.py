@@ -5,7 +5,8 @@ Created on Apr 27, 2014
 '''
 from django.conf.urls import patterns, url
 from personnel.views import Index, Stats, CadetListing, cadet_page, CompanyDetail, CompanyListing, \
-    CompanyCadetListing, MSlevelListing, MScadetListing, MSLevelDetail, PlatoonDetail, Input, Login, logout, SquadDetail
+    CompanyCadetListing, MSlevelListing, MScadetListing, MSLevelDetail, PlatoonDetail, Input, Login, logout, SquadDetail, \
+    EditCompany, AddCompany, DeleteCompany
 
 urlpatterns = patterns('',
                        # site index
@@ -24,18 +25,22 @@ urlpatterns = patterns('',
                        url(r'^cadets/(?P<cadet_id>[0-9]+)/$', cadet_page, name='cadetpage'),
                        url(r'^cadets/(?P<cadet_id>[0-9]+)/(?P<tab>\w+)/$', cadet_page, name='cadetpage'),
 
+                        #TODO: All these needs converting to IDs instead of name
                        #Company/Platoon/Squad Pages
                        url(r'^companys/$', CompanyListing.as_view(), name='companylisting'),
-                       url(r'^companys/(?P<company_name>[-A-Za-z0-9_]+)/$', CompanyDetail.as_view(),
+                       url(r'^companys/(?P<company_id>\d+)/$', CompanyDetail.as_view(),
                            name='company_detail'),
-                       url(r'^companys/(?P<company_name>[-A-Za-z0-9_]+)/cadets$', CompanyCadetListing.as_view(),
+                       url(r'^companys/(?P<company_id>\d+)/cadets$', CompanyCadetListing.as_view(),
                            name='cadets_in_company'),
-                       url(r'^companys/(?P<company_name>[-A-Za-z0-9_]+)/(?P<tab>\w+)/$', CompanyDetail.as_view(),
+                       url(r'^companys/(?P<company_id>\d+)/(?P<tab>\w+)/$', CompanyDetail.as_view(),
                            name='company_detail'),
-                       url(r'^companys/(?P<company_name>[-A-Za-z0-9_]+)/platoons/(?P<platoon_num>[-A-Za-z0-9_]+)/$',
+                       url(r'^companys/(?P<company_id>\d+)/platoons/(?P<platoon_num>[-A-Za-z0-9_]+)/$',
                            PlatoonDetail.as_view(), name="platoon_detail"),
-                       url(r'^companys/(?P<company_name>[-A-Za-z0-9_]+)/platoons/(?P<platoon_num>[-A-Za-z0-9_]+)/squads/(?P<squad_num>[-A-Za-z0-9_]+)/$',
+                       url(r'^companys/(?P<company_id>\d+)/platoons/(?P<platoon_num>[-A-Za-z0-9_]+)/squads/(?P<squad_num>[-A-Za-z0-9_]+)/$',
                            SquadDetail.as_view(), name="squad_detail"),
+                       url(r'^companys/edit/(?P<company_id>\d+)/$', EditCompany.as_view(), name='edit_company'),
+                       url(r'^companys/add/$', AddCompany.as_view(), name='add_company'),
+                       url(r'^companys/delete/(?P<company_pk>\d+)/$', DeleteCompany.as_view(), name='delete_company'),
 
                        #MS Class Pages
                        url(r'^ms-classes/$', MSlevelListing.as_view(), name='mslisting'),

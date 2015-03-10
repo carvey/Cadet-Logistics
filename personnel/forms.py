@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate
-from personnel.models import Demographic, GENDER_CHOICES, BLOOD_TYPES, Cadet
+from personnel.models import Demographic, GENDER_CHOICES, BLOOD_TYPES, Cadet, Company
 
 
 class LoginForm(AuthenticationForm):
@@ -43,12 +43,6 @@ class EditCadet(forms.ModelForm):
 
 class EditCadetFull(forms.ModelForm):
 
-    # def __init__(self, *args, **kwargs):
-    #     super(EditCadetFull, self).__init__(*args, **kwargs)
-    #
-    #     for field in self.fields:
-    #         self.fields[field].required = False
-
     class Meta():
         model = Cadet
         exclude = ['objects', 'user', 'events_missed', 'class_events_missed',
@@ -57,13 +51,20 @@ class EditCadetFull(forms.ModelForm):
 
 class EditCadetUser(forms.ModelForm):
 
-    # def __init__(self, *args, **kwargs):
-    #     super(EditCadetUser, self).__init__(*args, **kwargs)
-    #
-    #     for field in self.fields:
-    #         self.fields[field].required = False
-
     class Meta():
         model = User
         exclude = ['date_joined', 'last_login', 'superuser_status', 'password', 'groups', 'user_permissions',
                    'is_staff', 'is_active', 'is_superuser']
+
+
+class AddCompanyForm(forms.ModelForm):
+
+    class Meta():
+        model = Company
+        exclude = []
+
+class EditCompanyForm(forms.ModelForm):
+
+    class Meta():
+        model = Company
+        exclude = []

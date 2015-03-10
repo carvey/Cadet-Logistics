@@ -1,16 +1,13 @@
 from django.shortcuts import render, HttpResponseRedirect
 from django.views.generic import View
-from django.views.generic.edit import FormView
+from django.views.generic.edit import FormView, DeleteView
 from django.contrib.auth import authenticate, login
 from personnel.models import Cadet, Company, MsLevel, Platoon, SnapShot, Demographic, Squad
 from pt.models import PtScore, PtTest, Grader
 from personnel_utils import grouping_data
 from django.contrib.auth.decorators import login_required
-from personnel.forms import LoginForm, EditCadet, EditCadetFull, EditCadetUser
+from personnel.forms import LoginForm, EditCadet, EditCadetFull, EditCadetUser, AddCompanyForm, EditCompanyForm
 from django.contrib.auth.views import logout_then_login
-
-
-# Create your views here.
 
 
 class Login(FormView):
@@ -166,6 +163,66 @@ def cadet_page(request, cadet_id, tab='overview'):
     return render(request, template_name, context)
 
 
+class AddCompany(View):
+    template = 'personnel/company_pages/company_form.html'
+
+    def get(self, request):
+        form = AddCompanyForm()
+        context = {
+            'form': form
+        }
+        return render(request, self.template, context)
+
+    def post(self, request):
+        form = AddCompanyForm(request.POST or None)
+        if form.is_valid():
+            form.save()
+        return HttpResponseRedirect('/personnel/companys')
+
+
+class EditCompany(View):
+    template = 'personnel/company_pages/company_form.html'
+
+    def get(self, request, company_id):
+        company = Company.objects.get(id=company_id)
+        form = EditCompanyForm(instance=company)
+
+        context = {
+            'company': company,
+            'form': form,
+            'edit': True
+        }
+        return render(request, self.template, context)
+
+    def post(self, request, company_id):
+        company = Company.objects.get(id=company_id)
+        form = EditCompanyForm(request.POST, instance=company)
+        if form.is_valid():
+            form.save()
+
+        return HttpResponseRedirect('/personnel/companys/')
+
+
+# class DeleteCompany(View):
+#     template = 'personnel/companys/delete.html'
+#
+#     def get(self, request, company_id):
+#         company = Company.objects.get(id=company_id)
+#         context = {
+#             'company': company
+#         }
+#         return render(request, self.template, context)
+#
+#     def post(self, request, company_id):
+
+class DeleteCompany(DeleteView):
+    model = Company
+    success_url = '/personnel/companys/'
+    slug_field = 'id'
+    slug_url_kwarg = 'company_pk'
+
+
+
 class CompanyListing(View):
     template_name = 'personnel/company_listing.html'
 
@@ -179,8 +236,8 @@ class CompanyListing(View):
 class CompanyCadetListing(View):
     template_name = 'personnel/company_cadet_listing.html'
 
-    def get(self, request, company_name):
-        company = Company.objects.get(name=company_name)
+    def get(self, request, company_id):
+        company = Company.objects.get(id=company_id)
         cadets = Cadet.objects.filter(company=company)
         return render(request, self.template_name, {'company': company, 'cadets': cadets})
 
@@ -228,8 +285,8 @@ class MSLevelDetail(View):
 class CompanyDetail(View):
     template = 'personnel/group_pages/grouping_profile.html'
 
-    def get(self, request, company_name, tab='stats'):
-        company = Company.objects.get(name=company_name)
+    def get(self, request, company_id, tab='stats'):
+        company = Company.objects.get(id=company_id)
         group = "%s Company" % company.name
         groups = Platoon.objects.filter(company=company)
         link = "platoons"
@@ -255,8 +312,8 @@ class CompanyDetail(View):
 class PlatoonDetail(View):
     template = 'personnel/group_pages/grouping_profile.html'
 
-    def get(self, request, company_name, platoon_num, tab='stats'):
-        company = Company.objects.get(name=company_name)
+    def get(self, request, company_id, platoon_num, tab='stats'):
+        company = Company.objects.get(id=company_id)
         platoon = Platoon.objects.get(name=platoon_num, company=company)
         group = "%s Company, %s Platoon" % (company, platoon.name)
         groups = Squad.objects.filter(platoon=platoon)
@@ -282,8 +339,8 @@ class PlatoonDetail(View):
 class SquadDetail(View):
     template = 'personnel/group_pages/grouping_profile.html'
 
-    def get(self, request, company_name, platoon_num, squad_num, tab='stats'):
-        company = Company.objects.get(name=company_name)
+    def get(self, request, company_id, platoon_num, squad_num, tab='stats'):
+        company = Company.objects.get(id=company_id)
         platoon = Platoon.objects.get(name=platoon_num, company=company)
         squad = Squad.objects.get(name=squad_num, platoon=platoon)
         group = squad.__unicode__()

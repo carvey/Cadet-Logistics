@@ -90,11 +90,9 @@ class Company(models.Model):
 
     name = models.CharField(max_length=10, default="", help_text="Enter Name of the new company here")
     company_commander = models.OneToOneField('Cadet', db_index=False, related_name='company_commander',
-                                             limit_choices_to={'is_company_staff': True}, blank=True, null=True,
-                                             help_text="Enter the Name of the Commander Officer")
+                                             blank=True, null=True, help_text="Enter the Name of the Commander Officer")
     first_sergeant = models.OneToOneField('Cadet', db_index=False, related_name="first_sgt",
-                                          limit_choices_to={'is_company_staff': True}, blank=True, null=True,
-                                          help_text="Enter the First Sergeant for this Company")
+                                          blank=True, null=True, help_text="Enter the First Sergeant for this Company")
 
     class Meta:
         db_table = 'Company'
@@ -109,11 +107,7 @@ class Company(models.Model):
         :param cadet: the cadet to be set as the new first sergeant
         :return:
         """
-        if self.first_sergeant:
-            self.first_sergeant.is_company_staff = False
-
         self.first_sergeant = cadet
-        cadet.is_company_staff = True
         cadet.save()
         self.save()
 
@@ -127,6 +121,12 @@ class Company(models.Model):
         self.company_commander = cadet
         cadet.save()
         self.save()
+
+    def get_initial(self):
+        return self.name[0]
+
+    def count(self):
+        return self.cadet_set.all().count()
 
 
 class Cadet(Users):
@@ -255,11 +255,9 @@ class Platoon(models.Model):
     name = models.PositiveIntegerField(default=1, blank=False)
     company = models.ForeignKey(Company, db_index=False, related_name='platoons', blank=True, null=True)
     platoon_commander = models.OneToOneField('Cadet', db_index=False, related_name='platoon_commander',
-                                             limit_choices_to={'is_company_staff': True}, blank=True, null=True,
-                                             help_text="Enter the Platoon Commander")
+                                             blank=True, null=True, help_text="Enter the Platoon Commander")
     platoon_sergeant = models.OneToOneField('Cadet', db_index=False, related_name="platoon_sgt",
-                                            limit_choices_to={'is_company_staff': True}, blank=True, null=True,
-                                            help_text="Enter the Platoon Sergeant")
+                                            blank=True, null=True, help_text="Enter the Platoon Sergeant")
 
     class Meta:
         db_table = 'Platoon'

@@ -57,7 +57,7 @@
                  aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
-                        <form action="{% url 'delete_company' company.pk %}" method="post">
+                        <form action="{% url 'delete_company' company.id %}" method="post">
                             {% csrf_token %}
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span

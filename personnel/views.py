@@ -2,12 +2,15 @@ from django.shortcuts import render, HttpResponseRedirect
 from django.views.generic import View
 from django.views.generic.edit import FormView, DeleteView
 from django.contrib.auth import authenticate, login
+from django.core.urlresolvers import reverse
 from personnel.models import Cadet, Company, MsLevel, Platoon, SnapShot, Demographic, Squad
 from pt.models import PtScore, PtTest, Grader
 from personnel_utils import grouping_data
 from django.contrib.auth.decorators import login_required
 from personnel.forms import LoginForm, EditCadet, EditCadetFull, EditCadetUser, AddCompanyForm, EditCompanyForm
 from django.contrib.auth.views import logout_then_login
+
+from django.views.decorators.http import require_GET
 
 
 class Login(FormView):
@@ -166,18 +169,18 @@ def cadet_page(request, cadet_id, tab='overview'):
 class AddCompany(View):
     template = 'personnel/company_pages/company_form.html'
 
+    def post(self, request):
+        form = AddCompanyForm(request.POST)
+        if form.is_valid():
+            form.save()
+        return HttpResponseRedirect(reverse('company_listing'))
+
     def get(self, request):
         form = AddCompanyForm()
         context = {
             'form': form
         }
         return render(request, self.template, context)
-
-    def post(self, request):
-        form = AddCompanyForm(request.POST or None)
-        if form.is_valid():
-            form.save()
-        return HttpResponseRedirect('/personnel/companys')
 
 
 class EditCompany(View):
@@ -200,41 +203,33 @@ class EditCompany(View):
         if form.is_valid():
             form.save()
 
-        return HttpResponseRedirect('/personnel/companys/')
+        return HttpResponseRedirect(reverse('company_listing'))
 
 
-# class DeleteCompany(View):
-#     template = 'personnel/companys/delete.html'
-#
-#     def get(self, request, company_id):
-#         company = Company.objects.get(id=company_id)
-#         context = {
-#             'company': company
-#         }
-#         return render(request, self.template, context)
-#
-#     def post(self, request, company_id):
+class DeleteCompany(View):
+    template = 'personnel/companys/delete.html'
 
-class DeleteCompany(DeleteView):
-    model = Company
-    success_url = '/personnel/companys/'
-    slug_field = 'id'
-    slug_url_kwarg = 'company_pk'
+    def post(self, request, company_id):
+        company = Company.objects.get(id=company_id)
+        company.delete()
+        return HttpResponseRedirect(reverse('company_listing'))
 
 
-
-class CompanyListing(View):
+def company_listing(request):
     template_name = 'personnel/company_listing.html'
 
     companies = Company.objects.all()
-    platoons = Platoon.objects.all()
 
-    def get(self, request):
-        return render(request, self.template_name, {'companies': self.companies, 'platoons': self.platoons})
+    context = {
+        'companies': companies
+    }
+
+    return render(request, template_name, context)
 
 
 class CompanyCadetListing(View):
     template_name = 'personnel/company_cadet_listing.html'
+    print "blah"
 
     def get(self, request, company_id):
         company = Company.objects.get(id=company_id)

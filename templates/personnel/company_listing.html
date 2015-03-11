@@ -21,39 +21,36 @@
 
     <div class="row">
         {% for company in companies %}
-            {% with avgScore=test.getAvgTotalScore %}
-                <div class="col-lg-6">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <a href="/personnel/companys/{{ company.id }}/" style="display: inline-block">
-                                <h3 class="panel-title">{{ company }} Company</h3>
+            <div class="col-lg-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <a href="/personnel/companys/{{ company.id }}/" style="display: inline-block">
+                            <h3 class="panel-title">{{ company }} Company</h3>
+                        </a>
+                        {% if user|super_permissions %}
+                            <a href="{% url 'edit_company' company.id %}" style="display: inline-block; float: right">
+                                <h3 class="panel-title">
+                                <span class="glyphicon glyphicon-edit" style="float: right;"> Edit</span>
+                                </h3>
                             </a>
-                            {% if user|super_permissions %}
-                                <a href="{% url 'edit_company' company.id %}" style="display: inline-block; float: right">
-                                    <h3 class="panel-title">
-                                    <span class="glyphicon glyphicon-edit" style="float: right;"> Edit</span>
-                                    </h3>
+                        {% endif %}
+                    </div>
+                    <div class="panel-body">
+                        <div style="font-size: 150px; height: 200px; text-align: center">{{ company.get_initial }}</div>
+
+                            <div class="panel-test-list">Commanding Officer
+                                <a href="/personnel/cadets/{{ company.company_commander.id }}">
+                                    <span class="test-list-value">{{ company.company_commander }}</span>
                                 </a>
-                            {% endif %}
-                        </div>
-                        <div class="panel-body">
-                            <div style="font-size: 150px; height: 200px; text-align: center">{{ company.get_initial }}</div>
+                            </div>
+                            <div class="panel-test-list">First Sergeant <span class="test-list-value">{{ company.first_sergeant }}</span></div>
+                            <div class="panel-test-list">Executive Officer <span class="test-list-value">{{ company.executive_officer }}</span></div>
+                            <div class="panel-test-list">Cadet Count <span class="test-list-value">{{ company.count }}</span></div>
 
-                                <div class="panel-test-list">Commanding Officer
-                                    <a href="/personnel/cadets/{{ company.company_commander.id }}">
-                                        <span class="test-list-value">{{ company.company_commander }}</span>
-                                    </a>
-                                </div>
-                                <div class="panel-test-list">First Sergeant <span class="test-list-value">{{ company.first_sergeant }}</span></div>
-                                <div class="panel-test-list">Executive Officer <span class="test-list-value">{{ company.executive_officer }}</span></div>
-                                <div class="panel-test-list">Cadet Count <span class="test-list-value">{{ company.count }}</span></div>
-
-                        </div>
                     </div>
                 </div>
-                {# This is the script for displaying the pie charts #}
-                {% include 'pt/js/pt_test_pie_chart' %}
-            {% endwith %}
+            </div>
+
         {% endfor %}
     </div>
 {% endblock %}

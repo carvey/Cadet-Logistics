@@ -216,7 +216,7 @@ class DeleteCompany(View):
 
 
 def company_listing(request):
-    template_name = 'personnel/company_listing.html'
+    template_name = 'personnel/company_pages/company_listing.html'
 
     companies = Company.objects.all()
 
@@ -228,7 +228,7 @@ def company_listing(request):
 
 
 class CompanyCadetListing(View):
-    template_name = 'personnel/company_cadet_listing.html'
+    template_name = 'personnel/company_pages/company_cadet_listing.html'
     print "blah"
 
     def get(self, request, company_id):

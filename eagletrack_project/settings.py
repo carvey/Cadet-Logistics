@@ -14,7 +14,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 SETTINGS_DIR = os.path.dirname(__file__)
 PROJECT_PATH = os.path.join(SETTINGS_DIR, os.pardir)
 PROJECT_PATH = os.path.abspath(PROJECT_PATH)
-TEMPLATE_PATH = os.path.join(PROJECT_PATH, 'templates')
 
 STATIC_PATH = os.path.join(PROJECT_PATH, 'static')
 
@@ -36,6 +35,13 @@ LOGIN_URL = 'login'
 LOGOUT_URL = 'logout'
 
 ALLOWED_HOSTS = []
+
+TEMPLATE_LOADERS = (
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader'
+)
+
+TEMPLATE_PATH = os.path.join(PROJECT_PATH, 'templates')
 
 TEMPLATE_DIRS = (
     TEMPLATE_PATH,

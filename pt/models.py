@@ -170,8 +170,21 @@ class PtTest(models.Model):
     def get_average_score(self, company=None):
         scores = PtScore.objects.filter(pt_test=self)
         if company:
-            score = scores.filter(cadet__company=company)
+            scores = scores.filter(cadet__company=company)
         return PtScore.get_avg_total_score(scores)
+
+    def get_optimal_cadet_count(self):
+        ms_classes = [ms for ms in self.ms_levels.all()]
+        return Cadet.objects.filter(ms_level__in=ms_classes).count()
+
+    def get_actual_cadet_count(self):
+        return self.ptscore_set.all().count()
+
+    def get_missing_record_count(self):
+        print self.get_optimal_cadet_count() - self.get_actual_cadet_count()
+        return self.get_optimal_cadet_count() - self.get_actual_cadet_count()
+
+
 
     class Meta:
         db_table = 'PtTest'

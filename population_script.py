@@ -167,9 +167,9 @@ def populate():
 
 
     print "Creating pt tests"
-    add_pt_test(date=datetime.date(2014, 6, 1) + datetime.timedelta(days=2))
-    add_pt_test(date=datetime.date(2014, 6, 1) + datetime.timedelta(days=5))
-    add_pt_test(date=datetime.date(2014, 6, 1) + datetime.timedelta(days=7))
+    add_pt_test(date=datetime.date(2014, 6, 1) + datetime.timedelta(days=2), ms_classes=[ms4])
+    add_pt_test(date=datetime.date(2014, 6, 1) + datetime.timedelta(days=5), ms_classes=[ms1, ms2, ms3])
+    add_pt_test(date=datetime.date(2014, 6, 1) + datetime.timedelta(days=7), ms_classes=[ms1, ms2, ms3])
     print "Done adding pt tests"
     print "-----------------------"
 
@@ -309,49 +309,33 @@ def add_mslevel(name):
     return ms
 
 
-def add_pt_test(date):
-    pt_test = PtTest.objects.get_or_create(date=date)
+def add_pt_test(date, ms_classes):
+    pt_test = PtTest.objects.get_or_create(date=date)[0]
+    for ms_level in ms_classes:
+        pt_test.ms_levels.add(ms_level)
     return pt_test
+
 
 def add_demographic(demographic):
     demo = Demographic.objects.get_or_create(demographic=demographic)
     return demo
 
+
 def create_pt_scores():
     grader_list = Cadet.objects.filter(ms_level__name='MS4' and 'MS3')
     pt_tests = PtTest.objects.all()
     for test in pt_tests:
-        for cadet in cadets:
+        ms_classes = [ms for ms in test.ms_levels.all()]
+        for cadet in Cadet.objects.filter(ms_level__in=ms_classes):
             cadet_score = None
             try:
                 cadet_score = PtScore.objects.get(cadet=cadet, pt_test=test) #checks to see whether a ptscore has already been created for this test and cadet
                 cadet_score.save()
             except:
                 pass
-            if cadet_score == None:
+            if cadet_score is None:
                 score = PtScore.objects.get_or_create(grader=random.choice(grader_list), pt_test=test, cadet=cadet, pushups=random.randint(0,80), situps=random.randint(0,80), score=0, two_mile="%s:%s" % (random.randint(12,20), random.randint(0,59)))
                 score[0].save()
-
-
-def generate_pt_score_value():
-    pt_tests = PtTest.objects.all()
-    score_values = Grader.objects.all()
-    for test in pt_tests:
-        pt_scores = PtScore.objects.filter(pt_test=test)
-        for score in pt_scores:
-            age = score.cadet.get_score_value_age_group(score.cadet, score_values)
-            pushup_score_values = Grader.objects.get(gender=score.cadet.gender, activity='pushups',
-                                                     age_group=age).get_ordered_dict()
-            situp_score_values = Grader.objects.get(gender=score.cadet.gender, activity='situps',
-                                                    age_group=age).get_ordered_dict()
-            two_mile_score_values = Grader.objects.get(gender=score.cadet.gender, activity='Two-mile run',
-                                                       age_group=age).get_ordered_dict()
-
-            pushup_score = score.cadet.get_score_value(score.pushups, pushup_score_values)
-            situp_score = score.cadet.get_score_value(score.situps, situp_score_values)
-            two_mile_score = score.cadet.get_score_value(score.two_mile, two_mile_score_values)
-            score.score = int(pushup_score) + int(situp_score) + int(two_mile_score)
-            score.save()
 
 
 def assign_eagle_id():

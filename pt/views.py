@@ -196,10 +196,13 @@ class StatisticsView(View):
         for test_counter, pt_test in enumerate(pt_tests):
             pt_scores = PtScore.objects.filter(pt_test=pt_test)
             total_num = len(pt_scores)
-            total_score = 0
-            for score_counter, pt_score in enumerate(pt_scores):
-                total_score += pt_score.score
-            avg_score = float(total_score)/total_num
+            avg_score = 0
+            if total_num:
+                total_score = 0
+                for score_counter, pt_score in enumerate(pt_scores):
+                    total_score += pt_score.score
+                avg_score = float(total_score)/total_num
+
             avg_pt_scores[pt_test] = avg_score
 
         #This is to get the avg scores per company per pt test

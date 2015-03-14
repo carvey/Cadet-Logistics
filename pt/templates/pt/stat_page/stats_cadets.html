@@ -30,11 +30,17 @@
 				<ol>
                     {% for score, cadet in top_cadets %}
                         {% if cadet|is_list %}
-                            {% for c in cadet %}
-                                <li><a href="/personnel/cadets/{{ cadet.id }}">{{ c.get_name }}</a>: {{ score }}</li>
-                            {% endfor %}
+                            <li> {{ score }}:
+                                {% for c in cadet %}
+                                    {% if forloop.last %}
+                                        <a href="/personnel/cadets/{{ c.id }}">{{ c }}</a>
+                                    {% else %}
+                                        <a href="/personnel/cadets/{{ c.id }}">{{ c }};</a>
+                                    {% endif %}
+                                {% endfor %}
+                            </li>
                         {% else %}
-                            <li><a href="/personnel/cadets/{{ cadet.id }}">{{ cadet.get_name }}</a>: {{ score }}</li>
+                            <li>{{ score }}: <a href="/personnel/cadets/{{ cadet.id }}">{{ cadet }}</a></li>
                         {% endif %}
                     {% endfor %}
 				</ol>
@@ -50,7 +56,19 @@
 			<div class='panel-body top_list'>
 				<ol>
                     {% for score, cadet in lowest_cadets %}
-                        <li><a href="{% url 'cadetpage' cadet.id %}">{{ cadet.get_name }}</a>: {{ score }}</li>
+                        {% if cadet|is_list %}
+                            <li> {{ score }}:
+                                {% for c in cadet %}
+                                    {% if forloop.last %}
+                                        <a href="/personnel/cadets/{{ c.id }}">{{ c }}</a>
+                                    {% else %}
+                                        <a href="/personnel/cadets/{{ c.id }}">{{ c }};</a>
+                                    {% endif %}
+                                {% endfor %}
+                            </li>
+                        {% else %}
+                            <li>{{ score }}: <a href="/personnel/cadets/{{ cadet.id }}">{{ cadet }}</a></li>
+                        {% endif %}
                     {% endfor %}
 				</ol>
 			</div>

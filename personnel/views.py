@@ -10,8 +10,6 @@ from django.contrib.auth.decorators import login_required
 from personnel.forms import LoginForm, EditCadet, EditCadetFull, EditCadetUser, AddCompanyForm, EditCompanyForm
 from django.contrib.auth.views import logout_then_login
 
-from django.views.decorators.http import require_GET
-
 
 class Login(FormView):
     template_name = 'personnel/auth/login.html'
@@ -229,7 +227,6 @@ def company_listing(request):
 
 class CompanyCadetListing(View):
     template_name = 'personnel/company_pages/company_cadet_listing.html'
-    print "blah"
 
     def get(self, request, company_id):
         company = Company.objects.get(id=company_id)

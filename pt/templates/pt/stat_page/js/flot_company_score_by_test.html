@@ -10,12 +10,12 @@
 
         function plot() {
 
-            var scores = [{% for key,value in data.items %}["{{ key }}", {{ value }}], {% endfor %}];
+            var scores = [{% for key,value in data.items %}["{{ key.date }}", {{ value }}], {% endfor %}];
 
             {% for key, value in company_scores.items %}
                 var scores{{ forloop.counter }} = [
                 {% for test, avg in value.items %}
-                        ["{{ test }}", {{ avg }}],
+                        ["{{ test.date }}", {{ avg }}],
                 {% endfor %}
                 ];
             {% endfor %}

@@ -44,10 +44,10 @@ urlpatterns = patterns('',
 
                        #MS Class Pages
                        url(r'^ms-classes/$', MSlevelListing.as_view(), name='mslisting'),
-                       url(r'^ms-classes/(?P<ms_class>[-A-Za-z0-9_]+)/$', MSLevelDetail.as_view(), name='ms_detail'),
-                       url(r'^ms-classes/(?P<ms_class>[-A-Za-z0-9_]+)/cadets/$', MScadetListing.as_view(),
+                       url(r'^ms-classes/(?P<ms_class_id>\d+)/$', MSLevelDetail.as_view(), name='ms_detail'),
+                       url(r'^ms-classes/(?P<ms_class_id>\d+)/cadets/$', MScadetListing.as_view(),
                            name='mscadets'),
-                       url(r'^ms-classes/(?P<ms_class>[-A-Za-z0-9_]+)/(?P<tab>\w+)/$', MSLevelDetail.as_view(),
+                       url(r'^ms-classes/(?P<ms_class_id>\d+)/(?P<tab>\w+)/$', MSLevelDetail.as_view(),
                            name='ms_detail'),
 
                        #Dedicated input pages

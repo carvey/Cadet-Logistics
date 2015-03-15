@@ -1,6 +1,4 @@
 import os
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'eagletrack_project.settings')
-
 
 from personnel.models import *
 from pt.models import *
@@ -13,9 +11,9 @@ sys.path.append(os.path.dirname(__file__))
 # Create your tests here.
 cadets = Cadet.objects.all()
 
+
 def clear_cadets():
-    for cadet in Cadet.objects.all():
-        cadet.delete()
+    Cadet.objects.all().delete()
 
 
 def populate():
@@ -94,7 +92,7 @@ def populate():
     add_cadet(first_name="Jason", last_name="Canter", age=20, ms_level=ms4, company=alpha, platoon=alpha1st, squad=alpha11)
     add_cadet(first_name="Eddie", last_name="Hanson", age=20, ms_level=ms4, company=alpha, platoon=alpha1st, squad=alpha12, sl=True)
     add_cadet(first_name="Ashley", last_name="Scott", age=20, gender="Female", ms_level=ms4, company=alpha, platoon=alpha1st, squad=alpha12)
-    add_cadet(first_name="Danial", last_name="Miller", age=20, ms_level=ms3, company=alpha, platoon=alpha1st, squad=alpha12)
+    add_cadet(first_name="Danial", last_name="Miller", age=20, ms_level=ms4, company=alpha, platoon=alpha1st, squad=alpha12)
 
 
     #Bravo company
@@ -108,7 +106,9 @@ def populate():
     add_cadet(first_name="Trenton", last_name="Francis", age=19, ms_level=ms2, company=bravo, platoon=bravo1st, squad=bravo11)
     add_cadet(first_name="Samantha", last_name="Roberts", age=19, gender="Female", ms_level=ms2, company=bravo, platoon=bravo1st, squad=bravo12, sl=True)
     add_cadet(first_name="Robert", last_name="Bacon", age=19, ms_level=ms2, company=bravo, platoon=bravo1st, squad=bravo12)
-    add_cadet(first_name="Samual", last_name="Gates", age=19, ms_level=ms2, company=bravo, platoon=bravo1st, squad=bravo12)
+    add_cadet(first_name="Samual", last_name="Gates", age=19, ms_level=ms1, company=bravo, platoon=bravo1st, squad=bravo12)
+    add_cadet(first_name="Troy", last_name="Gerner", age=19, ms_level=ms1, company=bravo, platoon=bravo1st, squad=bravo12)
+    add_cadet(first_name="Victor", last_name="Caswell", age=19, ms_level=ms1, company=bravo, platoon=bravo1st, squad=bravo12)
     #Bravo 2nd Platoon
     add_cadet(first_name="George", last_name="Hart", age=20, ms_level=ms3, company=bravo, platoon=bravo2nd, pc=True)
     add_cadet(first_name="Wilson", last_name="Cooper", age=20, ms_level=ms3, company=bravo, platoon=bravo2nd, ps=True)
@@ -117,7 +117,9 @@ def populate():
     add_cadet(first_name="Eva", last_name="Lowry", age=20, gender="Female", ms_level=ms2, company=bravo, platoon=bravo2nd, squad=bravo21)
     add_cadet(first_name="Michael", last_name="Han", age=19, ms_level=ms2, company=bravo, platoon=bravo2nd, squad=bravo21)
     add_cadet(first_name="Kathy", last_name="Marino", age=19, gender="Female", ms_level=ms2, company=bravo, platoon=bravo2nd, squad=bravo22, sl=True)
-    add_cadet(first_name="James", last_name="Cooper", age=19, ms_level=ms2, company=bravo, platoon=bravo2nd, squad=bravo22)
+    add_cadet(first_name="James", last_name="Cooper", age=19, ms_level=ms1, company=bravo, platoon=bravo2nd, squad=bravo22)
+    add_cadet(first_name="Barry", last_name="Waldner", age=19, ms_level=ms1, company=bravo, platoon=bravo2nd, squad=bravo22)
+    add_cadet(first_name="Chase", last_name="Torrens", age=19, ms_level=ms1, company=bravo, platoon=bravo2nd, squad=bravo22)
 
 
     #Charlie Company
@@ -130,13 +132,17 @@ def populate():
     add_cadet(first_name="Roger", last_name="Alan", age=18, ms_level=ms1, company=charlie, platoon=charlie1st, squad=charlie11)
     add_cadet(first_name="Joshua", last_name="Springer", age=20, ms_level=ms2, company=charlie, platoon=charlie1st, squad=charlie12, sl=True)
     add_cadet(first_name="Pablo", last_name="Smith", age=18, ms_level=ms1, company=charlie, platoon=charlie1st, squad=charlie12)
+    add_cadet(first_name="Harry", last_name="White", age=18, ms_level=ms2, company=charlie, platoon=charlie1st, squad=charlie12)
+    add_cadet(first_name="Bryan", last_name="Bader", age=18, ms_level=ms2, company=charlie, platoon=charlie1st, squad=charlie12)
     #Charlie 2nd Platoon
     add_cadet(first_name="Gordon", last_name="Miles", age=20, ms_level=ms3, company=charlie, platoon=charlie2nd, pc=True)
     add_cadet(first_name="Mia", last_name="Scott", age=20, gender="Female", ms_level=ms3, company=charlie, platoon=charlie2nd, ps=True)
     add_cadet(first_name="Brett", last_name="Cade", age=20, ms_level=ms2, company=charlie, platoon=charlie2nd, squad=charlie21, sl=True)
     add_cadet(first_name="Garret", last_name="Timpson", age=18, ms_level=ms1, company=charlie, platoon=charlie2nd, squad=charlie21)
+    add_cadet(first_name="Otis", last_name="Lee", age=20, ms_level=ms2, company=charlie, platoon=charlie2nd, squad=charlie21)
     add_cadet(first_name="Julia", last_name="Anderson", age=18, gender="Female", ms_level=ms1, company=charlie, platoon=charlie2nd, squad=charlie22, sl=True)
     add_cadet(first_name="Chris", last_name="Danials", age=20, ms_level=ms2, company=charlie, platoon=charlie2nd, squad=charlie22)
+    add_cadet(first_name="Jeff", last_name="Stein", age=20, ms_level=ms3, company=charlie, platoon=charlie2nd, squad=charlie22)
 
 
     #Delta company
@@ -149,6 +155,8 @@ def populate():
     add_cadet(first_name="Jim", last_name="Bob", age=18, ms_level=ms1, company=delta, platoon=delta1st, squad=delta11)
     add_cadet(first_name="Gordon", last_name="Thomas", age=20, ms_level=ms2, company=delta, platoon=delta1st, squad=delta12, sl=True)
     add_cadet(first_name="Isabella", last_name="Miller", age=19, gender="Female", ms_level=ms2, company=delta, platoon=delta1st, squad=delta12)
+    add_cadet(first_name="Roxanne", last_name="Imes", age=19, gender="Female", ms_level=ms2, company=delta, platoon=delta1st, squad=delta12)
+    add_cadet(first_name="Jule", last_name="Mattes", age=19, gender="Female", ms_level=ms2, company=delta, platoon=delta1st, squad=delta12)
     #Second Platoon
     add_cadet(first_name="Steve", last_name="Bolhman", age=20, ms_level=ms3, company=delta, platoon=delta2nd, pc=True)
     add_cadet(first_name="Eric", last_name="Greenwood", age=20, ms_level=ms3, company=delta, platoon=delta2nd, ps=True)
@@ -156,6 +164,8 @@ def populate():
     add_cadet(first_name="Cody", last_name="Gruff", age=19, ms_level=ms2, company=delta, platoon=delta2nd, squad=delta21)
     add_cadet(first_name="Jane", last_name="West", age=18, gender="Female", ms_level=ms1, company=delta, platoon=delta2nd, squad=delta22, sl=True)
     add_cadet(first_name="Anne", last_name="Locke", age=18, gender="Female", ms_level=ms1, company=delta, platoon=delta2nd, squad=delta22)
+    add_cadet(first_name="Lindsey", last_name="Roehr", age=18, gender="Female", ms_level=ms1, company=delta, platoon=delta2nd, squad=delta22)
+    add_cadet(first_name="Stacie", last_name="Bridgers", age=18, gender="Female", ms_level=ms3, company=delta, platoon=delta2nd, squad=delta22)
     print "Done creating cadets"
     print "-----------------------"
 
@@ -170,7 +180,17 @@ def populate():
     add_pt_test(date=datetime.date(2014, 6, 1) + datetime.timedelta(days=2), ms_classes=[ms4])
     add_pt_test(date=datetime.date(2014, 6, 1) + datetime.timedelta(days=5), ms_classes=[ms1, ms2, ms3])
     add_pt_test(date=datetime.date(2014, 6, 1) + datetime.timedelta(days=7), ms_classes=[ms1, ms2, ms3])
+    add_pt_test(date=datetime.date(2015, 1, 15) + datetime.timedelta(days=7), ms_classes=[ms1, ms2, ms3])
+    add_pt_test(date=datetime.date(2015, 2, 15) + datetime.timedelta(days=7), ms_classes=[ms4])
+    add_pt_test(date=datetime.date(2015, 2, 28) + datetime.timedelta(days=7), ms_classes=[ms1, ms2])
+    add_pt_test(date=datetime.date(2015, 5, 14) + datetime.timedelta(days=7), ms_classes=[ms4], record=True)
+    add_pt_test(date=datetime.date(2015, 5, 25) + datetime.timedelta(days=7), ms_classes=[ms1, ms2, ms3], record=True)
     print "Done adding pt tests"
+    print "-----------------------"
+
+    print "Creating graders"
+    create_graders()
+    print "Done creating Graders"
     print "-----------------------"
 
     print "creating pt scores"
@@ -249,11 +269,6 @@ def populate():
     print "Done generating Snapshots"
     print "-----------------------"
 
-    print "Creating graders"
-    create_graders()
-    print "Done creating Graders"
-    print "-----------------------"
-    #generate_pt_score_value()
 
 
 def add_company(name, co=None, fs=None):
@@ -309,8 +324,8 @@ def add_mslevel(name):
     return ms
 
 
-def add_pt_test(date, ms_classes):
-    pt_test = PtTest.objects.get_or_create(date=date)[0]
+def add_pt_test(date, ms_classes, record=False):
+    pt_test = PtTest.objects.get_or_create(date=date, record=record)[0]
     for ms_level in ms_classes:
         pt_test.ms_levels.add(ms_level)
     return pt_test
@@ -334,8 +349,10 @@ def create_pt_scores():
             except:
                 pass
             if cadet_score is None:
-                score = PtScore.objects.get_or_create(grader=random.choice(grader_list), pt_test=test, cadet=cadet, pushups=random.randint(0,80), situps=random.randint(0,80), score=0, two_mile="%s:%s" % (random.randint(12,20), random.randint(0,59)))
+                score = PtScore.objects.get_or_create(grader=random.choice(grader_list), pt_test=test, cadet=cadet, pushups=random.randint(0,80), situps=random.randint(0,80), two_mile="%s:%s" % (random.randint(12,20), random.randint(0,59)))
                 score[0].save()
+            else:
+                print "not creating scores"
 
 
 def assign_eagle_id():
@@ -552,12 +569,11 @@ def create_graders():
                                  score_table=RUBRIC_FEMALE_37_41_SITUPS)
 
 
-if __name__ == '__main__':
+def run_population():
     print "Starting Eagletrack Population script..."
-    from personnel.models import Cadet, Company, Platoon, MsLevel
 
-    import django
-    django.setup()
+    # import django
+    # django.setup()
 
     populate()
     print "Population script has ran successfully"

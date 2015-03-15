@@ -246,8 +246,8 @@ class MSlevelListing(View):
 class MScadetListing(View):
     template_name = 'personnel/ms_cadet_listing.html'
 
-    def get(self, request, ms_class):
-        ms_class = MsLevel.objects.get(name=ms_class)
+    def get(self, request, ms_class_id):
+        ms_class = MsLevel.objects.get(id=ms_class_id)
         cadets = Cadet.objects.filter(ms_level=ms_class)
         return render(request, self.template_name, {'ms_class': ms_class, 'cadets': cadets})
 
@@ -255,12 +255,12 @@ class MScadetListing(View):
 class MSLevelDetail(View):
     template = 'personnel/group_pages/grouping_profile.html'
 
-    def get(self, request, ms_class, tab='stats'):
-        ms_level = MsLevel.objects.get(name=ms_class)
+    def get(self, request, ms_class_id, tab='stats'):
+        ms_level = MsLevel.objects.get(id=ms_class_id)
         group = "%s Class" % ms_level.name
         groups = Cadet.objects.filter(ms_level=ms_level)
         link = "/personnel/cadets"
-        cadet_listing_template = 'personnel/group_pages/grouping_listing.html'
+        cadet_listing_template = 'personnel/group_pages/grouping_cadet_listing.html'
 
         context = {'tab': tab,
                    'group': group,

@@ -126,14 +126,14 @@
     <div class='col-md-6'>
 		<div class='panel panel-default'>
 			<div class='panel-heading'>
-				Highest Scores for This Test (Overall)
+				Top Platoons for this Test
 			</div>
 			<div class='panel-body top_list'>
                 <ol>
-                    {% for score, cadet in top_platoons %}
+                    {% for score, platoon in top_platoons %}
                         {% if cadet|is_list %}
                             <li> {{ score }}:
-                                {% for c in cadet %}
+                                {% for c in platoon %}
                                     {% if forloop.last %}
                                         <a href="/personnel/cadets/{{ c.id }}">{{ c }}</a>
                                     {% else %}
@@ -142,7 +142,7 @@
                                 {% endfor %}
                             </li>
                         {% else %}
-                            <li>{{ score }}: <a href="/personnel/cadets/{{ cadet.id }}">{{ cadet }}</a></li>
+                            <li>{{ score }}: <a href="/personnel/companys/{{ platoon.company.id }}/platoons/{{ platoon.name }}/">{{ platoon }}</a></li>
                         {% endif %}
                     {% endfor %}
                 </ol>
@@ -153,23 +153,23 @@
     <div class='col-md-6'>
 		<div class='panel panel-default'>
 			<div class='panel-heading'>
-				Highest Scores for this Test (Non-Contracted Cadets)
+				Top Squads for the Test
 			</div>
 			<div class='panel-body top_list'>
                 <ol>
-                    {% for score, cadet in top_squads %}
+                    {% for score, squad in top_squads %}
                         {% if cadet|is_list %}
                             <li> {{ score }}:
-                                {% for c in cadet %}
+                                {% for c in squad %}
                                     {% if forloop.last %}
-                                        <a href="/personnel/cadets/{{ c.id }}">{{ c }}</a>
+                                        <a href="/personnel/companys/{{ c.platoon.company.id }}/platoons/{{ c.platoon.name }}/squads/{{ c.name }}/">{{ c }}</a>
                                     {% else %}
-                                        <a href="/personnel/cadets/{{ c.id }}">{{ c }};</a>
+                                        <a href="/personnel/companys/{{ c.platoon.company.id }}/platoons/{{ c.platoon.name }}/squads/{{ c.name }}/">{{ c }};</a>
                                     {% endif %}
                                 {% endfor %}
                             </li>
                         {% else %}
-                            <li>{{ score }}: <a href="/personnel/cadets/{{ cadet.id }}">{{ cadet }}</a></li>
+                            <li>{{ score }}: <a href="/personnel/companys/{{ squad.platoon.company.id }}/platoons/{{ squad.platoon.name }}/squads/{{ squad.name }}/">{{ squad }}</a></li>
                         {% endif %}
                     {% endfor %}
                 </ol>

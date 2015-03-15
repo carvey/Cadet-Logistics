@@ -339,11 +339,8 @@ class PtScore(models.Model):
                 'passing': instance.passing}
 
     def save(self, *args, **kwargs):
-        try:
-            PtScore.calculate_score(instance=self)
-        except IndexError:
-            #this will catch an index error to avoid errors when running scripted db population
-            pass
+        PtScore.calculate_score(instance=self)
+
 
         # Call the actual save method to save the score in the database
         super(PtScore, self).save(*args, **kwargs)
@@ -372,9 +369,7 @@ class PtScore(models.Model):
 
         for char in run_string:
             if char != ':':
-                try:
-                    int(char)
-                except ValueError:
+                if not char.isdigit():
                     return False
         return True
 

@@ -32,12 +32,13 @@ def grouping_data(cadets):
     tests = PtTest.filtered_tests.all()
     for test in tests:
         scores = PtScore.objects.filter(pt_test=test, cadet__in=cadets)
-        test_dict = {}
-        test_dict.update({'pushups': PtScore.get_avg_pushup_score(scores),
-                          'situps': PtScore.get_avg_situp_score(scores),
-                          'run': PtScore.get_avg_run_score(scores),
-                          'total': PtScore.get_avg_total_score(scores)})
-        scores_by_test.update({test: test_dict})
+        if scores:
+            test_dict = {}
+            test_dict.update({'pushups': PtScore.get_avg_pushup_score(scores),
+                              'situps': PtScore.get_avg_situp_score(scores),
+                              'run': PtScore.get_avg_run_score(scores),
+                              'total': PtScore.get_avg_total_score(scores)})
+            scores_by_test.update({test: test_dict})
 
     context = {
                'cadets': cadets,

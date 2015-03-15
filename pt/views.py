@@ -194,6 +194,7 @@ class TestScoresView(View):
 
 class StatisticsView(View):
     template_name = 'pt/stat_page/statistics.html'
+    # TODO: If a cadet isn't in an ms level taking the pt_test, they should not be taken into account for the test in any way
 
     def get(self, request, tab='cadets'):
         avg_pt_scores = {}

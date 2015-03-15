@@ -21,25 +21,32 @@ class TestProfiletView(View):
     def get(self, request, test_id, tab='stats'):
         context = {}
         test = PtTest.filtered_tests.get(id=test_id)
-        #sitewide context
+        #pagewide context
         context.update(
             {'test': test, 'tab': tab}
         )
 
         if tab == 'stats':
-            top_scores = test.get_n_highest_scores(n=5)
+            top_scores = test.get_n_highest_scores(n=10)
 
+            #this filter expression will be passed to the get_n_hightest_scores method to further filter scores
             filter_expression = {'cadet__contracted': False}
-            top_non_contracted_scores = test.get_n_highest_scores(filter_expression=filter_expression, n=5)
+            top_non_contracted_scores = test.get_n_highest_scores(filter_expression=filter_expression, n=10)
 
             context.update({'top_scores': top_scores,
                             'top_non_contracted_scores': top_non_contracted_scores
             })
 
+            top_squads = test.get_n_highest_squads()
+            top_platoons = test.get_n_highest_platoons()
+
             filter_expression = {'pt_test': test}
             context.update(get_complete_average_scores_dict(filter_expression))
+            context.update({'top_squads': top_squads, 'top_platoons': top_platoons})
+
             return render(request, self.template_name, context)
 
+        # TODO: Need to add company and ms level to the datatable as default hidden fields that can also be filtered
         elif tab == 'listing':
             template_name = 'pt/pt_tests/test_profile_listing.html'
             cadets = Cadet.objects.all()

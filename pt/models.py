@@ -4,9 +4,9 @@ from itertools import cycle
 
 from django.db import models
 from datetime import datetime
-from personnel.models import Cadet, MsLevel
+from personnel.models import Cadet, MsLevel, Squad, Platoon
 from django.core.validators import RegexValidator
-from population_script import add_pt_test
+
 from decimal import Decimal
 from pt.managers import FilteredTestManager, FutureTestManager
 
@@ -68,21 +68,6 @@ class PtTest(models.Model):
             return True
         return False
 
-    #when implemented, should get the cadets associated with this test
-    #might need to use personnel snapshots
-    # def get_cadets(self):
-    #
-
-    def getAvgTotalScore(self):
-        pt_scores = PtScore.objects.filter(pt_test=self)
-        num_of_scores = len(pt_scores)
-        if num_of_scores == 0:
-            return 0
-        total = 0
-        for pt_score in pt_scores:
-            total += pt_score.score
-        return total / num_of_scores
-
     def passing_rate(self):
         """
         This method calculates the passing rate for a particular instance
@@ -122,18 +107,43 @@ class PtTest(models.Model):
         #returns {cadet : score}
         return {highest_scoring_cadet: highest_score}
 
+    @staticmethod
+    def order_scores_dict(scores, n):
+        """
+        Will take a dict and generate a dict of n of the top scores
+        :param scores: The dict to be evaluated. Should be in the format {score: cadet/grouping, ...}
+        :type scores: dict
+        :param n: the number of top scores to return
+        :type n: int
+        :return: The top n scores and their respective cadet/grouping
+        :type return: dict
+        """
+        #TODO: Can this be done with some lambda function instead? Might be complex, but worth checking out
+        top_scores = {}
+        for count in range(0, n):
+            # this conditional will break the loop if scores_dict runs out of scores
+            # this would happen, and cause errors, when n > len(scores)
+            if scores:
+                highest_score = max(scores)
+                top_scores.update({highest_score: scores[highest_score]})
+                scores.pop(highest_score)
+            else:
+                break
+        return top_scores
+
     #returns the n highest scores over a set/subset of cadets
     def get_n_highest_scores(self, filter_expression=None, n=5):
         """
-        Get the cadets with the top overall pt scores for this testF
+        Get the cadets with the top overall pt scores for this test
         :param n: the number of top cadets to return. Default=5
+        :param filter_expression: an expression to further filter the scores to be evaluated
         :return: a sorted dict (descending order) of {score: cadet} or {score: [cadet, cadet, ...]} pairs
         """
         scores = PtScore.objects.filter(pt_test=self)
         if filter_expression:
             scores = scores.filter(**filter_expression)
-        scores_dict = collections.OrderedDict()
-        #The following loop is to consolidate all of the scores into a dict - {score, cadet}
+        scores_dict = {}
+        #The following loop is to consolidate all of the scores into a dict - {score: cadet}
         for score in scores:
             #if there is a repeat score (ex: 1st and 2nd place cadets both have 300s)
             if score.score in scores_dict:
@@ -147,30 +157,33 @@ class PtTest(models.Model):
             else:
                 scores_dict.update({score.score: score.cadet})
         #Get the highest scores from scores_dict and put them in a separate dict to be returned
-        top_scores = {}
-        for count in range(0, n):
-            # this conditional will break the loop if scores_dict runs out of scores
-            # this would happen, and cause errors, when n > len(scores)
-            if scores_dict:
-                highest_score = max(scores_dict)
-                top_scores.update({highest_score: scores_dict[highest_score]})
-                scores_dict.pop(highest_score)
-            else:
-                break
+        top_scores = PtTest.order_scores_dict(scores_dict, n)
         return reversed(sorted(top_scores.items()))
 
-    def getLowestScore(self):
-        scores = PtScore.objects.filter(pt_test=self)
-        lowest_score = scores[0].score
-        for score in scores:
-            if score.score < lowest_score:
-                lowest_score = score.score
-        return lowest_score
+    def get_n_highest_squads(self, n=5):
+        squads = Squad.objects.all()
+        squad_scores = {}
+        for squad in squads:
+            squad_scores[self.get_average_score(squad=squad)] = squad
+        top_squads = PtTest.order_scores_dict(squad_scores, n)
+        return reversed(sorted(top_squads.items()))
 
-    def get_average_score(self, company=None):
+    def get_n_highest_platoons(self, n=5):
+        platoons = Platoon.objects.all()
+        platoon_scores = {}
+        for platoon in platoons:
+            platoon_scores[self.get_average_score(platoon=platoon)] = platoon
+        top_platoons = PtTest.order_scores_dict(platoon_scores, n)
+        return reversed(sorted(top_platoons.items()))
+
+    def get_average_score(self, company=None, platoon=None, squad=None):
         scores = PtScore.objects.filter(pt_test=self)
         if company:
             scores = scores.filter(cadet__company=company)
+        elif platoon:
+            scores = scores.filter(cadet__platoon=platoon)
+        elif squad:
+            scores = scores.filter(cadet__squad=squad)
         return PtScore.get_avg_total_score(scores)
 
     def get_optimal_cadet_count(self):
@@ -181,10 +194,7 @@ class PtTest(models.Model):
         return self.ptscore_set.all().count()
 
     def get_missing_record_count(self):
-        print self.get_optimal_cadet_count() - self.get_actual_cadet_count()
         return self.get_optimal_cadet_count() - self.get_actual_cadet_count()
-
-
 
     class Meta:
         db_table = 'PtTest'

@@ -80,7 +80,7 @@
     <div class="row">
         {% for test in tests %}
 
-            {% with avgScore=test.getAvgTotalScore %}
+            {% with avgScore=test.get_average_score %}
                 <div class="col-lg-4">
                     <div class="panel panel-default">
                         <div class="panel-heading">
@@ -118,7 +118,7 @@
                     </div>
                 </div>
                 {# This is the script for displaying the pie charts #}
-                {% include 'pt/js/pt_test_pie_chart' %}
+                {% include 'pt/pt_tests/js/pt_test_pie_chart' %}
             {% endwith %}
         {% endfor %}
     </div>

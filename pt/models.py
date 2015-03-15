@@ -85,7 +85,6 @@ class PtTest(models.Model):
     def getNumberOfScores(self):
         return len(PtScore.objects.filter(pt_test=self))
 
-
     def getHighestScore(self):
         scores = PtScore.objects.filter(pt_test=self)
         if not scores:
@@ -118,7 +117,7 @@ class PtTest(models.Model):
         :return: The top n scores and their respective cadet/grouping
         :type return: dict
         """
-        #TODO: Can this be done with some lambda function instead? Might be complex, but worth checking out
+        #TODO: Can this be done with some lambda function instead? Might be complex, but worth c
         top_scores = {}
         for count in range(0, n):
             # this conditional will break the loop if scores_dict runs out of scores

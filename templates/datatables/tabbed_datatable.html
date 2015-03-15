@@ -24,6 +24,8 @@
                 <div class="table-responsive">
                     <table class="table table-striped table-bordered table-hover"
                            {% block datatable-id %}id="datatables-instance"{% endblock %}>
+
+
                         <thead>
                         <tr>
                             <!-- This block determines the columns in the datatable -->
@@ -32,6 +34,17 @@
                             {% endblock %}
                         </tr>
                         </thead>
+
+                        <tfoot>
+                            <tr>
+                                {% block table_footer %}
+{#                                    <td></td>#}
+                                {% endblock %}
+                            </tr>
+                        </tfoot>
+
+
+
                         <tbody>
                         <!-- This block handles putting data into the datatable -->
                         <!-- Each td tag corresponds to its respective column header as listed in the columns block -->

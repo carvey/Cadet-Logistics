@@ -46,7 +46,6 @@ class TestProfiletView(View):
 
             return render(request, self.template_name, context)
 
-        # TODO: Need to add company and ms level to the datatable as default hidden fields that can also be filtered
         elif tab == 'listing':
             template_name = 'pt/pt_tests/test_profile_listing.html'
             cadets = Cadet.objects.all()

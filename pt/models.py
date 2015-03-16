@@ -1,9 +1,9 @@
 import ast, collections
+import datetime
 
 from itertools import cycle
 
 from django.db import models
-from datetime import datetime
 from personnel.models import Cadet, MsLevel, Squad, Platoon
 from django.core.validators import RegexValidator
 
@@ -47,7 +47,7 @@ ACTIVITY_CHOICES = (
 
 # This class handles the pt test itself, identified by a date
 class PtTest(models.Model):
-    date = models.DateField(default=datetime.today(), blank=False)
+    date = models.DateField(default=datetime.date.today(), blank=False)
     ms_levels = models.ManyToManyField(MsLevel)
     record = models.BooleanField(default=False)
     diagnostic = models.BooleanField(default=False)
@@ -60,8 +60,15 @@ class PtTest(models.Model):
         format_date = self.date.strftime('%d %b, %Y')
         return '%s PT Test' % format_date
 
-    def has_scores(self):
-        if self.ptscore_set.all():
+    def formatted_date(self):
+        """
+        To be used for full calendar event objects
+        :return: A Y-m-d formatted date string
+        """
+        return self.date.strftime('%Y-%m-%d')
+
+    def has_past(self):
+        if datetime.date.today() > self.date:
             return True
         return False
 

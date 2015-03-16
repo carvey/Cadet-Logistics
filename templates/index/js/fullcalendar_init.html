@@ -1,11 +1,36 @@
-
+{% load pt_filters %}
 
 <script>
     $(document).ready(function() {
-
         $('#calendar').fullCalendar({
+            events: [
+                {% for test in tests %}
+                    {
+                        id: {{ test.id }},
+                        title: "PT Test",
+                        start: "{{ test.formatted_date }}T05:30:00",
+                        allDay: false,
+                        date: "{{ test.date }}",
+                        past: "{{ test.has_past }}"
+                    },
+                {% endfor %}
+            ],
+            eventClick: function(event)
+            {
+                $('#modalTitle').html(event.date + " PT Test");
+                $('#modalBody').html("PT Test to take place on " + event.date);
 
-        })
+                if (event.past == "True")
+                {
+                    $('#eventUrl').parent().css('display', 'inline');
+                    $('#eventUrl').attr('href','/pt/tests/' + event.id);
+                } else {
+                    $('#eventUrl').parent().css('display', 'none');
+                }
+                $('#fullCalModal').modal();
+            }
+
+        });
 
     });
 </script>

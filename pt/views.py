@@ -14,6 +14,7 @@ from pt.forms import *
 
 import json
 
+
 class TestProfiletView(View):
     template_name = 'pt/pt_tests/test_profile.html'
 

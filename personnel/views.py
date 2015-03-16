@@ -40,13 +40,23 @@ class Index(View):
     template_name = "index/index.html"
 
     def get(self, request):
-        context = {}
+        tests = PtTest.objects.all()
+        context = {
+            'tests': tests
+        }
 
         if hasattr(request.user, 'cadet'):
             cadet = request.user.cadet
-            context.update({'cadet': cadet})
+
+            context.update({
+                'cadet': cadet
+            })
         elif hasattr(request.user, 'cadre'):
-            pass
+            cadre = request.user.cadre
+
+            context.update({
+                'cadre': cadre
+            })
 
         return render(request, self.template_name, context)
 

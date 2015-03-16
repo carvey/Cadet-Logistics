@@ -245,6 +245,7 @@ class Cadre(Users):
     """The Cadre class is the model for cadre in the batallion. It extends the Users model"""
     rank = models.CharField(max_length=25)
     position = models.CharField(max_length=75)
+    ms_level_assignment = models.ForeignKey('MsLevel', related_name='instructors', blank=True, null=True)
 
     class Meta:
         db_table = 'Cadre'

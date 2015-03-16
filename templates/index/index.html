@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load personnel_filters %}
+{% load permission_filters %}
 
 {% block head %}
     <link rel="stylesheet" href="{% static 'css/fullcalendar.min.css' %}" />
@@ -27,33 +28,44 @@
 
 					</div>
 					<div class='panel-body'>
-
-                        <p><span class="panel-info-p">Cadet</span>: <a href="/personnel/cadets/{{ cadet.id }}">{{ cadet }}</a></p>
-                        {% with commissioned=cadet.commissioned %}
-							<p><span class="panel-info-p">Cadet Status</span>:
-								<span style="color: {{cadet.dropped|active_color:commissioned}}">
-									{{cadet.dropped|active_cadet:commissioned}}
-								</span>
-							</p>
-						{% endwith %}
-						<p><span class="panel-info-p">MS Class</span>: <a href='/personnel/ms-classes/{{ cadet.ms_level }}'>{{cadet.ms_level}}</a></p>
-						<p><span class="panel-info-p">Company</span>:
-                            {% if cadet.company %}
-                                <a href='/personnel/companys/{{ cadet.company.id }}'>{{ cadet.company }}</a>
-                            {% else %}
-                                None
+                        {% if user|is_cadet %}
+                            <p><span class="panel-info-p">Cadet</span>: <a href="/personnel/cadets/{{ cadet.id }}">{{ cadet }}</a></p>
+                            {% with commissioned=cadet.commissioned %}
+                                <p><span class="panel-info-p">Cadet Status</span>:
+                                    <span style="color: {{cadet.dropped|active_color:commissioned}}">
+                                        {{cadet.dropped|active_cadet:commissioned}}
+                                    </span>
+                                </p>
+                            {% endwith %}
+                            <p><span class="panel-info-p">MS Class</span>: <a href='/personnel/ms-classes/{{ cadet.ms_level }}'>{{cadet.ms_level}}</a></p>
+                            <p><span class="panel-info-p">Company</span>:
+                                {% if cadet.company %}
+                                    <a href='/personnel/companys/{{ cadet.company.id }}'>{{ cadet.company }}</a>
+                                {% else %}
+                                    None
+                                {% endif %}
+                            </p>
+                            <p><span class="panel-info-p">Platoon</span>:
+                                {% if cadet.platoon %}
+                                    <a href='/personnel/companys/{{ cadet.company }}/platoons/{{ cadet.platoon.id }}'>{{ cadet.platoon.display_name }}</a>
+                                {% else %}
+                                    None
+                                {% endif %}
+                            </p>
+                            <p><span class="panel-info-p">Squad</span>: {% if cadet.squad %}{{ cadet.squad.short_name }}{% else %}None{% endif %}</p>
+                            <hr>
+                            <p><span class="panel-info-p">Staff Position</span>: {{ cadet.get_staff_position|interpret_none }}</p>
+                        {% elif user|is_cadre %}
+                            <p>Cadre: {{ cadre.rank }} {{ cadre.get_name }}</p>
+                            <p>Position: {{ cadre.position }}</p>
+                            {% if cadre.ms_level_assignment %}
+                                <p>Instructor for:
+                                    <a href="/personnel/ms-classes/{{ cadre.ms_level_assignment.id }}">
+                                        {{ cadre.ms_level_assignment }} Class
+                                    </a>
+                                </p>
                             {% endif %}
-                        </p>
-                        <p><span class="panel-info-p">Platoon</span>:
-                            {% if cadet.platoon %}
-                                <a href='/personnel/companys/{{ cadet.company }}/platoons/{{ cadet.platoon.id }}'>{{ cadet.platoon.display_name }}</a>
-                            {% else %}
-                                None
-                            {% endif %}
-                        </p>
-                        <p><span class="panel-info-p">Squad</span>: {% if cadet.squad %}{{ cadet.squad.short_name }}{% else %}None{% endif %}</p>
-                        <hr>
-                        <p><span class="panel-info-p">Staff Position</span>: {{ cadet.get_staff_position|interpret_none }}</p>
+                        {% endif %}
 					</div>
 				</div>
 
@@ -63,6 +75,25 @@
 	    <div class='col-md-8'>
             <div id="calendar">
 
+            </div>
+        </div>
+    </div>
+
+
+
+    {# full calendar event modal #}
+    <div id="fullCalModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span> <span class="sr-only">close</span></button>
+                    <h4 id="modalTitle" class="modal-title"></h4>
+                </div>
+                <div id="modalBody" class="modal-body"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button class="btn btn-primary"><a id="eventUrl" target="_blank">Test Profile</a></button>
+                </div>
             </div>
         </div>
     </div>

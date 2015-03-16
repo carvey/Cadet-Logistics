@@ -12,14 +12,16 @@ sys.path.append(os.path.dirname(__file__))
 cadets = Cadet.objects.all()
 
 
-def clear_cadets():
+def clear_users():
     Cadet.objects.all().delete()
+    Cadre.objects.all().delete()
+
 
 
 def populate():
     print "clearing cadets"
     #use this for when snapshots need testing, otherwise comment it out
-    clear_cadets()
+    clear_users()
     print "done clearing cadets"
     print "-----------------------"
 
@@ -170,7 +172,7 @@ def populate():
     print "-----------------------"
 
     print "Creating Cadre"
-    add_cadre(first_name="Roger", last_name="Smith", age=30, rank="Captain", position="XO")
+    add_cadre(first_name="Roger", last_name="Smith", age=30, rank="Master Sergeant", position="MS2 Instructor", ms_level_assignment=ms2)
     print "Done create cadre"
     print "-----------------------"
 
@@ -180,11 +182,11 @@ def populate():
     add_pt_test(date=datetime.date(2014, 6, 1) + datetime.timedelta(days=2), ms_classes=[ms4])
     add_pt_test(date=datetime.date(2014, 6, 1) + datetime.timedelta(days=5), ms_classes=[ms1, ms2, ms3])
     add_pt_test(date=datetime.date(2014, 6, 1) + datetime.timedelta(days=7), ms_classes=[ms1, ms2, ms3])
-    add_pt_test(date=datetime.date(2015, 1, 15) + datetime.timedelta(days=7), ms_classes=[ms1, ms2, ms3])
-    add_pt_test(date=datetime.date(2015, 2, 15) + datetime.timedelta(days=7), ms_classes=[ms4])
-    add_pt_test(date=datetime.date(2015, 2, 28) + datetime.timedelta(days=7), ms_classes=[ms1, ms2])
-    add_pt_test(date=datetime.date(2015, 5, 14) + datetime.timedelta(days=7), ms_classes=[ms4], record=True)
-    add_pt_test(date=datetime.date(2015, 5, 25) + datetime.timedelta(days=7), ms_classes=[ms1, ms2, ms3], record=True)
+    add_pt_test(date=datetime.date(2015, 1, 15), ms_classes=[ms1, ms2, ms3])
+    add_pt_test(date=datetime.date(2015, 2, 15), ms_classes=[ms4])
+    add_pt_test(date=datetime.date(2015, 2, 28), ms_classes=[ms1, ms2])
+    add_pt_test(date=datetime.date(2015, 3, 13), ms_classes=[ms4], record=True)
+    add_pt_test(date=datetime.date(2015, 3, 25), ms_classes=[ms1, ms2, ms3], record=True)
     print "Done adding pt tests"
     print "-----------------------"
 
@@ -309,13 +311,13 @@ def add_cadet(first_name, last_name, age, ms_level, company, squad=None, gender=
     return c
 
 
-def add_cadre(first_name, last_name, age, rank, position):
+def add_cadre(first_name, last_name, age, rank, position, ms_level_assignment):
 
     user = User.objects.get_or_create(username=(first_name+last_name).lower(), first_name=first_name, last_name=last_name)[0]
     user.set_password('pass')
     user.save()
 
-    c = Cadre.objects.get_or_create(user=user, age=age, rank=rank, position=position)
+    c = Cadre.objects.get_or_create(user=user, age=age, rank=rank, position=position, ms_level_assignment=ms_level_assignment)
 
     return c
 

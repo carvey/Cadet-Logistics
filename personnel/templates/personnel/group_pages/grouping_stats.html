@@ -1,3 +1,5 @@
+{% load personnel_filters %}
+
 <style>
     .top_list {
         font-size: 20px;
@@ -59,7 +61,20 @@
 			<div class='panel-body top_list'>
 				<ul>
                     {% for score, cadet in top_scores %}
-                        <li>{{ cadet.get_name }}: {{ score }}</li>
+{#                        <li>{{ cadet.get_name }}: {{ score }}</li>#}
+                          {% if cadet|is_list %}
+                            <li> {{ score }}:
+                                {% for c in cadet %}
+                                    {% if forloop.last %}
+                                        <a href="/personnel/cadets/{{ c.id }}">{{ c }}</a>
+                                    {% else %}
+                                        <a href="/personnel/cadets/{{ c.id }}">{{ c }};</a>
+                                    {% endif %}
+                                {% endfor %}
+                            </li>
+                        {% else %}
+                            <li>{{ score }}: <a href="/personnel/cadets/{{ cadet.id }}">{{ cadet }}</a></li>
+                        {% endif %}
                     {% endfor %}
 				</ul>
 			</div>
@@ -74,7 +89,20 @@
 			<div class='panel-body top_list'>
 				<ul>
                     {% for gpa, cadet in top_gpas %}
-                        <li>{{ cadet.get_name }}: {{ gpa }}</li>
+{#                        <li>{{ cadet.get_name }}: {{ gpa }}</li>#}
+                        {% if cadet|is_list %}
+                            <li> {{ gpa }}:
+                                {% for c in cadet %}
+                                    {% if forloop.last %}
+                                        <a href="/personnel/cadets/{{ c.id }}">{{ c }}</a>
+                                    {% else %}
+                                        <a href="/personnel/cadets/{{ c.id }}">{{ c }};</a>
+                                    {% endif %}
+                                {% endfor %}
+                            </li>
+                        {% else %}
+                            <li>{{ gpa }}: <a href="/personnel/cadets/{{ cadet.id }}">{{ cadet }}</a></li>
+                        {% endif %}
                     {% endfor %}
 				</ul>
 			</div>

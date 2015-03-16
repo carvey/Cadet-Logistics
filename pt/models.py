@@ -60,9 +60,6 @@ class PtTest(models.Model):
         format_date = self.date.strftime('%d %b, %Y')
         return '%s PT Test' % format_date
 
-    def getAddress(self):
-        return "/pt/tests/scores/%d" % self.id
-
     def has_scores(self):
         if self.ptscore_set.all():
             return True
@@ -130,6 +127,11 @@ class PtTest(models.Model):
                 break
         return top_scores
 
+    def grouping_has_scores(self, grouping):
+        cadets = grouping.cadet_set.all()
+        scores = self.ptscore_set.filter(cadet__in=cadets)
+        return bool(scores)
+
     #returns the n highest scores over a set/subset of cadets
     def get_n_highest_scores(self, filter_expression=None, n=5):
         """
@@ -163,7 +165,8 @@ class PtTest(models.Model):
         squads = Squad.objects.all()
         squad_scores = {}
         for squad in squads:
-            squad_scores[self.get_average_score(squad=squad)] = squad
+            if self.grouping_has_scores(squad):
+                squad_scores[self.get_average_score(squad=squad)] = squad
         top_squads = PtTest.order_scores_dict(squad_scores, n)
         return reversed(sorted(top_squads.items()))
 
@@ -171,7 +174,8 @@ class PtTest(models.Model):
         platoons = Platoon.objects.all()
         platoon_scores = {}
         for platoon in platoons:
-            platoon_scores[self.get_average_score(platoon=platoon)] = platoon
+            if self.grouping_has_scores(platoon):
+                platoon_scores[self.get_average_score(platoon=platoon)] = platoon
         top_platoons = PtTest.order_scores_dict(platoon_scores, n)
         return reversed(sorted(top_platoons.items()))
 
@@ -340,7 +344,6 @@ class PtScore(models.Model):
 
     def save(self, *args, **kwargs):
         PtScore.calculate_score(instance=self)
-
 
         # Call the actual save method to save the score in the database
         super(PtScore, self).save(*args, **kwargs)

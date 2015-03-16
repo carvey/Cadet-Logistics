@@ -8,11 +8,29 @@
 
         function plot() {
 
-            var scores = [{% for key,value in avg_overall_scores.items %}["{{ key }}", {{ value }}], {% endfor %}];
+            var scores = [{% for key,value in avg_overall_scores.items %}
+                {% if value %}
+                    ["{{ key }}", {{ value }}],
+                {% endif %}
+            {% endfor %}];
 
-            var pushups = [{% for key, value in avg_pushup_scores.items %}["{{ key }}", {{ value }}], {% endfor %}];
-            var situps = [{% for key, value in avg_situp_scores.items %}["{{ key }}", {{ value }}], {% endfor %}];
-            var run = [{% for key, value in avg_run_scores.items %}["{{ key }}", {{ value }}], {% endfor %}];
+            var pushups = [{% for key, value in avg_pushup_scores.items %}
+                {% if value %}
+                    ["{{ key }}", {{ value }}],
+                {% endif %}
+            {% endfor %}];
+
+            var situps = [{% for key, value in avg_situp_scores.items %}
+                {% if value %}
+                    ["{{ key }}", {{ value }}],
+                {% endif %}
+            {% endfor %}];
+
+            var run = [{% for key, value in avg_run_scores.items %}
+                {% if value %}
+                    ["{{ key }}", {{ value }}],
+                {% endif %}
+            {% endfor %}];
 
             var options = {
                 series: {

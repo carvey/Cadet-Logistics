@@ -215,10 +215,12 @@ class StatisticsView(View):
         #This is to get the avg scores per company per pt test
         test_scores = {}
         for company in Company.objects.all():
+            avg = 0
             test_dict = {}
             for test in PtTest.filtered_tests.all():
                 avg = test.get_average_score(company)
-                test_dict.update({test: avg})
+                if avg:
+                    test_dict.update({test: avg})
             test_scores[company] = test_dict
 
         pushups = {}

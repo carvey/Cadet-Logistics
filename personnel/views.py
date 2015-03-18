@@ -198,8 +198,12 @@ class EditCompany(View):
         company = Company.objects.get(id=company_id)
         form = EditCompanyForm(instance=company)
 
+        platoons = company.platoons.all()
+        print platoons
+
         context = {
             'company': company,
+            'platoons': platoons,
             'form': form,
             'edit': True
         }

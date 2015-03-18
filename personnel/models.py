@@ -83,7 +83,7 @@ class Users(models.Model):
     class Meta:
         abstract = True
 
-
+# TODO: Company, platoon, squad, MsLevel, and Cadet need to subclass a mixin class so that helper methods can be enforced
 class Company(models.Model):
     """Company is the model for the companies in the batallion"""
     objects = SearchManager()
@@ -308,6 +308,9 @@ class Platoon(models.Model):
         self.platoon_sergeant = cadet
         cadet.save()
         self.save()
+
+    def count(self):
+        return len(self.cadet_set.all())
 
 
 class Squad(models.Model):

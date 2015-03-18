@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load permission_filters %}
 
 {% block head %}
     <script src="{% static 'css/less/bootstrap-datepicker/js/bootstrap-datepicker.js' %}"></script>
@@ -24,6 +25,17 @@
 {% endblock %}
 
 {% block content %}
+
+    <style>
+        .panel-test-list {
+        border-top: #DFDFDF 1px solid;
+        padding-top: 10px;
+        padding-bottom: 5px;
+        }
+        .test-list-value {
+            float: right;
+        }
+        </style>
 
     <div class="row">
         <div class="col-md-6">
@@ -88,6 +100,52 @@
         </div>
     </div>
 
+    <!--TODO: This should be moved to the grouping listing page for companies-->
+    <h2>Platoons</h2>
+    <hr>
+    <div class="row">
+
+        {% for platoon in platoons %}
+            <div class="col-lg-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <a href="/personnel/companys/{{ company.id }}/" style="display: inline-block">
+                            <h3 class="panel-title">{{ platoon }} </h3>
+                        </a>
+                        {% if user|super_permissions %}
+                            <a href="{% url 'edit_company' platoon.id %}" style="display: inline-block; float: right">
+                                <h3 class="panel-title">
+                                <span class="glyphicon glyphicon-edit" style="float: right;"> Edit</span>
+                                </h3>
+                            </a>
+                        {% endif %}
+                    </div>
+                    <div class="panel-body">
+                        <div style="font-size: 150px; height: 200px; text-align: center">{{ platoon.name }}</div>
+
+                            <div class="panel-test-list">Platoon Leader
+                                <a href="/personnel/cadets/{{ platoon.platoon_commander.id }}">
+                                    <span class="test-list-value">{{ platoon.platoon_commander }}</span>
+                                </a>
+                            </div>
+                            <div class="panel-test-list">Platoon Sergeant <span class="test-list-value">{{ company.first_sergeant }}</span></div>
+                            <div class="panel-test-list">Cadet Count <span class="test-list-value">{{ platoon.count }}</span></div>
+
+                    </div>
+                </div>
+            </div>
+
+        {% endfor %}
+    </div>
+
+
+    <script>
+        {% for platoon in platoons %}
+            console.log("{{ platoon }}");
+        {% endfor %}
+        console.log("{{ sdfsadf }}");
+    </script>
+
     <script>
         $(document).ready(function() {
             $("select,:text,:input[type='number'],:input[type='email']").addClass("form-control");
@@ -99,6 +157,7 @@
             });
         });
     </script>
+
 
 
 

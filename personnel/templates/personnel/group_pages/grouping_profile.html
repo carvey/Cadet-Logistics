@@ -3,18 +3,18 @@
 
 
 {% block page_header %}
-{{ group }}
+{{ group.get_name }}
 {% endblock %}
 
 {% block content %}
 	<ul class='nav nav-tabs'>
 		<li {% if tab == "stats" %}class="active"{% endif %}><a href="#stats" data-toggle="tab">Stats</a></li>
 
-        {% if listing_template %}
+        {% if sub_groupings %}
 		    <li {% if tab == "listing" %}class="active"{% endif %}><a href="#listing" data-toggle="tab">Group Listing</a></li>
         {% endif %}
 
-        {% if cadet_listing_template %}
+        {% if sub_cadets %}
             <li {% if tab == "cadetlisting" %}class="active"{% endif %}><a href="#cadetlisting" data-toggle="tab">Cadet Listing</a></li>
         {% endif %}
 	</ul>
@@ -25,15 +25,15 @@
 			{% include 'personnel/group_pages/grouping_stats.html' %}
 		</div>
 		
-		{% if listing_template %}
+		{% if sub_groupings %}
 		<div class='tab-pane fade{% if tab == "listing" %} in active{% endif %} ' id='listing'>
-			{% include listing_template %}
+			{% include 'personnel/group_pages/grouping_listing.html' %}
 		</div>
         {% endif %}
 
-        {% if cadet_listing_template %}
+        {% if sub_cadets %}
             <div class='tab-pane fade{% if tab == "cadetlisting" %} in active{% endif %} ' id='cadetlisting'>
-			    {% include cadet_listing_template %}
+			    {% include 'personnel/group_pages/grouping_cadet_listing.html' %}
 		    </div>
         {% endif %}
 

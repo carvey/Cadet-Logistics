@@ -40,14 +40,14 @@
                             <p><span class="panel-info-p">MS Class</span>: <a href='/personnel/ms-classes/{{ cadet.ms_level }}'>{{cadet.ms_level}}</a></p>
                             <p><span class="panel-info-p">Company</span>:
                                 {% if cadet.company %}
-                                    <a href='/personnel/companys/{{ cadet.company.id }}'>{{ cadet.company }}</a>
+                                    <a href='/personnel/companies/{{ cadet.company.id }}'>{{ cadet.company }}</a>
                                 {% else %}
                                     None
                                 {% endif %}
                             </p>
                             <p><span class="panel-info-p">Platoon</span>:
                                 {% if cadet.platoon %}
-                                    <a href='/personnel/companys/{{ cadet.company }}/platoons/{{ cadet.platoon.id }}'>{{ cadet.platoon.display_name }}</a>
+                                    <a href='/personnel/companies/{{ cadet.company }}/platoons/{{ cadet.platoon.id }}'>{{ cadet.platoon.display_name }}</a>
                                 {% else %}
                                     None
                                 {% endif %}

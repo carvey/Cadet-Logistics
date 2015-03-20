@@ -1,9 +1,11 @@
+from abc import ABCMeta
 from django.core.validators import MaxValueValidator, MinValueValidator, validate_email
 from django.db import models
 from django.contrib.auth.hashers import make_password
 from collections import OrderedDict
 from django.contrib.auth.models import AbstractUser, User
 from personnel.managers import SearchManager
+from mixins import GroupingMixin
 
 
 '''Static variables'''
@@ -83,8 +85,19 @@ class Users(models.Model):
     class Meta:
         abstract = True
 
-# TODO: Company, platoon, squad, MsLevel, and Cadet need to subclass a mixin class so that helper methods can be enforced
-class Company(models.Model):
+
+# class Grouping(models.Model):
+#
+#     def blah(self):
+#         raise NotImplementedError
+#
+#     class Meta:
+#         abstract = True
+
+
+
+
+class Company(models.Model, GroupingMixin):
     """Company is the model for the companies in the batallion"""
     objects = SearchManager()
 
@@ -99,6 +112,15 @@ class Company(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    def get_name(self):
+        return "%s Company" % self.name
+
+    def get_sub_groupings(self):
+        return self.platoons.all()
+
+    def get_sub_cadets(self):
+        return self.cadets.all()
 
     def set_first_sergeant(self, cadet):
         """
@@ -126,7 +148,7 @@ class Company(models.Model):
         return self.name[0]
 
     def count(self):
-        return self.cadet_set.all().count()
+        return self.cadets.all().count()
 
 
 class Cadet(Users):
@@ -147,7 +169,7 @@ class Cadet(Users):
     school = models.ForeignKey(School, blank=True, null=True)
 
     # #
-    company = models.ForeignKey(Company, blank=True, null=True)
+    company = models.ForeignKey(Company, blank=True, null=True, related_name="cadets")
     platoon = models.ForeignKey('Platoon', blank=True, null=True)
     squad = models.ForeignKey('Squad', blank=True, null=True)
     ms_level = models.ForeignKey('MsLevel', blank=False, null=True)
@@ -251,9 +273,9 @@ class Cadre(Users):
         db_table = 'Cadre'
 
 
-class Platoon(models.Model):
+class Platoon(models.Model, GroupingMixin):
     """Each Platoon can only belong to one company."""
-    name = models.PositiveIntegerField(default=1, blank=False)
+    number = models.PositiveIntegerField(default=1, blank=False)
     company = models.ForeignKey(Company, db_index=False, related_name='platoons', blank=True, null=True)
     platoon_commander = models.OneToOneField('Cadet', db_index=False, related_name='platoon_commander',
                                              blank=True, null=True, help_text="Enter the Platoon Commander")
@@ -264,28 +286,14 @@ class Platoon(models.Model):
         db_table = 'Platoon'
 
     def __unicode__(self):
-        end_string = "th"
-        if self.name % 10 == 1:
-            end_string = "st"
-        elif self.name % 10 == 2:
-            end_string = "nd"
-        elif self.name % 10 == 3:
-            end_string = "rd"
 
         if self.company:
-            return str(self.company) + " Company, " + str(self.name) + end_string + " Platoon"
+            return str(self.company) + " Company, " + str(self.number) + self.number_end_str() + " Platoon"
         else:
-            return str(self.name) + end_string + " Platoon"
+            return str(self.number) + self.number_end_str() + " Platoon"
 
     def display_name(self):
-        end_string = "th"
-        if self.name % 10 == 1:
-            end_string = "st"
-        elif self.name % 10 == 2:
-            end_string = "nd"
-        elif self.name % 10 == 3:
-            end_string = "rd"
-        return str(self.name) + end_string + " Platoon"
+        return str(self.number) + self.number_end_str() + " Platoon"
 
     def set_platoon_commander(self, cadet):
         """
@@ -313,37 +321,30 @@ class Platoon(models.Model):
         return len(self.cadet_set.all())
 
 
-class Squad(models.Model):
-    name = models.PositiveSmallIntegerField(blank=False)
+class Squad(models.Model, GroupingMixin):
+    number = models.PositiveSmallIntegerField(blank=False)
     platoon = models.ForeignKey(Platoon, related_name='squads', blank=False)
     squad_leader = models.OneToOneField(Cadet, db_index=False, related_name="squad_leader",
                                         blank=True, null=True,
                                         help_text="Enter the Squad Leader")
 
-    def __unicode__(self):
-        end_string = "th"
-        if self.name % 10 == 1:
-            end_string = "st"
-        elif self.name % 10 == 2:
-            end_string = "nd"
-        elif self.name % 10 == 3:
-            end_string = "rd"
-
+    def get_name(self):
         if self.platoon:
-            return str(self.platoon) + ", " + str(self.name) + end_string + " Squad"
+            return str(self.platoon) + ", " + str(self.number) + self.number_end_str() + " Squad"
         else:
-            return str(self.name) + end_string + " Squad"
+            return str(self.number) + self.number_end_str() + " Squad"
+
+    def get_sub_cadets(self):
+        return self.cadet_set.all()
+
+    def get_sub_groupings(self):
+        return None
+
+    def __unicode__(self):
+        return self.get_name()
 
     def short_name(self):
-        end_string = "th"
-        if self.name % 10 == 1:
-            end_string = "st"
-        elif self.name % 10 == 2:
-            end_string = "nd"
-        elif self.name % 10 == 3:
-            end_string = "rd"
-
-        return "%s%s Squad" % (self.name, end_string)
+        return "%s%s Squad" % (self.number, self.number_end_str())
 
     def set_squad_leader(self, cadet):
         """

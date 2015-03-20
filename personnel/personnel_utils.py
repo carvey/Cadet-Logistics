@@ -56,4 +56,3 @@ def grouping_data(cadets):
                'scores_by_test': scores_by_test,
                }
     return context
-

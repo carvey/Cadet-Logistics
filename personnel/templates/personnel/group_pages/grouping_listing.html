@@ -1,23 +1,48 @@
-{% extends 'datatables/tabbed_datatable.html' %}
-{% load static %}
+{% load permission_filters %}
 
-{% block page_header %}
+    <style>
+        .panel-test-list {
+        border-top: #DFDFDF 1px solid;
+        padding-top: 10px;
+        padding-bottom: 5px;
+        }
+        .test-list-value {
+            float: right;
+        }
 
-{% endblock %}
+    </style>
 
-{% block table_title %}
-    {{ group }} Listing
-{% endblock %}
+<div class="row">
 
-{% block columns %}
-    <th>Name</th>
-{% endblock %}
+    {% for grouping in sub_groupings %}
+        <div class="col-lg-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <a href="#" style="display: inline-block">
+                        <h3 class="panel-title">{{ grouping }} </h3>
+                    </a>
+                    {% if user|super_permissions %}
+                        <a href="#" style="display: inline-block; float: right">
+                            <h3 class="panel-title">
+                            <span class="glyphicon glyphicon-edit" style="float: right;"> Edit</span>
+                            </h3>
+                        </a>
+                    {% endif %}
+                </div>
+                <div class="panel-body">
+                    <div style="font-size: 150px; height: 200px; text-align: center">{{ grouping.number }}</div>
 
-{% block table_data %}
-    {# a group can be an actual group (company) or a cadet #}
-    {% for group in groups %}
-        <tr>
-            <td><a href="{{ link }}/{{ group.id }}">{{ group }}</a></td>
-        </tr>
+                        <div class="panel-test-list">Platoon Leader
+                            <a href="#">
+                                <span class="test-list-value">{{ platoon.platoon_commander }}</span>
+                            </a>
+                        </div>
+                        <div class="panel-test-list">Platoon Sergeant <span class="test-list-value">Name</span></div>
+                        <div class="panel-test-list">Cadet Count <span class="test-list-value">{{ grouping.count }}</span></div>
+
+                </div>
+            </div>
+        </div>
+
     {% endfor %}
-{% endblock %}
+</div>

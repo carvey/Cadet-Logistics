@@ -142,7 +142,7 @@
                                 {% endfor %}
                             </li>
                         {% else %}
-                            <li>{{ score }}: <a href="/personnel/companys/{{ platoon.company.id }}/platoons/{{ platoon.name }}/">{{ platoon }}</a></li>
+                            <li>{{ score }}: <a href="/personnel/companies/{{ platoon.company.id }}/platoons/{{ platoon.id }}/">{{ platoon }}</a></li>
                         {% endif %}
                     {% endfor %}
                 </ol>
@@ -162,14 +162,14 @@
                             <li> {{ score }}:
                                 {% for c in squad %}
                                     {% if forloop.last %}
-                                        <a href="/personnel/companys/{{ c.platoon.company.id }}/platoons/{{ c.platoon.name }}/squads/{{ c.name }}/">{{ c }}</a>
+                                        <a href="/personnel/companies/{{ c.platoon.company.id }}/platoons/{{ c.platoon.id }}/squads/{{ c.id }}/">{{ c }}</a>
                                     {% else %}
-                                        <a href="/personnel/companys/{{ c.platoon.company.id }}/platoons/{{ c.platoon.name }}/squads/{{ c.name }}/">{{ c }};</a>
+                                        <a href="/personnel/companies/{{ c.platoon.company.id }}/platoons/{{ c.platoon.id }}/squads/{{ c.id }}/">{{ c }};</a>
                                     {% endif %}
                                 {% endfor %}
                             </li>
                         {% else %}
-                            <li>{{ score }}: <a href="/personnel/companys/{{ squad.platoon.company.id }}/platoons/{{ squad.platoon.name }}/squads/{{ squad.name }}/">{{ squad }}</a></li>
+                            <li>{{ score }}: <a href="/personnel/companies/{{ squad.platoon.company.id }}/platoons/{{ squad.platoon.id }}/squads/{{ squad.id }}/">{{ squad }}</a></li>
                         {% endif %}
                     {% endfor %}
                 </ol>

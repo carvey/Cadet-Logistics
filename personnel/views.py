@@ -219,7 +219,7 @@ class EditCompany(View):
 
 
 class DeleteCompany(View):
-    template = 'personnel/companys/delete.html'
+    template = 'personnel/companies/delete.html'
 
     def post(self, request, company_id):
         company = Company.objects.get(id=company_id)
@@ -264,6 +264,35 @@ class MScadetListing(View):
         ms_class = MsLevel.objects.get(id=ms_class_id)
         cadets = Cadet.objects.filter(ms_level=ms_class)
         return render(request, self.template_name, {'ms_class': ms_class, 'cadets': cadets})
+
+
+class GroupingDetail(View):
+    template = 'personnel/group_pages/grouping_profile.html'
+
+    @staticmethod
+    def get_grouping(grouping_type, id):
+        if grouping_type == "companies":
+            return Company.objects.get(id=id)
+        elif grouping_type == "platoosn":
+            return Platoon.objects.get(id=id)
+        elif grouping_type == "squads":
+            return Squad.objects.get(id=id)
+
+    def get(self, request, grouping_id, grouping_type, tab="stats"):
+        group = GroupingDetail.get_grouping(grouping_type, grouping_id)
+        sub_groups = group.get_sub_groupings()
+        sub_cadets = group.get_sub_cadets()
+
+        context = {
+            'tab': tab,
+            'group': group,
+            'sub_groupings': sub_groups,
+            'sub_cadets': sub_cadets
+        }
+
+        context.update(grouping_data(sub_cadets))
+
+        return render(request, self.template, context)
 
 
 class MSLevelDetail(View):
@@ -318,10 +347,10 @@ class CompanyDetail(View):
 class PlatoonDetail(View):
     template = 'personnel/group_pages/grouping_profile.html'
 
-    def get(self, request, company_id, platoon_num, tab='stats'):
+    def get(self, request, company_id, platoon_id, tab='stats'):
         company = Company.objects.get(id=company_id)
-        platoon = Platoon.objects.get(name=platoon_num, company=company)
-        group = "%s Company, %s Platoon" % (company, platoon.name)
+        platoon = Platoon.objects.get(id=platoon_id, company=company)
+        group = "%s Company, %s Platoon" % (company, platoon.get_name())
         groups = Squad.objects.filter(platoon=platoon)
         link = "squads"
         listing_template = "personnel/group_pages/platoon_group_listing.html"
@@ -345,10 +374,11 @@ class PlatoonDetail(View):
 class SquadDetail(View):
     template = 'personnel/group_pages/grouping_profile.html'
 
-    def get(self, request, company_id, platoon_num, squad_num, tab='stats'):
+    def get(self, request, company_id, platoon_id, squad_id, tab='stats'):
+        # TODO: Extra queries are unneccessary
         company = Company.objects.get(id=company_id)
-        platoon = Platoon.objects.get(name=platoon_num, company=company)
-        squad = Squad.objects.get(name=squad_num, platoon=platoon)
+        platoon = Platoon.objects.get(id=platoon_id, company=company)
+        squad = Squad.objects.get(name=squad_id, platoon=platoon)
         group = squad.__unicode__()
         groups = Cadet.objects.filter(squad=squad)
         cadet_listing_template = 'personnel/group_pages/grouping_listing.html'

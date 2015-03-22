@@ -21,6 +21,10 @@ class GroupingMixin():
         pass
 
     @abstractmethod
+    def short_name(self):
+        pass
+
+    @abstractmethod
     def get_sub_groupings(self):
         pass
 
@@ -28,6 +32,17 @@ class GroupingMixin():
     def get_sub_cadets(self):
         pass
 
+    @abstractmethod
+    def get_link(self):
+        pass
+
+    @abstractmethod
+    def get_co(self):
+        pass
+
+    @abstractmethod
+    def get_sgt(self):
+        pass
 
     def number_end_str(self):
         """

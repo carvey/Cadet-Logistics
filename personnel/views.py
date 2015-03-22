@@ -231,9 +231,13 @@ def company_listing(request):
     template_name = 'personnel/company_pages/company_listing.html'
 
     companies = Company.objects.all()
+    assigned_cadets = Cadet.objects.filter(company__isnull=False)
+    unassigned_cadets = Cadet.objects.filter(company__isnull=True)
 
     context = {
-        'companies': companies
+        'companies': companies,
+        'assigned_cadets': assigned_cadets,
+        'unassigned_cadets': unassigned_cadets
     }
 
     return render(request, template_name, context)
@@ -273,7 +277,7 @@ class GroupingDetail(View):
     def get_grouping(grouping_type, id):
         if grouping_type == "companies":
             return Company.objects.get(id=id)
-        elif grouping_type == "platoosn":
+        elif grouping_type == "platoons":
             return Platoon.objects.get(id=id)
         elif grouping_type == "squads":
             return Squad.objects.get(id=id)
@@ -291,107 +295,6 @@ class GroupingDetail(View):
         }
 
         context.update(grouping_data(sub_cadets))
-
-        return render(request, self.template, context)
-
-
-class MSLevelDetail(View):
-    template = 'personnel/group_pages/grouping_profile.html'
-
-    def get(self, request, ms_class_id, tab='stats'):
-        ms_level = MsLevel.objects.get(id=ms_class_id)
-        group = "%s Class" % ms_level.name
-        groups = Cadet.objects.filter(ms_level=ms_level)
-        link = "/personnel/cadets"
-        cadet_listing_template = 'personnel/group_pages/grouping_cadet_listing.html'
-
-        context = {'tab': tab,
-                   'group': group,
-                   'groups': groups,
-                   'link': link,
-                   'cadet_listing_template': cadet_listing_template,
-        }
-        cadets = Cadet.objects.filter(ms_level=ms_level)
-        context.update(grouping_data(cadets))
-
-        return render(request, self.template, context)
-
-
-class CompanyDetail(View):
-    template = 'personnel/group_pages/grouping_profile.html'
-
-    def get(self, request, company_id, tab='stats'):
-        company = Company.objects.get(id=company_id)
-        group = "%s Company" % company.name
-        groups = Platoon.objects.filter(company=company)
-        link = "platoons"
-        listing_template = 'personnel/group_pages/company_datatable_listing.html'
-        cadet_listing_template = 'personnel/group_pages/grouping_cadet_listing.html'
-
-        context = {'tab': tab,
-                   'company': company,
-                   'group': group,
-                   'groups': groups,
-                   'link': link,
-                   'listing_template': listing_template,
-                   'cadet_listing_template': cadet_listing_template
-        }
-
-        # Additions to the context
-        cadets = Cadet.objects.filter(company=company)
-        context.update(grouping_data(cadets))
-
-        return render(request, self.template, context)
-
-
-class PlatoonDetail(View):
-    template = 'personnel/group_pages/grouping_profile.html'
-
-    def get(self, request, company_id, platoon_id, tab='stats'):
-        company = Company.objects.get(id=company_id)
-        platoon = Platoon.objects.get(id=platoon_id, company=company)
-        group = "%s Company, %s Platoon" % (company, platoon.get_name())
-        groups = Squad.objects.filter(platoon=platoon)
-        link = "squads"
-        listing_template = "personnel/group_pages/platoon_group_listing.html"
-        cadet_listing_template = 'personnel/group_pages/grouping_cadet_listing.html'
-
-        context = {'tab': tab,
-                   'platoon': platoon,
-                   'group': group,
-                   'groups': groups,
-                   'link': link,
-                   'listing_template': listing_template,
-                   'cadet_listing_template': cadet_listing_template,
-        }
-        # Additons to the context
-        cadets = Cadet.objects.filter(platoon=platoon)
-        context.update(grouping_data(cadets))
-
-        return render(request, self.template, context)
-
-
-class SquadDetail(View):
-    template = 'personnel/group_pages/grouping_profile.html'
-
-    def get(self, request, company_id, platoon_id, squad_id, tab='stats'):
-        # TODO: Extra queries are unneccessary
-        company = Company.objects.get(id=company_id)
-        platoon = Platoon.objects.get(id=platoon_id, company=company)
-        squad = Squad.objects.get(name=squad_id, platoon=platoon)
-        group = squad.__unicode__()
-        groups = Cadet.objects.filter(squad=squad)
-        cadet_listing_template = 'personnel/group_pages/grouping_listing.html'
-
-        context = {'tab': tab,
-                   'squad': squad,
-                   'group': group,
-                   'groups': groups,
-                   'cadet_listing_template': cadet_listing_template,
-        }
-        # Additons to the context
-        cadets = Cadet.objects.filter(squad=squad)
-        context.update(grouping_data(cadets))
 
         return render(request, self.template, context)
 

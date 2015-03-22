@@ -46,7 +46,7 @@
 						{% endwith %}
 						<p>MS Class: {{cadet.ms_level}}</p>
 						<p>Company: {{cadet.company}}</p>
-                        <p>Platoon: {{ cadet.platoon.display_name|interpret_none }}</p>
+                        <p>Platoon: {{ cadet.platoon.short_name|interpret_none }}</p>
                         <p>Squad: {% if cadet.squad %}{{ cadet.squad.short_name }}{% else %}None{% endif %}</p>
                         <hr>
                         <p>Staff Position: {{ cadet.get_staff_position|interpret_none }}</p>

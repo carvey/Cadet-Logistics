@@ -47,7 +47,7 @@
                             </p>
                             <p><span class="panel-info-p">Platoon</span>:
                                 {% if cadet.platoon %}
-                                    <a href='/personnel/companies/{{ cadet.company }}/platoons/{{ cadet.platoon.id }}'>{{ cadet.platoon.display_name }}</a>
+                                    <a href='/personnel/companies/{{ cadet.company }}/platoons/{{ cadet.platoon.id }}'>{{ cadet.platoon.short_name }}</a>
                                 {% else %}
                                     None
                                 {% endif %}

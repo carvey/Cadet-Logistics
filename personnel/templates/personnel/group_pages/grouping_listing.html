@@ -18,8 +18,8 @@
         <div class="col-lg-4">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <a href="#" style="display: inline-block">
-                        <h3 class="panel-title">{{ grouping }} </h3>
+                    <a href="{{ grouping.get_link }}" style="display: inline-block">
+                        <h3 class="panel-title">{{ grouping.short_name }} </h3>
                     </a>
                     {% if user|super_permissions %}
                         <a href="#" style="display: inline-block; float: right">
@@ -31,13 +31,18 @@
                 </div>
                 <div class="panel-body">
                     <div style="font-size: 150px; height: 200px; text-align: center">{{ grouping.number }}</div>
-
-                        <div class="panel-test-list">Platoon Leader
-                            <a href="#">
-                                <span class="test-list-value">{{ platoon.platoon_commander }}</span>
+                        {% if grouping.get_co %}
+                            <div class="panel-test-list">{{ grouping.get_co.title }}
+                                <a href="/personnel/cadets/{{ grouping.get_co.cadet.id }}">
+                                    <span class="test-list-value">{{ grouping.get_co.cadet }}</span>
+                                </a>
+                            </div>
+                        {% endif %}
+                        <div class="panel-test-list">{{ grouping.get_sgt.title }}
+                            <a href="/personnel/cadets/{{ grouping.get_sgt.cadet.id }}">
+                                <span class="test-list-value">{{ grouping.get_sgt.cadet }}</span>
                             </a>
                         </div>
-                        <div class="panel-test-list">Platoon Sergeant <span class="test-list-value">Name</span></div>
                         <div class="panel-test-list">Cadet Count <span class="test-list-value">{{ grouping.count }}</span></div>
 
                 </div>

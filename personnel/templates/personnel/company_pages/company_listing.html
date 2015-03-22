@@ -20,38 +20,62 @@
 {% block content %}
 
     <div class="row">
-        {% for company in companies %}
-            <div class="col-lg-6">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <a href="/personnel/companies/{{ company.id }}/" style="display: inline-block">
-                            <h3 class="panel-title">{{ company }} Company</h3>
-                        </a>
-                        {% if user|super_permissions %}
-                            <a href="{% url 'edit_company' company.id %}" style="display: inline-block; float: right">
-                                <h3 class="panel-title">
-                                <span class="glyphicon glyphicon-edit" style="float: right;"> Edit</span>
-                                </h3>
+        <div class="col-lg-8">
+            {% for company in companies %}
+                <div class="col-lg-6" style="float: left">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <a href="/personnel/companies/{{ company.id }}/" style="display: inline-block">
+                                <h3 class="panel-title">{{ company }} Company</h3>
                             </a>
-                        {% endif %}
-                    </div>
-                    <div class="panel-body">
-                        <div style="font-size: 150px; height: 200px; text-align: center">{{ company.get_initial }}</div>
-
-                            <div class="panel-test-list">Commanding Officer
-                                <a href="/personnel/cadets/{{ company.company_commander.id }}">
-                                    <span class="test-list-value">{{ company.company_commander }}</span>
+                            {% if user|super_permissions %}
+                                <a href="{% url 'edit_company' company.id %}" style="display: inline-block; float: right">
+                                    <h3 class="panel-title">
+                                    <span class="glyphicon glyphicon-edit" style="float: right;"> Edit</span>
+                                    </h3>
                                 </a>
-                            </div>
-                            <div class="panel-test-list">First Sergeant <span class="test-list-value">{{ company.first_sergeant }}</span></div>
-                            <div class="panel-test-list">Executive Officer <span class="test-list-value">{{ company.executive_officer }}</span></div>
-                            <div class="panel-test-list">Cadet Count <span class="test-list-value">{{ company.count }}</span></div>
+                            {% endif %}
+                        </div>
+                        <div class="panel-body">
+                            <div style="font-size: 150px; height: 200px; text-align: center">{{ company.get_initial }}</div>
 
+                                <div class="panel-test-list">Commanding Officer
+                                    <a href="/personnel/cadets/{{ company.company_commander.id }}">
+                                        <span class="test-list-value">{{ company.company_commander }}</span>
+                                    </a>
+                                </div>
+                                <div class="panel-test-list">First Sergeant
+                                    <a href="/personnel/cadets/{{ company.first_sergeant.id }}">
+                                        <span class="test-list-value">{{ company.first_sergeant }}</span>
+                                    </a>
+                                </div>
+                                <div class="panel-test-list">Executive Officer
+                                    <a href="/personnel/cadets/{{ company.executive_officer.id }}">
+                                        <span class="test-list-value">{{ company.executive_officer }}</span>
+                                    </a>
+                                </div>
+                                <div class="panel-test-list">Cadet Count <span class="test-list-value">{{ company.count }}</span></div>
+
+                        </div>
                     </div>
                 </div>
-            </div>
 
-        {% endfor %}
+            {% endfor %}
+        </div>
+
+        <div class="col-lg-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Company Information
+                </div>
+
+                <div class="panel-body">
+                    <p>Number of Companies: {{ companies|length }}</p>
+                    <p>Cadets Assigned to Companies: {{ assigned_cadets|length }}</p>
+                    <p>Cadets Without a staff position or company: {{ unassigned_cadets|length }}</p>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}
 

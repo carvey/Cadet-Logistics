@@ -4,6 +4,8 @@ from django.db import models
 from django.contrib.auth.hashers import make_password
 from collections import OrderedDict
 from django.contrib.auth.models import AbstractUser, User
+from django.core.urlresolvers import reverse
+
 from personnel.managers import SearchManager
 from mixins import GroupingMixin
 
@@ -116,6 +118,9 @@ class Company(models.Model, GroupingMixin):
     def get_name(self):
         return "%s Company" % self.name
 
+    def short_name(self):
+        return self.get_name()
+
     def get_sub_groupings(self):
         return self.platoons.all()
 
@@ -149,6 +154,21 @@ class Company(models.Model, GroupingMixin):
 
     def count(self):
         return self.cadets.all().count()
+
+    def get_link(self):
+        return '/personnel/companies/%s' % self.id
+
+    def get_co(self):
+        return {
+            'title': "Company Commander",
+            "cadet": self.company_commander
+        }
+
+    def get_sgt(self):
+        return {
+            'title': "First Sergeant",
+            'cadet': self.first_sergeant
+        }
 
 
 class Cadet(Users):
@@ -286,14 +306,22 @@ class Platoon(models.Model, GroupingMixin):
         db_table = 'Platoon'
 
     def __unicode__(self):
+        return self.get_name()
 
+    def get_name(self):
         if self.company:
             return str(self.company) + " Company, " + str(self.number) + self.number_end_str() + " Platoon"
         else:
             return str(self.number) + self.number_end_str() + " Platoon"
 
-    def display_name(self):
+    def short_name(self):
         return str(self.number) + self.number_end_str() + " Platoon"
+
+    def get_sub_groupings(self):
+        return self.squads.all()
+
+    def get_sub_cadets(self):
+        return self.cadet_set.all()
 
     def set_platoon_commander(self, cadet):
         """
@@ -319,6 +347,21 @@ class Platoon(models.Model, GroupingMixin):
 
     def count(self):
         return len(self.cadet_set.all())
+
+    def get_link(self):
+        return '/personnel/platoons/%s' % self.id
+
+    def get_co(self):
+        return {
+            'title': "Platoon Leader",
+            'cadet': self.platoon_commander
+        }
+
+    def get_sgt(self):
+        return {
+            'title': "Platoon Sergeant",
+            'cadet': self.platoon_sergeant
+        }
 
 
 class Squad(models.Model, GroupingMixin):
@@ -358,7 +401,23 @@ class Squad(models.Model, GroupingMixin):
         cadet.save()
         self.save()
 
+    def count(self):
+        return len(self.cadet_set.all())
 
+    def get_link(self):
+        return '/personnel/squads/%s' % self.id
+
+    def get_co(self):
+        return None
+
+    def get_sgt(self):
+        return {
+            "title": "Squad Leader",
+            "cadet": self.squad_leader
+        }
+
+
+# TODO: Needs to be added to GroupingMixin
 class MsLevel(models.Model):
     """
     Model to represent each MS Level

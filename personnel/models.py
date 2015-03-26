@@ -124,8 +124,6 @@ class Company(models.Model, GroupingMixin):
     def get_sub_groupings(self):
         return self.platoons.all()
 
-    def get_sub_cadets(self):
-        return self.cadets.all()
 
     def set_first_sergeant(self, cadet):
         """
@@ -190,9 +188,9 @@ class Cadet(Users):
 
     # #
     company = models.ForeignKey(Company, blank=True, null=True, related_name="cadets")
-    platoon = models.ForeignKey('Platoon', blank=True, null=True)
-    squad = models.ForeignKey('Squad', blank=True, null=True)
-    ms_level = models.ForeignKey('MsLevel', blank=False, null=True)
+    platoon = models.ForeignKey('Platoon', blank=True, null=True, related_name="cadets")
+    squad = models.ForeignKey('Squad', blank=True, null=True, related_name="cadets")
+    ms_level = models.ForeignKey('MsLevel', blank=False, null=True, related_name="cadets")
     gpa = models.DecimalField(default=4.0, max_digits=3, decimal_places=2, blank=True, null=True)
     ms_grade = models.IntegerField(default=100, blank=True, null=True)
     # #
@@ -320,8 +318,6 @@ class Platoon(models.Model, GroupingMixin):
     def get_sub_groupings(self):
         return self.squads.all()
 
-    def get_sub_cadets(self):
-        return self.cadet_set.all()
 
     def set_platoon_commander(self, cadet):
         """
@@ -346,7 +342,7 @@ class Platoon(models.Model, GroupingMixin):
         self.save()
 
     def count(self):
-        return len(self.cadet_set.all())
+        return len(self.cadets.all())
 
     def get_link(self):
         return '/personnel/platoons/%s' % self.id
@@ -377,8 +373,6 @@ class Squad(models.Model, GroupingMixin):
         else:
             return str(self.number) + self.number_end_str() + " Squad"
 
-    def get_sub_cadets(self):
-        return self.cadet_set.all()
 
     def get_sub_groupings(self):
         return None
@@ -402,7 +396,7 @@ class Squad(models.Model, GroupingMixin):
         self.save()
 
     def count(self):
-        return len(self.cadet_set.all())
+        return len(self.cadets.all())
 
     def get_link(self):
         return '/personnel/squads/%s' % self.id
@@ -418,7 +412,7 @@ class Squad(models.Model, GroupingMixin):
 
 
 # TODO: Needs to be added to GroupingMixin
-class MsLevel(models.Model):
+class MsLevel(models.Model, GroupingMixin):
     """
     Model to represent each MS Level
     """
@@ -427,7 +421,10 @@ class MsLevel(models.Model):
     name = models.CharField(max_length=3, choices=MS_LEVEL_CHOICES, blank=False)
 
     def __unicode__(self):
-        return self.name
+        return self.get_name()
+
+    def get_name(self):
+        return "%s Class" % self.name
 
     class Meta:
         db_table = 'MsLevel'

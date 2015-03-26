@@ -1,8 +1,5 @@
 from personnel.models import Cadet
 from pt.models import PtScore, PtTest
-from django.core.exceptions import ObjectDoesNotExist
-import collections
-
 
 #Shared functionality between all stat pages
 def grouping_data(cadets):
@@ -20,6 +17,8 @@ def grouping_data(cadets):
     top_scores = PtScore.get_top_cadets(cadets)
 
     top_gpas = Cadet.get_top_gpa_cadets(cadets, 5)
+
+    top_cumalitive_scores = top_cumulative_scores(cadets)
 
     ms_levels = {}
     for cadet in cadets:
@@ -52,7 +51,18 @@ def grouping_data(cadets):
                'completed_hours': completed_volunteer_hours,
                'top_scores': top_scores,
                'top_gpas': top_gpas,
+               'top_cumulative_scores': top_cumalitive_scores,
                'ms_levels': ms_levels,
                'scores_by_test': scores_by_test,
                }
     return context
+
+
+def top_cumulative_scores(cadets):
+    cumalitive_score_dict = {}
+    for cadet in cadets:
+        cadet_scores = PtScore.objects.filter(cadet=cadet)
+        score = PtScore.get_avg_total_score(cadet_scores) / float(100)
+        cumalitive = score + float(cadet.gpa)
+        cumalitive_score_dict[cumalitive] = cadet
+    return PtTest.order_scores_dict(cumalitive_score_dict, 5)

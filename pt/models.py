@@ -119,10 +119,10 @@ class PtTest(models.Model):
         :param n: the number of top scores to return
         :type n: int
         :return: The top n scores and their respective cadet/grouping
-        :type return: dict
+        :type return: OrderedDict
         """
         #TODO: Can this be done with some lambda function instead? Might be complex, but worth c
-        top_scores = {}
+        top_scores = collections.OrderedDict()
         for count in range(0, n):
             # this conditional will break the loop if scores_dict runs out of scores
             # this would happen, and cause errors, when n > len(scores)
@@ -135,7 +135,7 @@ class PtTest(models.Model):
         return top_scores
 
     def grouping_has_scores(self, grouping):
-        cadets = grouping.cadet_set.all()
+        cadets = grouping.cadets.all()
         scores = self.ptscore_set.filter(cadet__in=cadets)
         return bool(scores)
 

@@ -28,9 +28,8 @@ class GroupingMixin():
     def get_sub_groupings(self):
         pass
 
-    @abstractmethod
     def get_sub_cadets(self):
-        pass
+        return self.cadets.all()
 
     @abstractmethod
     def get_link(self):

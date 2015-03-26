@@ -4,8 +4,8 @@ Created on Apr 27, 2014
 @author: carvey
 '''
 from django.conf.urls import patterns, url
-from personnel.views import Index, Stats, CadetListing, cadet_page, CompanyDetail, company_listing, \
-    CompanyCadetListing, MSlevelListing, MScadetListing, MSLevelDetail, PlatoonDetail, Input, Login, logout, SquadDetail, \
+from personnel.views import Index, Stats, CadetListing, cadet_page, company_listing, \
+    CompanyCadetListing, MSlevelListing, MScadetListing, Input, Login, logout, \
     EditCompany, AddCompany, DeleteCompany, GroupingDetail
 
 urlpatterns = patterns('',
@@ -32,27 +32,14 @@ urlpatterns = patterns('',
 
                        url(r'^companies/$', company_listing,
                            name='company_listing'),
-                       # url(r'^companies/(?P<company_id>\d+)/$', CompanyDetail.as_view(),
-                       #     name='company_detail'),
-                       # url(r'^companies/(?P<company_id>\d+)/cadets$', CompanyCadetListing.as_view(),
-                       #     name='cadets_in_company'),
-                       # url(r'^companies/(?P<company_id>\d+)/(?P<tab>\w+)/$', CompanyDetail.as_view(),
-                       #     name='company_detail'),
-                       # url(r'^companies/(?P<company_id>\d+)/platoons/(?P<platoon_id>[-A-Za-z0-9_]+)/$',
-                       #     PlatoonDetail.as_view(), name="platoon_detail"),
-                       # url(r'^companies/(?P<company_id>\d+)/platoons/(?P<platoon_id>\d+)/squads/(?P<squad_id>\d+)/$',
-                       #     SquadDetail.as_view(), name="squad_detail"),
                        url(r'^companies/edit/(?P<company_id>\d+)/$', EditCompany.as_view(), name='edit_company'),
                        url(r'^companies/add/$', AddCompany.as_view(), name='add_company'),
                        url(r'^companies/delete/(?P<company_id>\d+)/$', DeleteCompany.as_view(), name='delete_company'),
 
                        #MS Class Pages
                        url(r'^ms-classes/$', MSlevelListing.as_view(), name='mslisting'),
-                       url(r'^ms-classes/(?P<ms_class_id>\d+)/$', MSLevelDetail.as_view(), name='ms_detail'),
                        url(r'^ms-classes/(?P<ms_class_id>\d+)/cadets/$', MScadetListing.as_view(),
                            name='mscadets'),
-                       url(r'^ms-classes/(?P<ms_class_id>\d+)/(?P<tab>\w+)/$', MSLevelDetail.as_view(),
-                           name='ms_detail'),
 
                        #Dedicated input pages
                        url(r'^input/', Input.as_view(), name='input')

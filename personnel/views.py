@@ -281,6 +281,8 @@ class GroupingDetail(View):
             return Platoon.objects.get(id=id)
         elif grouping_type == "squads":
             return Squad.objects.get(id=id)
+        elif grouping_type == "ms-classes":
+            return MsLevel.objects.get(id=id)
 
     def get(self, request, grouping_id, grouping_type, tab="stats"):
         group = GroupingDetail.get_grouping(grouping_type, grouping_id)

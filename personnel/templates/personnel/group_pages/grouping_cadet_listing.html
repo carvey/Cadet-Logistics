@@ -19,7 +19,7 @@
     {% for cadet in cadets %}
         <tr>
             <td><a href="{% url 'cadetpage' cadet.id %}">{{ cadet }}</a></td>
-            <td><a href="{% url 'ms_detail' cadet.ms_level.id %}">{{ cadet.ms_level }}</a></td>
+            <td><a href="{% url 'grouping_detail' 'ms_level' cadet.ms_level.id %}">{{ cadet.ms_level }}</a></td>
         </tr>
     {% endfor %}
 {% endblock %}

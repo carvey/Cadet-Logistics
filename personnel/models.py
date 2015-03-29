@@ -76,7 +76,7 @@ class Users(models.Model):
     user = models.OneToOneField(User)
     age = models.PositiveIntegerField(blank=False, null=True, default=18)
     gender = models.CharField(max_length=6, choices=GENDER_CHOICES, blank=False, default='male')
-    demographic = models.ForeignKey(Demographic, blank=True, null=True)
+    demographic = models.ForeignKey(Demographic, blank=False, null=False)
 
     def __unicode__(self):
         return self.user.last_name + ", " + self.user.first_name
@@ -183,22 +183,22 @@ class Cadet(Users):
                        'platoon_commander': 'Platoon Commander', 'platoon_sergeant': 'Platoon Sergeant',
                        'squad_leader': 'Squad Leader'}
 
-    eagle_id = models.PositiveIntegerField(default=0, blank=False, null=True)
+    eagle_id = models.PositiveIntegerField(default=0, blank=False, null=False)
     school = models.ForeignKey(School, blank=True, null=True)
 
     # #
     company = models.ForeignKey(Company, blank=True, null=True, related_name="cadets")
     platoon = models.ForeignKey('Platoon', blank=True, null=True, related_name="cadets")
     squad = models.ForeignKey('Squad', blank=True, null=True, related_name="cadets")
-    ms_level = models.ForeignKey('MsLevel', blank=False, null=True, related_name="cadets")
+    ms_level = models.ForeignKey('MsLevel', blank=False, null=False, related_name="cadets")
     gpa = models.DecimalField(default=4.0, max_digits=3, decimal_places=2, blank=True, null=True)
     ms_grade = models.IntegerField(default=100, blank=True, null=True)
     # #
-    cell_number = models.CharField(max_length=14, blank=True)
-    #the volunteer_hours_completed field is a measure of the amount of hours completed
-    volunteer_hours_completed = models.IntegerField(default=0, blank=True, null=True)
-    #the volunteer_hours_status boolean is to tell whether a cadet has completed the minimum number of hours
-    volunteer_hours_status = models.BooleanField(default=False)
+    cell_number = models.CharField(max_length=14, blank=False)
+    #the volunteer_hours_count field is a measure of the amount of hours completed
+    volunteer_hours_count = models.IntegerField(default=0, blank=True, null=True)
+    #the volunteer_hours_completed boolean is to tell whether a cadet has completed the minimum number of hours
+    volunteer_hours_completed = models.BooleanField(default=False)
     turned_in_104r = models.BooleanField(default=False)
     # #
     #TODO consider a profile model in the pt app instead of this field?

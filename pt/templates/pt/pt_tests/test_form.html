@@ -3,8 +3,8 @@
 
 {% block head %}
     <script src="{% static 'css/less/bootstrap-datepicker/js/bootstrap-datepicker.js' %}"></script>
+    <script src="{% static 'js/boostrap/bootstrap_form_control.js' %}"></script>
     <link href="{% static 'css/less/bootstrap-datepicker/datepicker.css' %}" rel="stylesheet">
-
 
 {% endblock %}
 
@@ -46,18 +46,6 @@
 
         </div>
     </div>
-
-    <script>
-        $(document).ready(function() {
-            $("select,:text,:input[type='number'],:input[type='email']").addClass("form-control");
-            $(":checkbox").addClass("checkbox");
-
-            $("#id_date").addClass("date");
-            $(".date").datepicker({
-                format: 'yyyy-mm-dd'
-            });
-        });
-    </script>
 
 
 

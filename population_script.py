@@ -407,7 +407,7 @@ def generate_volunteer_completion():
     for cadet in cadets:
         rand = random.randint(0, 20)
         if rand % 2 == 0:
-            cadet.volunteer_hours_status = True
+            cadet.volunteer_hours_completed = True
             cadet.save()
 
 

@@ -125,7 +125,7 @@ USE_TZ = True
 #A setting to allow django debug toolbar to work with wsgi interface
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
-STRONGHOLD_PUBLIC_NAMED_URLS = ()
+STRONGHOLD_PUBLIC_NAMED_URLS = ('cadet_registration', )
 
 STATIC_ROOT = PROJECT_PATH + '/../static'
 STATIC_URL = '/static/'

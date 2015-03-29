@@ -6,7 +6,7 @@ Created on Apr 27, 2014
 from django.conf.urls import patterns, url
 from personnel.views import Index, Stats, CadetListing, cadet_page, company_listing, \
     CompanyCadetListing, MSlevelListing, MScadetListing, Input, Login, logout, \
-    EditCompany, AddCompany, DeleteCompany, GroupingDetail
+    EditCompany, AddCompany, DeleteCompany, GroupingDetail, CadetRegistration
 
 urlpatterns = patterns('',
                        # site index
@@ -22,6 +22,7 @@ urlpatterns = patterns('',
 
                        #Cadet Page
                        url(r'^cadets/$', CadetListing.as_view(), name='cadetlisting'),
+                       url(r'^cadets/register', CadetRegistration.as_view(), name='cadet_registration'),
                        url(r'^cadets/(?P<cadet_id>[0-9]+)/$', cadet_page, name='cadetpage'),
                        url(r'^cadets/(?P<cadet_id>[0-9]+)/(?P<tab>\w+)/$', cadet_page, name='cadetpage'),
 

@@ -2,12 +2,14 @@ from django.shortcuts import render, HttpResponseRedirect
 from django.views.generic import View
 from django.views.generic.edit import FormView, DeleteView
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from personnel.models import Cadet, Company, MsLevel, Platoon, SnapShot, Demographic, Squad
 from pt.models import PtScore, PtTest, Grader
 from personnel_utils import grouping_data
 from django.contrib.auth.decorators import login_required
-from personnel.forms import LoginForm, EditCadet, EditCadetFull, EditCadetUser, AddCompanyForm, EditCompanyForm
+from personnel.forms import LoginForm, EditCadet, EditCadetFull, EditCadetUser, AddCompanyForm, EditCompanyForm,\
+    CadetRegistrationForm, UserRegistrationForm
 from django.contrib.auth.views import logout_then_login
 
 
@@ -99,12 +101,46 @@ class CadetListing(View):
         return render(request, self.template_name, {'cadets': self.cadets})
 
 
+class CadetRegistration(View):
+    template_name = 'personnel/auth/registration/cadet_registration.html'
+
+    def get(self, request):
+        user_form = UserRegistrationForm()
+        cadet_form = CadetRegistrationForm()
+        context = {
+            'user_form': user_form,
+            'cadet_form': cadet_form,
+        }
+        return render(request, self.template_name, context)
+
+    def post(self, request):
+        user_form = UserRegistrationForm(request.POST)
+        cadet_form = CadetRegistrationForm(request.POST)
+        if cadet_form.is_valid() and user_form.is_valid():
+            username = user_form.cleaned_data['school_email'].rpartition('@')[0]
+            password = user_form.cleaned_data['eagletrack_password']
+            email = user_form.cleaned_data['school_email']
+            first_name = user_form.cleaned_data['first_name']
+            last_name = user_form.cleaned_data['last_name']
+            user = User.objects.create_user(username, email, password, first_name=first_name, last_name=last_name)
+
+            cadet = cadet_form.save(commit=False)
+            cadet.user = user
+            cadet.save()
+            return HttpResponseRedirect('/')
+        else:
+            context = {
+                'user_form': user_form,
+                'cadet_form': cadet_form,
+            }
+            return render(request, self.template_name, context)
+
+
 def cadet_page(request, cadet_id, tab='overview'):
     template_name = 'personnel/cadet_page/cadet_page.html'
     form = None
     user_form = None
     cadet = Cadet.objects.get(id=cadet_id)
-
     context = {}
 
     scores = PtScore.objects.filter(cadet=cadet_id).order_by('-pt_test')
@@ -113,6 +149,13 @@ def cadet_page(request, cadet_id, tab='overview'):
     # initializing pt related vars to 0 ahead of time, in case the cadet has no pt tests yet
     max_score = min_score = avg_score = avg_pushups = avg_situps = avg_two_mile = 0
     avg_pushup_score = avg_situp_score = avg_two_mile_score = 0
+
+    context.update({
+        'tab': tab,
+        'cadet': cadet,
+        'form': form,
+        'user_form': user_form
+    })
 
     if scores:
         max_score = PtScore.get_max_score(scores)
@@ -128,8 +171,6 @@ def cadet_page(request, cadet_id, tab='overview'):
         avg_two_mile_score = PtScore.get_avg_run_score(scores)
 
         context.update({
-            'tab': tab,
-            'cadet': cadet,
             'scores': scores,
             'ordered_scores': ordered_scores,
             'max_score': max_score,
@@ -141,8 +182,6 @@ def cadet_page(request, cadet_id, tab='overview'):
             'avg_pushup_score': avg_pushup_score,
             'avg_situp_score': avg_situp_score,
             'avg_two_mile_score': avg_two_mile_score,
-            'form': form,
-            'user_form': user_form
         })
 
     #on request post, check if the user is cadre or not to determine whether the EditCadetFull and EditCadetUser
@@ -199,7 +238,6 @@ class EditCompany(View):
         form = EditCompanyForm(instance=company)
 
         platoons = company.platoons.all()
-        print platoons
 
         context = {
             'company': company,

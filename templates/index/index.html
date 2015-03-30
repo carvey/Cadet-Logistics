@@ -61,13 +61,14 @@
                             <p><span class="panel-info-p">Staff Position</span>: {{ cadet.get_staff_position|interpret_none }}</p>
                         {% elif user|is_cadre %}
                             <p>Cadre: {{ cadre.rank }} {{ cadre.get_name }}</p>
-                            <p>Position: {{ cadre.position }}</p>
                             {% if cadre.ms_level_assignment %}
                                 <p>Instructor for:
                                     <a href="/personnel/ms-classes/{{ cadre.ms_level_assignment.id }}">
-                                        {{ cadre.ms_level_assignment }} Class
+                                        {{ cadre.ms_level_assignment }}
                                     </a>
                                 </p>
+                            {% else %}
+                                <p>Position: {{ cadre.position }}</p>
                             {% endif %}
                         {% endif %}
 					</div>

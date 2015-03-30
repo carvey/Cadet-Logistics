@@ -21,7 +21,7 @@
     {% for cadet in cadets %}
         <tr>
             <td><a href="{% url 'cadetpage' cadet.id %}">{{ cadet }}</a></td>
-            <td><a href="{% url 'grouping_detail' 'ms_level' cadet.ms_level.id %}">{{ cadet.ms_level }}</a></td>
+            <td><a href="{% url 'grouping_detail' 'ms-classes' cadet.ms_level.id %}">{{ cadet.ms_level }}</a></td>
             <td>{{ cadet.cell_number|phone_format }}</td>
         </tr>
     {% endfor %}

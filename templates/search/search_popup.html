@@ -3,14 +3,14 @@
 
     <h3>Company Results</h3>
     {% for company in company_results %}
-        <a href='/personnel/companies/{{ company }}'>{{ company }} Company</a>
+        <a href='/personnel/companies/{{ company.id }}'>{{ company }} Company</a>
     {% endfor %}
 
     <hr>
 
     <h3>MS Level Results</h3>
     {% for ms_level in ms_level_results %}
-        <p><a href='/personnel/ms-classes/{{ ms_level }}'>{{ms_level}} Class</a></p>
+        <p><a href='/personnel/ms-classes/{{ ms_level.id }}'>{{ms_level}} Class</a></p>
     {% endfor %}
 
     <hr>

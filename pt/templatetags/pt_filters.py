@@ -19,3 +19,10 @@ def is_list(var):
         return True
     else:
         return False
+
+@register.filter(name='pass_fail')
+def pass_fail(bool):
+    if bool:
+        return "Pass"
+    else:
+        return "Fail"

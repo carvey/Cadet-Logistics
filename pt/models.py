@@ -423,7 +423,8 @@ class PtScore(models.Model):
         avg_scores = {}
         for cadet in cadets:
             scores = all_scores.filter(cadet=cadet)
-            avg_scores[cadet] = PtScore.get_avg_total_score(scores)
+            if scores:
+                avg_scores[cadet] = PtScore.get_avg_total_score(scores)
         avg_scores = collections.OrderedDict(sorted(avg_scores.items(), key=lambda t: t[1]))
         top_scores = collections.OrderedDict()
         count = 0
@@ -619,7 +620,7 @@ class PtScore(models.Model):
         """
         score_values = Grader.objects.all()
 
-        cadet_age = self.cadet.age
+        cadet_age = self.cadet.get_age()
         for score_value in score_values:
             value = score_value.age_group.split('-')
             if cadet_age >= int(value[0]) and cadet_age <= int(value[1]):

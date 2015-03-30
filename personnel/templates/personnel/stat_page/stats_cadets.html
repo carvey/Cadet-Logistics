@@ -91,15 +91,25 @@
     <div class="col-md-4">
         <div class="panel panel-default">
             <div class="panel-heading">
-                Least Events Missed
+                Top Cumalitive Scores
             </div>
             <div class="panel-body top_list">
                 <ul>
-                    <li>First Last: 0</li>
-                    <li>First Last: 0</li>
-                    <li>First Last: 1</li>
-                    <li>First Last: 2</li>
-                    <li>First Last: 5</li>
+                    {% for score, cadet in top_cumulative_scores.items %}
+                        {% if cadet|is_list %}
+                            <li> {{ score }}:
+                                {% for c in cadet %}
+                                    {% if forloop.last %}
+                                        <a href="/personnel/cadets/{{ c.id }}">{{ c }}</a>
+                                    {% else %}
+                                        <a href="/personnel/cadets/{{ c.id }}">{{ c }};</a>
+                                    {% endif %}
+                                {% endfor %}
+                            </li>
+                        {% else %}
+                            <li>{{ score }}: <a href="/personnel/cadets/{{ cadet.id }}">{{ cadet }}</a></li>
+                        {% endif %}
+                    {% endfor %}
                 </ul>
             </div>
         </div>

@@ -1,4 +1,5 @@
-from abc import ABCMeta
+# from dateutil.relativedelta import relativedelta
+import datetime
 from django.core.validators import MaxValueValidator, MinValueValidator, validate_email
 from django.db import models
 from django.contrib.auth.hashers import make_password
@@ -74,15 +75,20 @@ class Demographic(models.Model):
 class Users(models.Model):
     """Company is the model for the companies in the batallion"""
     user = models.OneToOneField(User)
-    age = models.PositiveIntegerField(blank=False, null=True, default=18)
+    # age = models.PositiveIntegerField(blank=False, null=True, default=18)
+    birth_date = models.DateField(blank=False, null=True)
     gender = models.CharField(max_length=6, choices=GENDER_CHOICES, blank=False, default='male')
-    demographic = models.ForeignKey(Demographic, blank=False, null=False)
+    demographic = models.ForeignKey(Demographic, blank=True, null=True)
 
     def __unicode__(self):
         return self.user.last_name + ", " + self.user.first_name
 
     def get_name(self):
         return '%s %s' % (self.user.first_name, self.user.last_name)
+
+    def get_age(self):
+        today = datetime.date.today()
+        return today.year - self.birth_date.year - ((today.month, today.day) < (self.birth_date.month, self.birth_date.day))
 
     class Meta:
         abstract = True
@@ -108,6 +114,8 @@ class Company(models.Model, GroupingMixin):
                                              blank=True, null=True, help_text="Enter the Name of the Commander Officer")
     first_sergeant = models.OneToOneField('Cadet', db_index=False, related_name="first_sgt",
                                           blank=True, null=True, help_text="Enter the First Sergeant for this Company")
+    executive_officer = models.OneToOneField('Cadet', db_index=False, related_name="xo",
+                                             blank=True, null=True, help_text="Enter the XO for this Company")
 
     class Meta:
         db_table = 'Company'
@@ -127,24 +135,29 @@ class Company(models.Model, GroupingMixin):
 
     def set_first_sergeant(self, cadet):
         """
-        This method removes a cadet from first sergeant, and replaces them with the cadet
-        passed in as a parameter.
+        This method sets the company First Sergeant position to the cadet passed in as the cadet arg
         :param cadet: the cadet to be set as the new first sergeant
         :return:
         """
         self.first_sergeant = cadet
-        cadet.save()
         self.save()
 
     def set_commander(self, cadet):
         """
-        This method removes a cadet from company commander, and replaces them with the cadet
-        passed in as a parameter.
+        This method sets the company CO position to the cadet passed in as the cadet arg
         :param cadet: the cadet to be set as the new company commander
         :return:
         """
         self.company_commander = cadet
-        cadet.save()
+        self.save()
+
+    def set_executive_officer(self, cadet):
+        """
+        This method sets the company XO position to the cadet passed in as the cadet arg
+        :param cadet: the cadet to be set as the new company commander
+        :return:
+        """
+        self.executive_officer = cadet
         self.save()
 
     def get_initial(self):

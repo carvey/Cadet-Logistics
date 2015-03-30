@@ -1,4 +1,5 @@
-{% load personnel_filters %}
+{% load pt_filters %}
+
 <div class="row">
 			<div class="col-lg-12">
 				<div class="panel panel-default">
@@ -16,6 +17,7 @@
 											<th>Pushups</th>
 											<th>Two Mile time</th>
 											<th>Score</th>
+                                            <th>Pass/Fail</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -26,6 +28,7 @@
 											<td>{{score.get_pushups}}</td>
 											<td>{{score.get_run_time_str}}</td>
 											<td>{{score.score}}</td>
+                                            <td>{{ score.passing|pass_fail }}</td>
 										</tr>
 										
 										{% endfor %}

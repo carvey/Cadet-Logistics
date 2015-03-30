@@ -18,7 +18,7 @@
 	 <th>Contracted</th>
 	 <th>SMP</th>
 	 <th>Cell Number</th>
-	 <th>MS Grade</th>
+	 <th>Email</th>
 	 
 {% endblock %}
 
@@ -29,7 +29,7 @@
 	 <td>Contracted</td>
 	 <td>SMP</td>
 	 <td>Cell Number</td>
-	 <td>MS Grade</td>
+	 <td>Email</td>
 {% endblock %}
 
 <!-- This block handles putting data into the datatable -->
@@ -43,7 +43,7 @@
 	       <td>{{cadet.contracted}}</td>
 	       <td>{{cadet.smp}}</td>
 	       <td>({{cadet.cell_number|slice:":3"}})-{{cadet.cell_number|slice:"3:6"}}-{{cadet.cell_number|slice:"6:10"}}</td>
-	       <td>{{cadet.ms_grade}}</td>
+	       <td>{{cadet.user.email}}</td>
 	   </tr>
    {% endfor %}
 {% endblock %}

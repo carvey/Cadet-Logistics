@@ -40,30 +40,30 @@ def populate():
         Platoons: company name + platoon number
         Squads:  company name + platoon number + squad number
     """
-    alpha1st = add_platoon(name=1, company=alpha)
-    alpha11 = add_squad(name=1, platoon=alpha1st)
-    alpha12 = add_squad(name=2, platoon=alpha1st)
+    alpha1st = add_platoon(number=1, company=alpha)
+    alpha11 = add_squad(number=1, platoon=alpha1st)
+    alpha12 = add_squad(number=2, platoon=alpha1st)
 
-    bravo1st = add_platoon(name=1, company=bravo)
-    bravo11 = add_squad(name=1, platoon=bravo1st)
-    bravo12 = add_squad(name=2, platoon=bravo1st)
-    bravo2nd = add_platoon(name=2, company=bravo)
-    bravo21 = add_squad(name=1, platoon=bravo2nd)
-    bravo22 = add_squad(name=2, platoon=bravo2nd)
+    bravo1st = add_platoon(number=1, company=bravo)
+    bravo11 = add_squad(number=1, platoon=bravo1st)
+    bravo12 = add_squad(number=2, platoon=bravo1st)
+    bravo2nd = add_platoon(number=2, company=bravo)
+    bravo21 = add_squad(number=1, platoon=bravo2nd)
+    bravo22 = add_squad(number=2, platoon=bravo2nd)
 
-    charlie1st = add_platoon(name=1, company=charlie)
-    charlie11 = add_squad(name=1, platoon=charlie1st)
-    charlie12 = add_squad(name=2, platoon=charlie1st)
-    charlie2nd = add_platoon(name=2, company=charlie)
-    charlie21 = add_squad(name=1, platoon=charlie2nd)
-    charlie22 = add_squad(name=2, platoon=charlie2nd)
+    charlie1st = add_platoon(number=1, company=charlie)
+    charlie11 = add_squad(number=1, platoon=charlie1st)
+    charlie12 = add_squad(number=2, platoon=charlie1st)
+    charlie2nd = add_platoon(number=2, company=charlie)
+    charlie21 = add_squad(number=1, platoon=charlie2nd)
+    charlie22 = add_squad(number=2, platoon=charlie2nd)
 
-    delta1st = add_platoon(name=1, company=delta)
-    delta11 = add_squad(name=1, platoon=delta1st)
-    delta12 = add_squad(name=2, platoon=delta1st)
-    delta2nd = add_platoon(name=2, company=delta)
-    delta21 = add_squad(name=1, platoon=delta2nd)
-    delta22 = add_squad(name=2, platoon=delta2nd)
+    delta1st = add_platoon(number=1, company=delta)
+    delta11 = add_squad(number=1, platoon=delta1st)
+    delta12 = add_squad(number=2, platoon=delta1st)
+    delta2nd = add_platoon(number=2, company=delta)
+    delta21 = add_squad(number=1, platoon=delta2nd)
+    delta22 = add_squad(number=2, platoon=delta2nd)
     print "done creating platoons"
     print "-----------------------"
 
@@ -90,6 +90,7 @@ def populate():
     #Alpha Company
     add_cadet(first_name="Adam", last_name="Kostner", age=20, ms_level=ms4, company=alpha, cc=True)
     add_cadet(first_name="Cole", last_name="Stuart", age=20, ms_level=ms4, company=alpha, fs=True)
+    add_cadet(first_name="Frank", last_name="Steers", age=20, ms_level=ms4, company=alpha, xo=True)
     add_cadet(first_name="Taylor", last_name="Cooper", age=20, ms_level=ms4, company=alpha, platoon=alpha1st, squad=alpha11, sl=True)
     add_cadet(first_name="Jason", last_name="Canter", age=20, ms_level=ms4, company=alpha, platoon=alpha1st, squad=alpha11)
     add_cadet(first_name="Eddie", last_name="Hanson", age=20, ms_level=ms4, company=alpha, platoon=alpha1st, squad=alpha12, sl=True)
@@ -100,6 +101,7 @@ def populate():
     #Bravo company
     add_cadet(first_name="James", last_name="Lee", age=20, ms_level=ms3, company=bravo, cc=True)
     add_cadet(first_name="Joanna", last_name="Henry", age=20, ms_level=ms3, company=bravo, fs=True)
+    add_cadet(first_name="Tyler", last_name="Smith", age=21, ms_level=ms3, company=bravo, xo=True)
     #Bravo 1st platoon
     add_cadet(first_name="Kyle", last_name="Jackson", age=20, ms_level=ms3, company=bravo, platoon=bravo1st, pc=True)
     add_cadet(first_name="Kathy", last_name="Jones", age=20, gender="Female", ms_level=ms3, company=bravo, platoon=bravo1st, ps=True)
@@ -127,6 +129,7 @@ def populate():
     #Charlie Company
     add_cadet(first_name="Sarah", last_name="Klein", age=20, gender="Female", ms_level=ms3, company=charlie, cc=True)
     add_cadet(first_name="Kenny", last_name="Walts", age=20, ms_level=ms3, company=charlie, fs=True)
+    add_cadet(first_name="Leah", last_name="Rutherford", age=20, gender="Female", ms_level=ms3, company=charlie, xo=True)
     #Charlie First Platoon
     add_cadet(first_name="Matthew", last_name="Henry", age=20, ms_level=ms3, company=charlie, platoon=charlie1st, pc=True)
     add_cadet(first_name="Audrey", last_name="Chantel", age=20, gender="Female", ms_level=ms3, company=charlie, platoon=charlie1st, ps=True)
@@ -150,6 +153,7 @@ def populate():
     #Delta company
     add_cadet(first_name="Nick", last_name="Russel", age=20, ms_level=ms3, company=delta, cc=True)
     add_cadet(first_name="Melissa", last_name="Hackman", age=20, gender="Female", ms_level=ms3, company=delta, fs=True)
+    add_cadet(first_name="Toby", last_name="Lammers", age=20, ms_level=ms3, company=delta, xo=True)
     #First Platoon
     add_cadet(first_name="Alexander", last_name="May", age=20, ms_level=ms3, company=delta, platoon=delta1st, pc=True)
     add_cadet(first_name="Jeff", last_name="Sleet", age=20, ms_level=ms3, company=delta, platoon=delta1st, ps=True)
@@ -278,29 +282,41 @@ def add_company(name, co=None, fs=None):
     return company
 
 
-def add_platoon(name, company):
-    platoon = Platoon.objects.get_or_create(name=name, company=company)[0]
+def add_platoon(number, company):
+    platoon = Platoon.objects.get_or_create(number=number, company=company)[0]
     return platoon
 
 
-def add_squad(name, platoon):
-    squad = Squad.objects.get_or_create(name=name, platoon=platoon)[0]
+def add_squad(number, platoon):
+    squad = Squad.objects.get_or_create(number=number, platoon=platoon)[0]
     return squad
 
 def add_cadet(first_name, last_name, age, ms_level, company, squad=None, gender="Male", platoon=None, ms_grade=100,
-               cc=False, fs=False, pc=False, ps=False, sl=False):
+               cc=False, fs=False, pc=False, ps=False, sl=False, xo=False):
 
     user = User.objects.get_or_create(username=(first_name+last_name).lower(), first_name=first_name, last_name=last_name)[0]
     user.set_password('pass')
     user.save()
 
-    c = Cadet.objects.get_or_create(user=user, age=age, gender=gender, ms_level=ms_level,
+    birth_date = None
+    if age == 18:
+        birth_date = datetime.date(1996, random.randint(1, 11), random.randint(1, 28))
+    elif age == 19:
+        birth_date = datetime.date(1995, random.randint(1, 11), random.randint(1, 28))
+    elif age == 20:
+        birth_date = datetime.date(1994, random.randint(1, 11), random.randint(1, 28))
+    elif age > 20:
+        birth_date = datetime.date(1993, random.randint(1, 11), random.randint(1, 28))
+
+    c = Cadet.objects.get_or_create(user=user, birth_date=birth_date, gender=gender, ms_level=ms_level,
                                     company=company, platoon=platoon, squad=squad)[0]
 
     if cc:
         company.set_commander(c)
     elif fs:
         company.set_first_sergeant(c)
+    elif xo:
+        company.set_executive_officer(c)
     elif pc:
         platoon.set_platoon_commander(c)
     elif ps:
@@ -317,7 +333,8 @@ def add_cadre(first_name, last_name, age, rank, position, ms_level_assignment):
     user.set_password('pass')
     user.save()
 
-    c = Cadre.objects.get_or_create(user=user, age=age, rank=rank, position=position, ms_level_assignment=ms_level_assignment)
+    birth_date = datetime.date(1965, 5, 15)
+    c = Cadre.objects.get_or_create(user=user, birth_date=birth_date, rank=rank, position=position, ms_level_assignment=ms_level_assignment)
 
     return c
 

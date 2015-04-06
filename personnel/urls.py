@@ -6,7 +6,8 @@ Created on Apr 27, 2014
 from django.conf.urls import patterns, url
 from personnel.views import Index, Stats, CadetListing, cadet_page, company_listing, \
     CompanyCadetListing, MSlevelListing, MScadetListing, Input, Login, logout, \
-    EditCompany, AddCompany, DeleteCompany, GroupingDetail, CadetRegistration
+    EditCompany, AddCompany, DeleteCompany, GroupingDetail, CadetRegistration, \
+    Organize, render_dd_js
 
 urlpatterns = patterns('',
                        # site index
@@ -43,5 +44,8 @@ urlpatterns = patterns('',
                            name='mscadets'),
 
                        #Dedicated input pages
-                       url(r'^input/', Input.as_view(), name='input')
+                       url(r'^input/', Input.as_view(), name='input'),
+
+                       url(r'^organize/$', Organize.as_view(), name="organize"),
+                       url(r'organize/dd/$', render_dd_js, name='render_dd_js')
 )

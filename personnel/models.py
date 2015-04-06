@@ -1,7 +1,9 @@
 # from dateutil.relativedelta import relativedelta
 import datetime
+import operator
 from django.core.validators import MaxValueValidator, MinValueValidator, validate_email
 from django.db import models
+from django.db.models import Q
 from django.contrib.auth.hashers import make_password
 from collections import OrderedDict
 from django.contrib.auth.models import AbstractUser, User
@@ -9,6 +11,7 @@ from django.core.urlresolvers import reverse
 
 from personnel.managers import SearchManager
 from mixins import GroupingMixin
+
 
 
 '''Static variables'''
@@ -243,6 +246,17 @@ class Cadet(Users):
 
     objects = SearchManager()
 
+    #TODO this explanation could probably find a better home...
+    """
+    NOTE: Several methods are used here to access information regarding cadets and staff positions.
+    Although there could be a staff position field for Cadet, which would eliminate the need for the is_staff()
+    and get_staff_position() methods, it would also mean that anywhere in the system that allows for
+    assignment information to be changed would have to implement methods that insured the cadet being moved
+    out of the position had their staff_position field modified appropriately, and obviously the cadet being
+    moved into the position would have to have their field updated appropriately. Although some logic needs to
+    be done with this approach, just having these few methods saves from having to deal with the chaos that would
+    be keeping up with a staff_position field
+    """
     def is_staff(self):
         """
         Determines whether or not a cadet is assigned to a staff position or not
@@ -263,6 +277,23 @@ class Cadet(Users):
                 return "%s %s" % (self.__dict__["_%s_cache" % staff_position], self.STAFF_POSITIONS[staff_position])
         return False
 
+    @staticmethod
+    def get_staff_cadets():
+        """
+        This should return a queryset of all cadets who hold a staff position
+        So I wrote this then realized I don't need it... but might come in handy sometime?
+        :return: dict of the format {staff_position1__isnull: False, staff_position2__isnull: False, ...}
+        """
+        filter_dict = {}
+        for position in Cadet.STAFF_POSITIONS.keys():
+            filter_expression = "%s__isnull" % position
+            filter_dict[filter_expression] = False
+
+        class QOR(Q):
+            default = Q.OR
+        q_filter = QOR(**filter_dict)
+        cadets = Cadet.objects.filter(q_filter)
+        return cadets
 
     #function used to return the avg gpa of a set of cadets
     @staticmethod
@@ -310,7 +341,7 @@ class Platoon(models.Model, GroupingMixin):
     company = models.ForeignKey(Company, db_index=False, related_name='platoons', blank=True, null=True)
     platoon_commander = models.OneToOneField('Cadet', db_index=False, related_name='platoon_commander',
                                              blank=True, null=True, help_text="Enter the Platoon Commander")
-    platoon_sergeant = models.OneToOneField('Cadet', db_index=False, related_name="platoon_sgt",
+    platoon_sergeant = models.OneToOneField('Cadet', db_index=False, related_name="platoon_sergeant",
                                             blank=True, null=True, help_text="Enter the Platoon Sergeant")
 
     class Meta:
@@ -386,7 +417,6 @@ class Squad(models.Model, GroupingMixin):
         else:
             return str(self.number) + self.number_end_str() + " Squad"
 
-
     def get_sub_groupings(self):
         return None
 
@@ -424,7 +454,6 @@ class Squad(models.Model, GroupingMixin):
         }
 
 
-# TODO: Needs to be added to GroupingMixin
 class MsLevel(models.Model, GroupingMixin):
     """
     Model to represent each MS Level

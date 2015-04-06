@@ -1,9 +1,13 @@
-from personnel.models import Cadet
+from personnel.models import Cadet, Company, Platoon, Squad
 from pt.models import PtScore, PtTest
 
 #Shared functionality between all stat pages
 def grouping_data(cadets):
-
+    """
+    This generates a ton of grouping related data over a subset of cadets
+    :param cadets: The subset of cadets to calculate over
+    :return: context dict
+    """
     contracted = cadets.filter(contracted=True)
     smp = cadets.filter(smp=True)
     avg_gpa = Cadet.get_avg_gpa(cadets)
@@ -40,25 +44,38 @@ def grouping_data(cadets):
             scores_by_test.update({test: test_dict})
 
     context = {
-               'cadets': cadets,
-               'contracted_cadets': contracted,
-               'smp_cadets': smp,
-               'avg_gpa': avg_gpa,
-               'at_risk_cadets': at_risk,
-               'profiles': profiles,
-               'male_cadets': male_cadets,
-               'female_cadets': female_cadets,
-               'completed_hours': completed_volunteer_hours,
-               'top_scores': top_scores,
-               'top_gpas': top_gpas,
-               'top_cumulative_scores': top_cumalitive_scores,
-               'ms_levels': ms_levels,
-               'scores_by_test': scores_by_test,
-               }
+        'cadets': cadets,
+        'contracted_cadets': contracted,
+        'smp_cadets': smp,
+        'avg_gpa': avg_gpa,
+        'at_risk_cadets': at_risk,
+        'profiles': profiles,
+        'male_cadets': male_cadets,
+        'female_cadets': female_cadets,
+        'completed_hours': completed_volunteer_hours,
+        'top_scores': top_scores,
+        'top_gpas': top_gpas,
+        'top_cumulative_scores': top_cumalitive_scores,
+        'ms_levels': ms_levels,
+        'scores_by_test': scores_by_test,
+        }
     return context
 
 
 def top_cumulative_scores(cadets):
+    """
+    Takes a subset of cadets and generates a sort of ranking for the cadet using a combination of GPA
+    and avg PT score
+
+    cumulative_score = GPA + (avg_pt_score/100)
+
+    So a GPA of 4.0 and an avg pt score of 297 would look like
+    cumulative_score = 4.0 + 2.97
+                     = 6.97
+
+    :param cadets: The subset of cadets to calculate scores over
+    :return:
+    """
     cumalitive_score_dict = {}
     for cadet in cadets:
         cadet_scores = PtScore.objects.filter(cadet=cadet)
@@ -66,3 +83,23 @@ def top_cumulative_scores(cadets):
         cumalitive = score + float(cadet.gpa)
         cumalitive_score_dict[cumalitive] = cadet
     return PtTest.order_scores_dict(cumalitive_score_dict, 5)
+
+
+def assemble_staff_hierarchy():
+    """
+    Should assemble a dict of the form
+    { company: { platoon: [squads] } }
+
+    EX:
+        { alpha company: {platoon1: [squad1, squad2], platoon2: [squad1, squad2] },
+          bravo company: {platoon1: [squad1, squad2], platoon2: [squad1, squad2] }
+
+    :return: dict containing the entire structure of the battalion
+    """
+    batallion_dict = {}
+    for company in Company.objects.all():
+        platoon_dict = {}
+        for platoon in company.platoons.all():
+            platoon_dict[platoon] = [squad for squad in platoon.squads.all()]
+        batallion_dict[company] = platoon_dict
+    return batallion_dict

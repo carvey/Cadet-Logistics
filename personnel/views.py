@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from personnel.models import Cadet, Company, MsLevel, Platoon, SnapShot, Demographic, Squad
 from pt.models import PtScore, PtTest, Grader
-from personnel_utils import grouping_data
+from personnel_utils import grouping_data, assemble_staff_hierarchy
 from django.contrib.auth.decorators import login_required
 from personnel.forms import LoginForm, EditCadet, EditCadetFull, EditCadetUser, AddCompanyForm, EditCompanyForm,\
     CadetRegistrationForm, UserRegistrationForm
@@ -362,3 +362,25 @@ class Input(View):
         context = {}
 
         return render(request, self.template, context)
+
+
+class Organize(View):
+    template = 'personnel/command_management/organize_cadets.html'
+
+    def get(self, request):
+        chain = assemble_staff_hierarchy()
+        context = {
+            'chain': chain
+        }
+        return render(request, self.template, context)
+
+
+def render_dd_js(request):
+    template = 'personnel/command_management/js/command_management.js'
+    chain = assemble_staff_hierarchy()
+
+    context = {
+        'chain': chain
+    }
+
+    return render(request, template, context)

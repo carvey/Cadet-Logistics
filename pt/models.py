@@ -121,7 +121,7 @@ class PtTest(models.Model):
         :return: The top n scores and their respective cadet/grouping
         :type return: OrderedDict
         """
-        #TODO: Can this be done with some lambda function instead? Might be complex, but worth c
+        #TODO: Can this be done with some lambda function instead? Might be complex, but worth checking out
         top_scores = collections.OrderedDict()
         for count in range(0, n):
             # this conditional will break the loop if scores_dict runs out of scores

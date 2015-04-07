@@ -162,14 +162,14 @@
                             <li> {{ score }}:
                                 {% for c in squad %}
                                     {% if forloop.last %}
-                                        <a href="/personnel/companies/{{ c.platoon.company.id }}/platoons/{{ c.platoon.id }}/squads/{{ c.id }}/">{{ c }}</a>
+                                        <a href="/personnel/companies/squads/{{ c.id }}/">{{ c }}</a>
                                     {% else %}
-                                        <a href="/personnel/companies/{{ c.platoon.company.id }}/platoons/{{ c.platoon.id }}/squads/{{ c.id }}/">{{ c }};</a>
+                                        <a href="/personnel/companies/squads/{{ c.id }}/">{{ c }};</a>
                                     {% endif %}
                                 {% endfor %}
                             </li>
                         {% else %}
-                            <li>{{ score }}: <a href="/personnel/companies/{{ squad.platoon.company.id }}/platoons/{{ squad.platoon.id }}/squads/{{ squad.id }}/">{{ squad }}</a></li>
+                            <li>{{ score }}: <a href="/personnel/squads/{{ squad.id }}/">{{ squad }}</a></li>
                         {% endif %}
                     {% endfor %}
                 </ol>

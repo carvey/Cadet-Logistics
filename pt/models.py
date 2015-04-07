@@ -238,48 +238,40 @@ class PtScore(models.Model):
         format_date = self.pt_test.date.strftime('%d %b, %Y')
         return 'PT Score %s for cadet: %s' % (format_date, self.cadet)
 
-    @staticmethod
-    def calculate_score(cadet_id=None, raw_situps=None, raw_pushups=None, run_time=None, instance=None):
-        """
-        Static method that will calculate the PT score based on given arguments, or a specific pt instance that
-        already has the three raw scores assigned.
-        However if an instance is given, this method does not save that instance to the database.\n
-        --
-        Params should be given in the following combinations:
-            1- cadet_id, raw_situps, raw_pushups, and run time\n
-            2- instance
-        Any other combination of args will result in an error
 
-        :param cadet_id: a cadet id of the cadet to calculate the score for
-        :type cadet_id: int
-        :param raw_situps: the num of situps to calculate the score for
-        :type raw_situps: int
-        :param raw_pushups: the num of pushups to calulate the score for
-        :type raw_pushups: int
-        :param run_time: the two mile time to calculate the score for (mm:ss format)
-        :type run_time: str
+    @staticmethod
+    def assemble_instance(cadet_id=None, raw_situps=None, raw_pushups=None, run_time=None):
+        """
+        Used to assemble a cadet instance based on raw scores and a cadet id.
+        :param cadet_id: The id of the cadet to calculate the scores for
+        :param raw_situps: the raw number of situps to calculate for
+        :param raw_pushups: the raw number of pushups to calculate for
+        :param run_time: the raw run time to calculate for. Use mm:ss format
+        :return: a non committed PtScore instance
+        """
+        cadet = Cadet.objects.get(id=cadet_id)
+        raw_pushups = int(raw_pushups)
+        raw_situps = int(raw_situps)
+        run_time = str(run_time)
+        instance = PtScore(cadet=cadet, pushups=raw_pushups, situps=raw_situps, two_mile=run_time)
+        return instance
+
+    @staticmethod
+    def calculate_score(instance=None):
+        """
+        Static method that will calculate the PT score based on a pt instance that already has a cadet and the
+        three raw scores assigned.
+        This method does not save that instance to the database.\n
+
+        If a score needs to be calculated and an instance has not been assembled yet, use the assemble_instance
+        method to get the instance
+        --
+
         :param instance: the instance to calculate the score on
         :type instance: PtScore
         :return: {'score': calculated_score, 'passing': True/False'}
         :type return: dict
         """
-        #check which arg combination was given
-        arg_combination1 = cadet_id and raw_situps and raw_pushups and run_time and not instance
-        arg_combination2 = not cadet_id and not raw_situps and not raw_pushups and instance
-
-        #if neither arg combination given, raise an error
-        if arg_combination1 or arg_combination2:
-            pass
-        else:
-            raise Exception("Invalid argument contents or mix. Check method docs for proper usage")
-
-        # if arg_combination1 is true, then create a ptscore instance with the given values for the given cadet
-        if arg_combination1:
-            cadet = Cadet.objects.get(id=cadet_id)
-            raw_pushups = int(raw_pushups)
-            raw_situps = int(raw_situps)
-            run_time = str(run_time)
-            instance = PtScore(cadet=cadet, pushups=raw_pushups, situps=raw_situps, two_mile=run_time)
 
         age_group = instance.get_age_group()
         # Gets the graders for the cadet

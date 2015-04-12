@@ -65,11 +65,15 @@ class UserRegistrationForm(forms.ModelForm):
 
 class CadetRegistrationForm(forms.ModelForm):
 
+    cell_number = forms.CharField(widget=forms.TextInput(attrs={'Placeholder': 'EX Format: 1234567890 (No dashes)'}))
+    car_model = forms.CharField(widget=forms.TextInput(attrs={'Placeholder': 'Enter "None" if this is not applicable'}))
+    car_tag = forms.CharField(widget=forms.TextInput(attrs={'Placeholder': 'Enter "None" if this is not applicable'}))
+
     class Meta():
         model = Cadet
         exclude = ['user', 'comments', 'profile_reason', 'events_missed', 'class_events_missed', 'lab_events_missed',
                    'pt_missed', 'attendance_rate', 'ranger_challenge', 'color_guard', 'school', 'dropped', 'commissioned',
-                   'volunteer_hours_completed', 'volunteer_hours_count', 'ms_grade']
+                   'volunteer_hours_completed', 'volunteer_hours_count', 'ms_grade', 'company', 'platoon']
 
 
 class EditCadet(forms.ModelForm):

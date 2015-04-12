@@ -33,6 +33,7 @@ GENDER_CHOICES = (
 )
 
 BLOOD_TYPES = (
+        ("I am not 100% sure", "I am not 100% sure"),
         ('A+', 'A+'),
         ('A-', 'A-'),
         ('B+', 'B-'),
@@ -92,6 +93,23 @@ class Users(models.Model):
     def get_age(self):
         today = datetime.date.today()
         return today.year - self.birth_date.year - ((today.month, today.day) < (self.birth_date.month, self.birth_date.day))
+
+    def generate_username(self, email=None):
+        """
+        This method should handle generating unique usernames for all users
+        Currently, this is done by using the first portion of the users email address
+
+        If the instance being called on has no user.email available, then an email
+        can be passed in the email argument
+        EX:
+            A user with email: myschoolemail@georgiasouthern.edu
+            Would get a username: myschoolemail
+        :return: a username string
+        """
+        if not email:
+            return self.user.email.rpartition('@')[0]
+        else:
+            return email.rpartition('@')[0]
 
     class Meta:
         abstract = True
@@ -207,6 +225,7 @@ class Cadet(Users):
     platoon = models.ForeignKey('Platoon', blank=True, null=True, related_name="cadets")
     squad = models.ForeignKey('Squad', blank=True, null=True, related_name="cadets")
     ms_level = models.ForeignKey('MsLevel', blank=False, null=False, related_name="cadets")
+
     gpa = models.DecimalField(default=4.0, max_digits=3, decimal_places=2, blank=True, null=True)
     ms_grade = models.IntegerField(default=100, blank=True, null=True)
     # #
@@ -220,12 +239,6 @@ class Cadet(Users):
     #TODO consider a profile model in the pt app instead of this field?
     on_profile = models.BooleanField(default=False)
     profile_reason = models.CharField(max_length=250, blank=True)
-    events_missed = models.PositiveIntegerField(default=0, blank=True)
-    class_events_missed = models.PositiveIntegerField(default=0, blank=True)
-    lab_events_missed = models.PositiveIntegerField(default=0, blank=True)
-    pt_missed = models.PositiveIntegerField(default=0, blank=True)
-    attendance_rate = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)],
-                                                  blank=True)  # logic for true and false attended is 100 and 0
     at_risk = models.BooleanField(default=False)
     # #
     contracted = models.BooleanField(default=False)
@@ -239,9 +252,9 @@ class Cadet(Users):
     color_guard = models.BooleanField(default=False)
 
     # #
-    blood_type = models.CharField(max_length=5, choices=BLOOD_TYPES, blank=True)
-    car_model = models.CharField(max_length=100, blank=True)
-    car_tag = models.CharField(max_length=25, blank=True)
+    blood_type = models.CharField(max_length=5, choices=BLOOD_TYPES, blank=False)
+    car_model = models.CharField(max_length=100, blank=False)
+    car_tag = models.CharField(max_length=25, blank=False)
     comments = models.TextField(max_length=1000, blank=True)
 
     objects = SearchManager()
@@ -320,6 +333,13 @@ class Cadet(Users):
             if count == num:
                 break
         return reversed(sorted(top_gpas.items()))
+
+    def set_squad(self, squad, commit=False):
+        self.squad = squad
+        self.platoon = squad.platoon
+        self.company = squad.platoon.company
+        if commit:
+            self.save()
 
     class Meta:
         db_table = 'Cadet'

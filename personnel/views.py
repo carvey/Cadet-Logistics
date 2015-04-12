@@ -117,15 +117,18 @@ class CadetRegistration(View):
         user_form = UserRegistrationForm(request.POST)
         cadet_form = CadetRegistrationForm(request.POST)
         if cadet_form.is_valid() and user_form.is_valid():
-            username = user_form.cleaned_data['school_email'].rpartition('@')[0]
             password = user_form.cleaned_data['eagletrack_password']
             email = user_form.cleaned_data['school_email']
             first_name = user_form.cleaned_data['first_name']
             last_name = user_form.cleaned_data['last_name']
-            user = User.objects.create_user(username, email, password, first_name=first_name, last_name=last_name)
 
             cadet = cadet_form.save(commit=False)
+            squad = cadet_form.cleaned_data.get('squad')
+
+            username = cadet.generate_username(email)
+            user = User.objects.create_user(username, email, password, first_name=first_name, last_name=last_name)
             cadet.user = user
+            cadet.set_squad(squad)
             cadet.save()
             return HttpResponseRedirect('/')
         else:

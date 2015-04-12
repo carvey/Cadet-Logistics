@@ -2,6 +2,8 @@
 {% load static %}
 
 {% block head %}
+    <link href="{% static 'css/less/bootstrap-datepicker/datepicker.css' %}" rel="stylesheet">
+    <script src="{% static 'css/less/bootstrap-datepicker/js/bootstrap-datepicker.js' %}"></script>
     <script src="{% static 'js/boostrap/bootstrap_form_control.js' %}"></script>
 {% endblock %}
 
@@ -24,6 +26,7 @@
     <div class="row">
         <div class="col-md-4">
             <form action="{% url 'cadet_registration' %}" method="post">
+                {% csrf_token %}
                 {% if user_form.errors or cadet_form.errors %}
                     <p>{{ cadet_form.errors }}</p>
                 {% endif %}

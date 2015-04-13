@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate
 from django.core.exceptions import ObjectDoesNotExist
-from personnel.models import Demographic, GENDER_CHOICES, BLOOD_TYPES, Cadet, Company
+from personnel.models import Cadet, Company, Squad
 
 
 class LoginForm(AuthenticationForm):
@@ -47,7 +47,6 @@ class UserRegistrationForm(forms.ModelForm):
         try:
             username = self.cleaned_data['school_email'].rpartition('@')[0]
             user = User.objects.get(username=username)
-            print self.__dict__
             raise forms.ValidationError('That Email has already been used for registration')
         except ObjectDoesNotExist:
             pass
@@ -106,8 +105,38 @@ class AddCompanyForm(forms.ModelForm):
         model = Company
         exclude = []
 
+
 class EditCompanyForm(forms.ModelForm):
 
     class Meta():
         model = Company
         exclude = []
+
+
+class CompanyStaffForm(forms.Form):
+
+    company = forms.ModelChoiceField(widget=forms.HiddenInput, queryset=Company.objects.all())
+    commander = forms.ModelChoiceField(queryset=Cadet.objects.all(), required=False)
+    commander_new_squad = forms.ModelChoiceField(queryset=Squad.objects.all(), label="Out-going Commander's new squad",
+                                                 required=False)
+    first_sgt = forms.ModelChoiceField(queryset=Cadet.objects.all(), required=False)
+    first_sgt_new_squad = forms.ModelChoiceField(queryset=Squad.objects.all(), label="Outgoing First Sgt's new Squad",
+                                                 required=False)
+    xo = forms.ModelChoiceField(queryset=Cadet.objects.all(), label="XO", required=False)
+    xo_new_squad = forms.ModelChoiceField(queryset=Squad.objects.all(), label="Out-going XO's new squad",
+                                          required=False)
+
+    def clean(self):
+        company = self.cleaned_data['company']
+        commander = self.cleaned_data['commander']
+        commander_new_squad = self.cleaned_data.get('commander_new_squad')
+        first_sgt = self.cleaned_data['first_sgt']
+        first_sgt_new_squad = self.cleaned_data.get('first_sgt_new_squad')
+        xo = self.cleaned_data['xo']
+        xo_new_squad = self.cleaned_data.get('xo_new_squad')
+
+        if commander and not commander_new_squad:
+            if company.company_commander != commander:
+                raise forms.ValidationError("If a new Commander is selected, then that commander must be assigned to a new Squad")
+            else:
+                raise forms.ValidationError("You must select a new squad for the outgoing commander to be placed in")

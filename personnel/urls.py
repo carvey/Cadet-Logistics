@@ -46,6 +46,6 @@ urlpatterns = patterns('',
                        #Dedicated input pages
                        url(r'^input/', Input.as_view(), name='input'),
 
-                       url(r'^organize/$', Organize.as_view(), name="organize"),
+                       url(r'^organize/$', Organize.as_view(), name="organize_staff"),
                        url(r'organize/dd/$', render_dd_js, name='render_dd_js')
 )

@@ -9,7 +9,7 @@ from pt.models import PtScore, PtTest, Grader
 from personnel_utils import grouping_data, assemble_staff_hierarchy
 from django.contrib.auth.decorators import login_required
 from personnel.forms import LoginForm, EditCadet, EditCadetFull, EditCadetUser, AddCompanyForm, EditCompanyForm,\
-    CadetRegistrationForm, UserRegistrationForm
+    CadetRegistrationForm, UserRegistrationForm, CompanyStaffForm
 from django.contrib.auth.views import logout_then_login
 
 
@@ -366,16 +366,35 @@ class Input(View):
 
         return render(request, self.template, context)
 
-
+# TODO this is pretty nasty code... thrown together pretty quickly. Can use a rewrite sometime soon
+# needs converting to a formset
 class Organize(View):
-    template = 'personnel/command_management/organize_cadets.html'
+    template = 'personnel/command_management/organize_staff.html'
+
+    chain = assemble_staff_hierarchy()
+    context = {
+        'chain': chain
+    }
 
     def get(self, request):
-        chain = assemble_staff_hierarchy()
-        context = {
-            'chain': chain
-        }
-        return render(request, self.template, context)
+        return render(request, self.template, self.context)
+
+    def post(self, request):
+        form = CompanyStaffForm(request.POST)
+        if form.is_valid():
+            company = form.cleaned_data['company']
+            commander = form.cleaned_data['commander']
+            commander_new_squad = form.cleaned_data['commander_new_squad']
+            company.company_commander.set_squad(commander_new_squad, commit=True)
+            company.set_commander(commander)
+
+            chain = assemble_staff_hierarchy()
+            self.context['chain'] = chain
+        else:
+            pass
+            # self.context['form'] = form
+
+        return render(request, self.template, self.context)
 
 
 def render_dd_js(request):

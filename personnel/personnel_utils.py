@@ -1,5 +1,6 @@
 from personnel.models import Cadet, Company, Platoon, Squad
 from pt.models import PtScore, PtTest
+from personnel.forms import CompanyStaffForm
 
 #Shared functionality between all stat pages
 def grouping_data(cadets):
@@ -84,7 +85,7 @@ def top_cumulative_scores(cadets):
         cumalitive_score_dict[cumalitive] = cadet
     return PtTest.order_scores_dict(cumalitive_score_dict, 5)
 
-
+# TODO docstring needs updating
 def assemble_staff_hierarchy():
     """
     Should assemble a dict of the form
@@ -101,5 +102,11 @@ def assemble_staff_hierarchy():
         platoon_dict = {}
         for platoon in company.platoons.all():
             platoon_dict[platoon] = [squad for squad in platoon.squads.all()]
-        batallion_dict[company] = platoon_dict
+        form = CompanyStaffForm(initial={
+            'company': company,
+            'commander': company.company_commander,
+            'first_sgt': company.first_sergeant,
+            'xo': company.executive_officer
+        })
+        batallion_dict[company] = (form, platoon_dict)
     return batallion_dict

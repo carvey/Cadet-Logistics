@@ -210,8 +210,11 @@ class PtTest(models.Model):
         db_table = 'PtTest'
 
 
-#The PTscore information for each cadet. Indentified by a foreign key linking to a specific cadet
 class PtScore(models.Model):
+    """
+    The PT score information for each cadet. Identified by a foreign key linking to a specific cadet
+    This model stores both the raw values and calculated scores for each cadet
+    """
     cadet = models.ForeignKey('personnel.Cadet', related_name='cadet_score', blank=False)
     pt_test = models.ForeignKey(PtTest, default='', blank=False, null=False)
     grader = models.ForeignKey('personnel.Cadet', related_name='grader', blank=True, null=True)
@@ -240,9 +243,11 @@ class PtScore(models.Model):
 
 
     @staticmethod
-    def assemble_instance(cadet_id=None, raw_situps=None, raw_pushups=None, run_time=None):
+    def assemble_instance(cadet_id, raw_situps, raw_pushups, run_time):
         """
         Used to assemble a cadet instance based on raw scores and a cadet id.
+        This method is used instead of the plain PtScore(...) syntax to get the cadet object
+        and ensure all the values are of the proper type
         :param cadet_id: The id of the cadet to calculate the scores for
         :param raw_situps: the raw number of situps to calculate for
         :param raw_pushups: the raw number of pushups to calculate for
@@ -336,7 +341,6 @@ class PtScore(models.Model):
 
         if instance.situps_score >= 60 and instance.pushups_score >= 60 and instance.run_score >= 60:
                 instance.passing = True
-
 
         return {'score': instance.score,
                 'passing': instance.passing}

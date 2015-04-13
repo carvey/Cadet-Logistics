@@ -202,6 +202,15 @@ class Company(models.Model, GroupingMixin):
             'cadet': self.first_sergeant
         }
 
+    def get_staff_form(self):
+        from forms import CompanyStaffForm
+        form = CompanyStaffForm(initial={
+            'commander': self.company_commander,
+            'first_sgt': self.first_sergeant,
+            'xo': self.executive_officer
+        })
+        return form
+
 
 class Cadet(Users):
     """

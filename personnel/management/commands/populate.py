@@ -3,7 +3,7 @@ from optparse import make_option
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
 from populate_testing import run_population
-
+from populate_production import run_production_population
 
 class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
@@ -17,7 +17,7 @@ class Command(BaseCommand):
         if options.get("flush_db"):
             call_command('flush', interactive=True)
             call_command('createsuperuser', interactive=True)
-            if options.get('testing'):
-                run_population()
-            # else:
-            #     run_population_production()
+        if options.get('testing'):
+            run_population()
+        else:
+            run_production_population()

@@ -317,16 +317,23 @@ class Cadet(Users):
         cadets = Cadet.objects.filter(q_filter)
         return cadets
 
-    #function used to return the avg gpa of a set of cadets
     @staticmethod
     def get_avg_gpa(cadets):
+        """
+        function used to return the avg gpa of a set of cadets
+        :param cadets:
+        :return:
+        """
         sum_gpa = 0
         cadets_with_gpa = 0
         for cadet in cadets:
             if cadet.gpa > 0:
                 cadets_with_gpa += 1
                 sum_gpa = sum_gpa + cadet.gpa
-        return round(sum_gpa / cadets_with_gpa, 2)
+        if cadets_with_gpa:
+            return round(sum_gpa / cadets_with_gpa, 2)
+        else:
+            return 0
 
     @staticmethod
     def get_top_gpa_cadets(cadets, num=3):

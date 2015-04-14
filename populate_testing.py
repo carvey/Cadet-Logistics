@@ -80,8 +80,9 @@ def populate():
     add_demographic(demographic="White")
     add_demographic(demographic="Black")
     add_demographic(demographic="Asian")
-    add_demographic(demographic="American Indian")
+    add_demographic(demographic="Native American")
     add_demographic(demographic="Hispanic")
+    add_demographic(demographic="Other")
     print "done adding demographics"
     print "-----------------------"
 

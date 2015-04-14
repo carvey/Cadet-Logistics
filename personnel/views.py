@@ -1,4 +1,4 @@
-from django.shortcuts import render, HttpResponseRedirect
+from django.shortcuts import render, HttpResponseRedirect, Http404
 from django.views.generic import View
 from django.views.generic.edit import FormView, DeleteView
 from django.contrib.auth import authenticate, login
@@ -145,6 +145,11 @@ def cadet_page(request, cadet_id, tab='overview'):
     user_form = None
     cadet = Cadet.objects.get(id=cadet_id)
     context = {}
+
+    user = request.user
+    if hasattr(user, 'cadet'):
+        if user.cadet != cadet:
+            raise Http404
 
     scores = PtScore.objects.filter(cadet=cadet_id).order_by('-pt_test')
     ordered_scores = scores.order_by('-pt_test')[:3]

@@ -80,8 +80,8 @@ class PtTest(models.Model):
         """
         passing = Decimal(PtScore.objects.filter(pt_test=self, passing=True).count())
         failing = Decimal(PtScore.objects.filter(pt_test=self, passing=False).count())
-        if failing == 0 and passing == 0:
-            return 0
+        if failing == 0:
+            return 100
         rate = (passing/failing * 100).quantize(Decimal(10) ** -2)
 
         return rate
@@ -462,12 +462,15 @@ class PtScore(models.Model):
     @staticmethod
     def get_avg_pushups(scores):
         """Returns the avg **number** of pushups over the given set of scores"""
-        sum_pushups = 0
-        length = len(scores)
-        for score in scores:
-            sum_pushups += int(score.pushups)
-        avg = sum_pushups / length
-        return avg
+        if scores:
+            sum_pushups = 0
+            length = len(scores)
+            for score in scores:
+                sum_pushups += int(score.pushups)
+            avg = sum_pushups / length
+            return avg
+        else:
+            return 0
 
     @staticmethod
     def get_avg_pushup_score(scores):
@@ -513,13 +516,16 @@ class PtScore(models.Model):
     @staticmethod
     def get_avg_run_time(scores):
         """Returns the avg **time** over the given set of scores"""
-        sum_time = 0
-        length = len(scores)
-        for score in scores:
-            time = score.get_two_mile_min()
-            sum_time = sum_time + time
-        avg = str(sum_time / length)
-        return scores[0].convert_time_mins_secs(avg)
+        if scores:
+            sum_time = 0
+            length = len(scores)
+            for score in scores:
+                time = score.get_two_mile_min()
+                sum_time = sum_time + time
+            avg = str(sum_time / length)
+            return scores[0].convert_time_mins_secs(avg)
+        else:
+            return 0
 
     @staticmethod
     def get_avg_run_score(scores):

@@ -1,0 +1,37 @@
+{% extends 'personnel/auth/auth_base.html' %}
+
+{% block content %}
+    <style>
+        .page-header {
+            border-bottom: 0;
+        }
+    </style>
+
+<style>
+    .forms {
+        padding: 10px 0px;
+    }
+    .panel-title {
+        font-weight: bold;
+    }
+</style>
+
+<div class="col-md-12">
+    <div class="modal-dialog" style="margin-bottom:0">
+        <div class="modal-content">
+        <div class="panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Error</h3>
+            </div>
+            <div class="panel-body">
+                <h3>You do not have sufficient permissions to view this page</h3>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+
+<br>
+
+
+{% endblock %}

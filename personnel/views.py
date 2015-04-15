@@ -149,7 +149,7 @@ def cadet_page(request, cadet_id, tab='overview'):
     user = request.user
     if hasattr(user, 'cadet'):
         if user.cadet != cadet:
-            raise Http404
+            return render(request, 'errors/insufficient_permissions.html', {})
 
     scores = PtScore.objects.filter(cadet=cadet_id).order_by('-pt_test')
     ordered_scores = scores.order_by('-pt_test')[:3]

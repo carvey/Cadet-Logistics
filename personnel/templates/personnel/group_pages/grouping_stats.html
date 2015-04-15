@@ -1,4 +1,5 @@
 {% load personnel_filters %}
+{% load permission_filters %}
 
 <style>
     .top_list {
@@ -87,9 +88,9 @@
 				Highest GPAs
 			</div>
 			<div class='panel-body top_list'>
+                {% if user|super_permissions %}
 				<ul>
                     {% for gpa, cadet in top_gpas %}
-{#                        <li>{{ cadet.get_name }}: {{ gpa }}</li>#}
                         {% if cadet|is_list %}
                             <li> {{ gpa }}:
                                 {% for c in cadet %}
@@ -105,6 +106,9 @@
                         {% endif %}
                     {% endfor %}
 				</ul>
+                {% else %}
+                <p>You do not have access to see this information</p>
+                {% endif %}
 			</div>
 		</div>
 	</div>
@@ -115,6 +119,7 @@
                 Cumulative Scores
             </div>
             <div class="panel-body top_list">
+                {% if user|super_permissions %}
                 <ul>
                     {% for score, cadet in top_cumulative_scores.items %}
                         {% if cadet|is_list %}
@@ -132,6 +137,9 @@
                         {% endif %}
                     {% endfor %}
                 </ul>
+                {% else %}
+                <p>You do not have access to see this information</p>
+                {% endif %}
             </div>
         </div>
     </div>

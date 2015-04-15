@@ -11,31 +11,42 @@ Cadets Listing
 {% endblock %}
 
 {% block columns %}
-	<th>Name</th>
-	<th>Avg. Pushup Score</th>
-	<th>Avg. Situp Score</th>
-    <th>Avg. Run Score</th>
-    <th>Avg. Total Score</th>
+	<td>Cadet</td>
+    <td>Avg. Pushup Count</td>
+	<td>Avg. Pushup Score</td>
+    <td>Avg. Situp Count</td>
+	<td>Avg. Situp Score</td>
+    <td>Avg. Run Time</td>
+    <td>Avg. Run Score</td>
+    <td>Avg. Total Score</td>
 {#    <th>Pass Rate</th>#}
 {% endblock %}
 
 {% block table_footer %}
-	<td>Name</td>
+	<td>Cadet</td>
+    <td>Avg. Pushup Count</td>
 	<td>Avg. Pushup Score</td>
+    <td>Avg. Situp Count</td>
 	<td>Avg. Situp Score</td>
+    <td>Avg. Run Time</td>
     <td>Avg. Run Score</td>
     <td>Avg. Total Score</td>
-{#    <td>Pass Rate</td>#}
+
 {% endblock %}
 
 {% block table_data %}
-	{% for cadet in cadets %}
-	<tr>
-		<td><a href="/personnel/cadets/{{cadet.id}}/pt/">{{cadet.get_name}}</a></td>
-		<td>{{ cadet|get_score:avg_pushup_scores }}</td>
-		<td>{{ cadet|get_score:avg_situp_scores }}</td>
-        <td>{{ cadet|get_score:avg_run_scores }}</td>
-        <td>{{ cadet|get_score:avg_scores }}</td>
-	</tr>
-	{% endfor %}
+	{% for cadet, scores in score_dict.items %}
+
+        <tr>
+            <td><a href="{% url 'cadetpage' cadet.id %}">{{ cadet }}</a></td>
+            <td>{{ scores.pushups.raw }}</td>
+            <td>{{ scores.pushups.score }}</td>
+            <td>{{ scores.situps.raw }}</td>
+            <td>{{ scores.situps.score }}</td>
+            <td>{{ scores.run.raw }}</td>
+            <td>{{ scores.run.score }}</td>
+            <td>{{ scores.total }}</td>
+        </tr>
+
+    {% endfor %}
 {% endblock %}

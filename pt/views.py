@@ -266,27 +266,31 @@ class CadetsListingView(View):
         cadets = Cadet.objects.all()
         all_scores = PtScore.objects.all()
 
-        avg_pushup_scores = {}
-        avg_situp_scores = {}
-        avg_run_scores = {}
-        avg_scores = {}
 
-        ptscore = PtScore()
-
+        score_dict = {}
         for cadet in cadets:
             scores = all_scores.filter(cadet=cadet)
 
-            avg_pushup_scores[cadet.id] = ptscore.get_avg_pushup_score(scores)
-            avg_situp_scores[cadet.id] = ptscore.get_avg_situp_score(scores)
-            avg_run_scores[cadet.id] = ptscore.get_avg_run_score(scores)
-            avg_scores[cadet.id] = PtScore.get_avg_total_score(scores)
+
+            avg_pushup_scores = PtScore.get_avg_pushup_score(scores)
+            avg_pushups = PtScore.get_avg_pushups(scores)
+            pushups = {'raw': avg_pushups, 'score': avg_pushup_scores}
+
+            avg_situp_scores = PtScore.get_avg_situp_score(scores)
+            avg_situps = PtScore.get_avg_situps(scores)
+            situps = {'raw': avg_situps, 'score': avg_situp_scores}
+
+            avg_run_scores = PtScore.get_avg_run_score(scores)
+            avg_run_time = PtScore.get_avg_run_time(scores)
+            run = {'raw': avg_run_time, 'score': avg_run_scores}
+
+            avg_scores = PtScore.get_avg_total_score(scores)
+
+            score_dict.update({cadet: {'pushups': pushups, 'situps': situps, 'run': run, 'total': avg_scores}})
 
         context = {
             'cadets': cadets,
-            'avg_pushup_scores': avg_pushup_scores,
-            'avg_situp_scores': avg_situp_scores,
-            'avg_run_scores': avg_run_scores,
-            'avg_scores': avg_scores
+            'score_dict': score_dict
         }
         return render(request, self.template_name, context)
 

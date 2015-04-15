@@ -10,6 +10,7 @@
 	<th>Sit-ups</th>
 	<th>Two Mile Time</th>
 	<th>Score</th>
+    <th>Passing</th>
     <th>Company</th>
     <th>MS Level</th>
 {% endblock %}
@@ -22,6 +23,7 @@
 				<td>{{score.situps}}</td>
 				<td>{{score.get_run_time_str}}</td> <!-- Not sorting properly. May have to do with creating in pop script -->
 				<td>{{score.score}}</td>
+                <td>{{ score.passing }}</td>
                 <td>{{ score.cadet.company }}</td>
                 <td>{{ score.cadet.ms_level }}</td>
 		</tr>
@@ -29,5 +31,5 @@
 {% endblock %}
 
 {% block display_column_index %}
-0,1,2,3,4
+0,1,2,3,4,5
 {% endblock %}

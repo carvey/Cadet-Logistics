@@ -1,0 +1,42 @@
+{% extends 'personnel/auth/auth_base.html' %}
+{% load static %}
+
+{% block head %}
+    <link href="{% static 'css/less/bootstrap-datepicker/datepicker.css' %}" rel="stylesheet">
+    <script src="{% static 'css/less/bootstrap-datepicker/js/bootstrap-datepicker.js' %}"></script>
+    <script src="{% static 'js/boostrap/bootstrap_form_control.js' %}"></script>
+{% endblock %}
+
+{% block page_header %}
+    Cadre Registration
+{% endblock %}
+
+{% block content %}
+
+    <style>
+    .btn-success {
+        margin: 25px 0;
+    }
+    .errorlist
+    {
+        color: red;
+    }
+
+    </style>
+    <div class="row">
+        <div class="col-md-4">
+            <form action="{% url 'cadre_registration' %}" method="post">
+                {% csrf_token %}
+                {% if user_form.errors or cadet_form.errors %}
+                    <p>{{ cadet_form.errors }}</p>
+                {% endif %}
+                {% csrf_token %}
+                {{ user_form.as_p }}
+                {{ cadre_form.as_p }}
+                <input class="btn btn-sm btn-success" type="submit" value="Submit" />
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
+

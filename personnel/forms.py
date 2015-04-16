@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate
 from django.core.exceptions import ObjectDoesNotExist
-from personnel.models import Cadet, Company, Squad, Problems
+from personnel.models import Cadet, Company, Squad, Problems, Cadre
 
 
 class LoginForm(AuthenticationForm):
@@ -60,6 +60,15 @@ class UserRegistrationForm(forms.ModelForm):
     class Meta():
         model = User
         fields = ['first_name', 'last_name']
+
+
+class CadreRegistrationForm(forms.ModelForm):
+
+    birth_date = forms.CharField(widget=forms.HiddenInput(attrs={'data-date-format': 'YYYY-mm-dd'}))
+
+    class Meta():
+        model = Cadre
+        exclude = ['user']
 
 
 class CadetRegistrationForm(forms.ModelForm):

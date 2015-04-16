@@ -9,7 +9,7 @@ from pt.models import PtScore, PtTest, Grader
 from personnel_utils import grouping_data, assemble_staff_hierarchy
 from django.contrib.auth.decorators import login_required
 from personnel.forms import LoginForm, EditCadet, EditCadetFull, EditCadetUser, AddCompanyForm, EditCompanyForm,\
-    CadetRegistrationForm, UserRegistrationForm, CompanyStaffForm, ProblemForm
+    CadetRegistrationForm, UserRegistrationForm, CompanyStaffForm, ProblemForm, CadreRegistrationForm
 from django.contrib.auth.views import logout_then_login
 
 
@@ -413,6 +413,44 @@ def render_dd_js(request):
     }
 
     return render(request, template, context)
+
+
+class CadreRegistration(View):
+    template_name = 'personnel/auth/registration/cadre_registration.html'
+
+    def get(self, request):
+        user_form = UserRegistrationForm()
+        cadre_formm = CadreRegistrationForm()
+        context = {
+            'user_form': user_form,
+            'cadre_form': cadre_formm,
+        }
+        return render(request, self.template_name, context)
+
+    def post(self, request):
+        user_form = UserRegistrationForm(request.POST)
+        cadre_form = CadreRegistrationForm(request.POST)
+        if cadre_form.is_valid() and user_form.is_valid():
+            password = user_form.cleaned_data['eagletrack_password']
+            email = user_form.cleaned_data['school_email']
+            first_name = user_form.cleaned_data['first_name']
+            last_name = user_form.cleaned_data['last_name']
+
+            cadre = cadre_form.save(commit=False)
+
+            username = cadre.generate_username(email)
+            user = User.objects.create_user(username, email, password, first_name=first_name, last_name=last_name)
+            cadre.user = user
+            cadre.save()
+            return HttpResponseRedirect('/')
+
+        else:
+
+            context = {
+                'user_form': user_form,
+                'cadre_form': cadre_form,
+            }
+            return render(request, self.template_name, context)
 
 
 class ReportProblem(View):

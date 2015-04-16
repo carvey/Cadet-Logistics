@@ -12,6 +12,7 @@ def populate():
     bravo = add_company(name="Bravo")
     charlie = add_company(name="Charlie")
     delta = add_company(name="Delta")
+    staff = add_company(name="Staff")
     print "done creating companies"
     print "-----------------------"
 
@@ -46,6 +47,10 @@ def populate():
     delta2nd = add_platoon(number=2, company=delta)
     delta21 = add_squad(number=1, platoon=delta2nd)
     delta22 = add_squad(number=2, platoon=delta2nd)
+
+    staff1st = add_platoon(number=1, company=staff)
+    staff11 = add_squad(number=1, platoon=staff1st)
+
     print "done creating platoons and squads"
     print "-----------------------"
 

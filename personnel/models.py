@@ -36,7 +36,7 @@ BLOOD_TYPES = (
         ("I am not 100% sure", "I am not 100% sure"),
         ('A+', 'A+'),
         ('A-', 'A-'),
-        ('B+', 'B-'),
+        ('B+', 'B+'),
         ('B-', 'B-'),
         ('AB+', 'AB+'),
         ('AB-', 'AB-'),

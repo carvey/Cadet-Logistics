@@ -79,10 +79,11 @@ def top_cumulative_scores(cadets):
     """
     cumalitive_score_dict = {}
     for cadet in cadets:
-        cadet_scores = PtScore.objects.filter(cadet=cadet)
-        score = PtScore.get_avg_total_score(cadet_scores) / float(100)
-        cumalitive = score + float(cadet.gpa)
-        cumalitive_score_dict[cumalitive] = cadet
+        if cadet.gpa:
+            cadet_scores = PtScore.objects.filter(cadet=cadet)
+            score = PtScore.get_avg_total_score(cadet_scores) / float(100)
+            cumalitive = score + float(cadet.gpa)
+            cumalitive_score_dict[cumalitive] = cadet
     return PtTest.order_scores_dict(cumalitive_score_dict, 5)
 
 # TODO docstring needs updating

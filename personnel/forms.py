@@ -73,7 +73,7 @@ class CadetRegistrationForm(forms.ModelForm):
         model = Cadet
         exclude = ['user', 'comments', 'profile_reason', 'events_missed', 'class_events_missed', 'lab_events_missed',
                    'pt_missed', 'attendance_rate', 'ranger_challenge', 'color_guard', 'school', 'dropped', 'commissioned',
-                   'volunteer_hours_completed', 'volunteer_hours_count', 'ms_grade', 'company', 'platoon']
+                   'volunteer_hours_completed', 'volunteer_hours_count', 'ms_grade', 'company', 'platoon', 'at_risk']
 
 
 class EditCadet(forms.ModelForm):

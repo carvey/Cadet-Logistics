@@ -42,7 +42,7 @@
 <body>
 
 {% block top_nav %}
-    <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="margin-bottom: 0">
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="margin-bottom: 0; display: inline-block">
     <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
             <span class="sr-only">Toggle navigation</span>
@@ -50,6 +50,8 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
+
+        <a class="navbar-text navbar-right" style="float: right; margin-right:10px; display: inline-block;" href="{% url 'report' %}">Report a problem</a>
         <a class="navbar-brand" href="/">Eagletrack</a>
     </div>
     <!-- /.navbar-header -->
@@ -97,13 +99,9 @@
         {% elif user.is_superuser %}
             <p class="navbar-text navbar-right">{{ user.username }}</p>
         {% else %} {# This implies the user is cadre #}
-            <p class="navbar-text navbar-right">{{ user.cadre.rank }} {{ user.cadre.get_name }}</p>
+            <p style="margin-left: 15px" class="navbar-text navbar-right">{{ user.cadre.rank }} {{ user.cadre.get_name }}</p>
         {% endif %}
     {% else %}
-
-        <ul class="nav navbar-top-links navbar-right" style="float:right;">
-            <li><a href="{% url 'report' %}">Report a problem</a></li>
-        </ul>
 
     {% endif %}
 

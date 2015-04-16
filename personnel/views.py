@@ -4,7 +4,7 @@ from django.views.generic.edit import FormView, DeleteView
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
-from personnel.models import Cadet, Company, MsLevel, Platoon, SnapShot, Demographic, Squad
+from personnel.models import Cadet, Company, MsLevel, Platoon, SnapShot, Demographic, Squad, Problems
 from pt.models import PtScore, PtTest, Grader
 from personnel_utils import grouping_data, assemble_staff_hierarchy
 from django.contrib.auth.decorators import login_required
@@ -133,7 +133,7 @@ class CadetRegistration(View):
             return HttpResponseRedirect('/')
 
         else:
-            print cadet_form.cleaned_data['birth_date']
+
             context = {
                 'user_form': user_form,
                 'cadet_form': cadet_form,
@@ -430,5 +430,11 @@ class ReportProblem(View):
 class Thanks(View):
 
     def get(self, request):
-
         return render(request, 'personnel/report_problem/thanks.html')
+
+
+class ProblemListing(View):
+
+    def get(self, request):
+        problems = Problems.objects.all()
+        return render(request, 'personnel/report_problem/problem_listing.html', {'problems': problems})

@@ -543,9 +543,9 @@ class SnapShot(models.Model):
 
 class Problems(models.Model):
 
-    name = models.CharField(max_length=75)
-    email = models.EmailField()
-    problem = models.TextField()
+    name = models.CharField(max_length=75, null=True)
+    email = models.EmailField(null=True)
+    problem = models.TextField(null=True)
 
     def __unicode__(self):
         return self.name

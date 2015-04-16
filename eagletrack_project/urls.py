@@ -2,7 +2,7 @@ from django.conf.urls import patterns, include, url
 from django.conf import settings
 from django.contrib import admin
 
-from personnel.views import Search, ReportProblem, Thanks
+from personnel.views import Search, ReportProblem, Thanks, ProblemListing
 admin.autodiscover()
 
 urlpatterns = patterns('',
@@ -12,7 +12,8 @@ urlpatterns = patterns('',
     url(r'^pt/', include('pt.urls')),
     url(r'^search/(?P<query_string>[-A-Za-z0-9_]+)/', Search.as_view(), name='search'),
     url(r'^report-a-problem/$', ReportProblem.as_view(), name='report'),
-    url(r'^thanks/$', Thanks.as_view(), name='thanks')
+    url(r'^thanks/$', Thanks.as_view(), name='thanks'),
+    url(r'^problems-listing/$', ProblemListing.as_view(), name='problems_listing')
 )
 if settings.DEBUG:
     urlpatterns += patterns (

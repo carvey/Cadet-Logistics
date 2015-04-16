@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate
 from django.core.exceptions import ObjectDoesNotExist
-from personnel.models import Cadet, Company, Squad
+from personnel.models import Cadet, Company, Squad, Problems
 
 
 class LoginForm(AuthenticationForm):
@@ -67,6 +67,7 @@ class CadetRegistrationForm(forms.ModelForm):
     cell_number = forms.CharField(widget=forms.TextInput(attrs={'Placeholder': 'EX Format: 1234567890 (No dashes)'}))
     car_model = forms.CharField(widget=forms.TextInput(attrs={'Placeholder': 'Enter "None" if this is not applicable'}))
     car_tag = forms.CharField(widget=forms.TextInput(attrs={'Placeholder': 'Enter "None" if this is not applicable'}))
+    birth_date = forms.CharField(widget=forms.HiddenInput(attrs={'data-date-format': 'YYYY-mm-dd'}))
 
     class Meta():
         model = Cadet
@@ -80,7 +81,7 @@ class EditCadet(forms.ModelForm):
 
     class Meta():
         model = Cadet
-        fields = ['eagle_id', 'cell_number', 'blood_type', 'car_model', 'car_tag']
+        fields = ['eagle_id', 'cell_number', 'blood_type', 'car_model', 'car_tag', 'ms_level']
 
 
 class EditCadetFull(forms.ModelForm):
@@ -140,3 +141,10 @@ class CompanyStaffForm(forms.Form):
                 raise forms.ValidationError("If a new Commander is selected, then that commander must be assigned to a new Squad")
             else:
                 raise forms.ValidationError("You must select a new squad for the outgoing commander to be placed in")
+
+
+class ProblemForm(forms.ModelForm):
+
+    class Meta:
+        model = Problems
+        exclude = []

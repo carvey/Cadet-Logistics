@@ -261,7 +261,7 @@ class Cadet(Users):
     color_guard = models.BooleanField(default=False)
 
     # #
-    blood_type = models.CharField(max_length=5, choices=BLOOD_TYPES, blank=False)
+    blood_type = models.CharField(max_length=20, choices=BLOOD_TYPES, blank=False)
     car_model = models.CharField(max_length=100, blank=False)
     car_tag = models.CharField(max_length=25, blank=False)
     comments = models.TextField(max_length=1000, blank=True)
@@ -539,3 +539,13 @@ class SnapShot(models.Model):
 
     def __unicode__(self):
         return self.date.strftime('%m %Y, %d')
+
+
+class Problems(models.Model):
+
+    name = models.CharField(max_length=75)
+    email = models.EmailField()
+    problem = models.TextField()
+
+    def __unicode__(self):
+        return self.name

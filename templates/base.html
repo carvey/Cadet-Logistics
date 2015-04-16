@@ -55,6 +55,7 @@
     <!-- /.navbar-header -->
     {% if user.is_authenticated %}
     <ul class="nav navbar-top-links navbar-right" style="float:right;">
+
         {% if user|super_permissions %}
             <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -98,6 +99,12 @@
         {% else %} {# This implies the user is cadre #}
             <p class="navbar-text navbar-right">{{ user.cadre.rank }} {{ user.cadre.get_name }}</p>
         {% endif %}
+    {% else %}
+
+        <ul class="nav navbar-top-links navbar-right" style="float:right;">
+            <li><a href="{% url 'report' %}">Report a problem</a></li>
+        </ul>
+
     {% endif %}
 
 {% endblock %}

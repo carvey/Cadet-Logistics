@@ -9,7 +9,7 @@ from pt.models import PtScore, PtTest, Grader
 from personnel_utils import grouping_data, assemble_staff_hierarchy
 from django.contrib.auth.decorators import login_required
 from personnel.forms import LoginForm, EditCadet, EditCadetFull, EditCadetUser, AddCompanyForm, EditCompanyForm,\
-    CadetRegistrationForm, UserRegistrationForm, CompanyStaffForm
+    CadetRegistrationForm, UserRegistrationForm, CompanyStaffForm, ProblemForm
 from django.contrib.auth.views import logout_then_login
 
 
@@ -131,7 +131,9 @@ class CadetRegistration(View):
             cadet.set_squad(squad)
             cadet.save()
             return HttpResponseRedirect('/')
+
         else:
+            print cadet_form.cleaned_data['birth_date']
             context = {
                 'user_form': user_form,
                 'cadet_form': cadet_form,
@@ -411,3 +413,22 @@ def render_dd_js(request):
     }
 
     return render(request, template, context)
+
+
+class ReportProblem(View):
+    def get(self, request):
+        form = ProblemForm()
+        return render(request, 'personnel/report_problem/report.html', {'form': form})
+
+    def post(self, request):
+        form = ProblemForm(request.POST)
+        if form.is_valid():
+            form.save()
+        return HttpResponseRedirect(reverse('thanks'))
+
+
+class Thanks(View):
+
+    def get(self, request):
+
+        return render(request, 'personnel/report_problem/thanks.html')

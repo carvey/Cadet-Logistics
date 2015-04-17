@@ -63,10 +63,10 @@
                     {% for score, cadet in top_scores %}
                         {% if cadet|is_list %}
                             {% for c in cadet %}
-                                <li><a href="/personnel/cadets/{{ cadet.id }}">{{ c.get_name }}</a>: {{ score }}</li>
+                                <li>{{ score }}: <a href="/personnel/cadets/{{ cadet.id }}">{{ cadet.short_name }}</a></li>
                             {% endfor %}
                         {% else %}
-                            <li><a href="/personnel/cadets/{{ cadet.id }}">{{ cadet.get_name }}</a>: {{ score }}</li>
+                            <li>{{ score }}: <a href="/personnel/cadets/{{ cadet.id }}"> {{ cadet.short_name }}</a></li>
                         {% endif %}
                     {% endfor %}
 				</ol>
@@ -87,14 +87,17 @@
                             <li> {{ gpa }}:
                                 {% for c in cadet %}
                                     {% if forloop.last %}
-                                        <a href="/personnel/cadets/{{ c.id }}">{{ c }}</a>
+                                        <a href="/personnel/cadets/{{ c.id }}">{{ c.short_name }}</a>
                                     {% else %}
-                                        <a href="/personnel/cadets/{{ c.id }}">{{ c }};</a>
+                                        <a href="/personnel/cadets/{{ c.id }}">{{ c.short_name }},</a>
+                                    {% endif %}
+                                    {% if forloop.counter|divisibleby:2 %}
+                                        <br>
                                     {% endif %}
                                 {% endfor %}
                             </li>
                         {% else %}
-                            <li>{{ gpa }}: <a href="/personnel/cadets/{{ cadet.id }}">{{ cadet }}</a></li>
+                            <li>{{ gpa }}: <a href="/personnel/cadets/{{ cadet.id }}">{{ cadet.short_name }}</a></li>
                         {% endif %}
                     {% endfor %}
                 </ul>
@@ -118,14 +121,17 @@
                             <li> {{ score }}:
                                 {% for c in cadet %}
                                     {% if forloop.last %}
-                                        <a href="/personnel/cadets/{{ c.id }}">{{ c }}</a>
+                                        <a href="/personnel/cadets/{{ c.id }}">{{ c.short_name }}</a>
                                     {% else %}
-                                        <a href="/personnel/cadets/{{ c.id }}">{{ c }};</a>
+                                        <a href="/personnel/cadets/{{ c.id }}">{{ c.short_name }},</a>
+                                    {% endif %}
+                                    {% if forloop.counter|divisibleby:2 %}
+                                        <br>
                                     {% endif %}
                                 {% endfor %}
                             </li>
                         {% else %}
-                            <li>{{ score }}: <a href="/personnel/cadets/{{ cadet.id }}">{{ cadet }}</a></li>
+                            <li>{{ score }}: <a href="/personnel/cadets/{{ cadet.id }}">{{ cadet.short_name }}</a></li>
                         {% endif %}
                     {% endfor %}
                 </ul>

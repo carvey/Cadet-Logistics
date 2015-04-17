@@ -1,3 +1,5 @@
 mysql-server
 python-dev
 libmysqlclient-dev
+libxslt1-dev
+libxml2-dev

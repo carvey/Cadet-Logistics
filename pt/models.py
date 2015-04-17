@@ -184,7 +184,7 @@ class PtTest(models.Model):
             if self.grouping_has_scores(platoon):
                 platoon_scores[self.get_average_score(platoon=platoon)] = platoon
         top_platoons = PtTest.order_scores_dict(platoon_scores, n)
-        return reversed(sorted(top_platoons.items()))
+        return sorted(top_platoons.items())
 
     def get_average_score(self, company=None, platoon=None, squad=None):
         scores = PtScore.objects.filter(pt_test=self)

@@ -337,18 +337,20 @@ class Cadet(Users):
 
     @staticmethod
     def get_top_gpa_cadets(cadets, num=3):
+        from pt.models import PtTest
         gpas = {}
         for cadet in cadets:
-            gpas.update({cadet.gpa: cadet})
-        gpas = OrderedDict(reversed(sorted(gpas.items(), key=lambda t: t[0])))
-        top_gpas = OrderedDict()
-        count = 0
-        for x, y in gpas.items():
-            top_gpas.update({x: y})
-            count += 1
-            if count == num:
-                break
-        return reversed(sorted(top_gpas.items()))
+            if cadet.gpa in gpas:
+                #if this value is already a list (more than 2 cadets with score score already), then append the cadet
+                if isinstance(gpas[cadet.gpa], list):
+                    gpas[cadet.gpa].append(cadet)
+                #if this is the first occurrence of repeated scores, then make a list out of the two cadets
+                else:
+                    gpas[cadet.gpa] = [gpas[cadet.gpa], cadet]
+            #no repeated scores, so just insert the score and cadet as a default key,value pair
+            else:
+                gpas.update({cadet.gpa: cadet})
+        return reversed(sorted(PtTest.order_scores_dict(gpas, 5).items()))
 
     def set_squad(self, squad, commit=False):
         self.squad = squad
@@ -356,6 +358,9 @@ class Cadet(Users):
         self.company = squad.platoon.company
         if commit:
             self.save()
+
+    def short_name(self):
+        return "%s, %s." % (self.user.last_name, self.user.first_name[0])
 
     class Meta:
         db_table = 'Cadet'

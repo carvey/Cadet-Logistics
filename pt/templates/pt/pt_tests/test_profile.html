@@ -20,18 +20,8 @@
 		</div>
 
         <div class='tab-pane fade{% if tab == "listing" %} in active{% endif %}' id='listing'>
-            {# listing content to go here via ajax #}
+            {% include 'pt/pt_tests/test_profile_listing.html' %}
 		</div>
-
-        <script>
-            $(document).ready(function() {
-                $('#listing_tab').click(function() {
-                   $.get('/pt/tests/{{ test.id }}/listing', {}, function(data) {
-                       $('#listing').html(data);
-                    });
-                });
-            });
-        </script>
 
 	</div>
 {% endblock %}

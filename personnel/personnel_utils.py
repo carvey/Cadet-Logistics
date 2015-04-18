@@ -1,6 +1,7 @@
 from personnel.models import Cadet, Company, Platoon, Squad
 from pt.models import PtScore, PtTest
 from personnel.forms import CompanyStaffForm
+from Utils.global_utils import sort_queryset, order_dict, update_merge_dict
 
 #Shared functionality between all stat pages
 def grouping_data(cadets):
@@ -21,7 +22,7 @@ def grouping_data(cadets):
     #Get the top n cadets
     top_scores = PtScore.get_top_cadets(cadets)
 
-    top_gpas = Cadet.get_top_gpa_cadets(cadets, 5)
+    top_gpas = sort_queryset(cadets, 'gpa', 5)
 
     top_cumalitive_scores = top_cumulative_scores(cadets)
 
@@ -78,22 +79,14 @@ def top_cumulative_scores(cadets):
     :return:
     """
     cumalitive_score_dict = {}
+    cm = {}
     for cadet in cadets:
         if cadet.gpa:
             cadet_scores = PtScore.objects.filter(cadet=cadet)
             score = PtScore.get_avg_total_score(cadet_scores) / float(100)
             cumalitive = score + float(cadet.gpa)
-        if cumalitive in cumalitive_score_dict:
-            #if this value is already a list (more than 2 cadets with score score already), then append the cadet
-            if isinstance(cumalitive_score_dict[cumalitive], list):
-                cumalitive_score_dict[cumalitive].append(cadet)
-                #if this is the first occurrence of repeated scores, then make a list out of the two cadets
-            else:
-                cumalitive_score_dict[cumalitive] = [cumalitive_score_dict[cumalitive], cadet]
-                #no repeated scores, so just insert the score and cadet as a default key,value pair
-        else:
-            cumalitive_score_dict.update({cumalitive: cadet})
-    return PtTest.order_scores_dict(cumalitive_score_dict, 5)
+            update_merge_dict(cumalitive_score_dict, cumalitive, cadet)
+    return order_dict(cumalitive_score_dict, n=5)
 
 # TODO docstring needs updating
 def assemble_staff_hierarchy():

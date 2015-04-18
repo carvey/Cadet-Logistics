@@ -72,7 +72,7 @@
 			</div>
 			<div class='panel-body top_list'>
                 <ol>
-                    {% for score, cadet in top_scores %}
+                    {% for score, cadet in top_scores.items %}
                         {% if cadet|is_list %}
                             <li> {{ score }}:
                                 {% for c in cadet %}
@@ -99,7 +99,7 @@
 			</div>
 			<div class='panel-body top_list'>
                 <ol>
-                    {% for score, cadet in top_non_contracted_scores %}
+                    {% for score, cadet in top_non_contracted_scores.items %}
                         {% if cadet|is_list %}
                             <li> {{ score }}:
                                 {% for c in cadet %}
@@ -126,23 +126,23 @@
     <div class='col-md-6'>
 		<div class='panel panel-default'>
 			<div class='panel-heading'>
-				Top Platoons for this Test
+				Top Platoons by Avg. Score for this Test
 			</div>
 			<div class='panel-body top_list'>
                 <ol>
-                    {% for score, platoon in top_platoons %}
-                        {% if cadet|is_list %}
+                    {% for score, platoon in top_platoons.items %}
+                        {% if platoon|is_list %}
                             <li> {{ score }}:
                                 {% for c in platoon %}
                                     {% if forloop.last %}
-                                        <a href="/personnel/cadets/{{ c.id }}">{{ c }}</a>
+                                        <a href="/personnel/platoons/{{ c.id }}">{{ c }}</a>
                                     {% else %}
-                                        <a href="/personnel/cadets/{{ c.id }}">{{ c }};</a>
+                                        <a href="/personnel/platoons/{{ c.id }}">{{ c }};</a>
                                     {% endif %}
                                 {% endfor %}
                             </li>
                         {% else %}
-                            <li>{{ score }}: <a href="/personnel/companies/{{ platoon.company.id }}/platoons/{{ platoon.id }}/">{{ platoon }}</a></li>
+                            <li>{{ score }}: <a href="/personnel/platoons/{{ platoon.id }}/">{{ platoon }}</a></li>
                         {% endif %}
                     {% endfor %}
                 </ol>
@@ -153,18 +153,18 @@
     <div class='col-md-6'>
 		<div class='panel panel-default'>
 			<div class='panel-heading'>
-				Top Squads for the Test
+				Top Squads by Avg. Score for the Test
 			</div>
 			<div class='panel-body top_list'>
                 <ol>
-                    {% for score, squad in top_squads %}
-                        {% if cadet|is_list %}
+                    {% for score, squad in top_squads.items %}
+                        {% if squad|is_list %}
                             <li> {{ score }}:
-                                {% for c in squad %}
+                                {% for s in squad %}
                                     {% if forloop.last %}
-                                        <a href="/personnel/companies/squads/{{ c.id }}/">{{ c }}</a>
+                                        <a href="/personnel/squads/{{ s.id }}/">{{ s }}</a>
                                     {% else %}
-                                        <a href="/personnel/companies/squads/{{ c.id }}/">{{ c }};</a>
+                                        <a href="/personnel/squads/{{ s.id }}/">{{ s }};</a>
                                     {% endif %}
                                 {% endfor %}
                             </li>

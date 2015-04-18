@@ -9,6 +9,7 @@ from django.core.validators import RegexValidator
 
 from decimal import Decimal
 from pt.managers import FilteredTestManager, FutureTestManager
+from Utils.global_utils import sort_queryset, order_dict, update_merge_dict
 
 male = 'Male'
 female = 'Female'
@@ -110,30 +111,6 @@ class PtTest(models.Model):
         #returns {cadet : score}
         return {highest_scoring_cadet: highest_score}
 
-    @staticmethod
-    def order_scores_dict(scores, n):
-        """
-        Will take a dict and generate a dict of n of the top scores
-        :param scores: The dict to be evaluated. Should be in the format {score: cadet/grouping, ...}
-        :type scores: dict
-        :param n: the number of top scores to return
-        :type n: int
-        :return: The top n scores and their respective cadet/grouping
-        :type return: OrderedDict
-        """
-        #TODO: Can this be done with some lambda function instead? Might be complex, but worth checking out
-        top_scores = collections.OrderedDict()
-        for count in range(0, n):
-            # this conditional will break the loop if scores_dict runs out of scores
-            # this would happen, and cause errors, when n > len(scores)
-            if scores:
-                highest_score = max(scores)
-                top_scores.update({highest_score: scores[highest_score]})
-                scores.pop(highest_score)
-            else:
-                break
-        return top_scores
-
     def grouping_has_scores(self, grouping):
         cadets = grouping.cadets.all()
         scores = self.ptscore_set.filter(cadet__in=cadets)
@@ -151,40 +128,26 @@ class PtTest(models.Model):
         if filter_expression:
             scores = scores.filter(**filter_expression)
         scores_dict = {}
-        #The following loop is to consolidate all of the scores into a dict - {score: cadet}
         for score in scores:
-            #if there is a repeat score (ex: 1st and 2nd place cadets both have 300s)
-            if score.score in scores_dict:
-                #if this value is already a list (more than 2 cadets with score score already), then append the cadet
-                if isinstance(scores_dict[score.score], list):
-                    scores_dict[score.score].append(score.cadet)
-                #if this is the first occurrence of repeated scores, then make a list out of the two cadets
-                else:
-                    scores_dict[score.score] = [scores_dict[score.score], score.cadet]
-            #no repeated scores, so just insert the score and cadet as a default key,value pair
-            else:
-                scores_dict.update({score.score: score.cadet})
-        #Get the highest scores from scores_dict and put them in a separate dict to be returned
-        top_scores = PtTest.order_scores_dict(scores_dict, n)
-        return reversed(sorted(top_scores.items()))
+            update_merge_dict(scores_dict, score.score, score.cadet)
+        return order_dict(scores_dict, 10)
 
     def get_n_highest_squads(self, n=5):
         squads = Squad.objects.all()
         squad_scores = {}
         for squad in squads:
             if self.grouping_has_scores(squad):
-                squad_scores[self.get_average_score(squad=squad)] = squad
-        top_squads = PtTest.order_scores_dict(squad_scores, n)
-        return reversed(sorted(top_squads.items()))
+                update_merge_dict(squad_scores, self.get_average_score(squad=squad), squad)
+
+        return order_dict(squad_scores, n)
 
     def get_n_highest_platoons(self, n=5):
         platoons = Platoon.objects.all()
         platoon_scores = {}
         for platoon in platoons:
             if self.grouping_has_scores(platoon):
-                platoon_scores[self.get_average_score(platoon=platoon)] = platoon
-        top_platoons = PtTest.order_scores_dict(platoon_scores, n)
-        return sorted(top_platoons.items())
+                update_merge_dict(platoon_scores, self.get_average_score(platoon=platoon), platoon)
+        return order_dict(platoon_scores, n)
 
     def get_average_score(self, company=None, platoon=None, squad=None):
         scores = PtScore.objects.filter(pt_test=self)
@@ -391,27 +354,10 @@ class PtScore(models.Model):
         avg_scores = {}
         for cadet in cadets:
             scores = all_scores.filter(cadet=cadet)
-            avg_scores[cadet] = PtScore.get_avg_total_score(scores)
+            avg_score = PtScore.get_avg_total_score(scores)
+            update_merge_dict(avg_scores, avg_score, cadet)
         avg_scores = collections.OrderedDict(reversed(sorted(avg_scores.items(), key=lambda t: t[1])))
-        top_scores = collections.OrderedDict()
-        count = 0
-        for cadet, score in avg_scores.items():
-            count += 1
-            #if there is a repeat score (ex: 1st and 2nd place cadets both have 300s)
-            if score in top_scores:
-                #if this value is already a list (more than 2 cadets with score score already), then append the cadet
-                if isinstance(top_scores[score], list):
-                    top_scores[score].append(cadet)
-                #if this is the first occurrence of repeated scores, then make a list out of the two cadets
-                else:
-                    top_scores[score] = [top_scores[score], cadet]
-            #no repeated scores, so just insert the score and cadet as a default key,value pair
-            else:
-                top_scores.update({score: cadet})
-            #the number of top cadets to get
-            if count == n:
-                break
-        return reversed(sorted(top_scores.items()))
+        return order_dict(avg_scores, 5)
 
     @staticmethod
     def get_worst_cadets(cadets, n=5):

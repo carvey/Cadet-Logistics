@@ -38,8 +38,8 @@
 	{% for cadet in cadets %}
 	   <tr class="odd gradeX">
 	       <td><a href = "/personnel/cadets/{{cadet.id}}">{{cadet.user.last_name}}, {{cadet.user.first_name}}</a></td>
-	       <td><a href = "/personnel/companies/{{cadet.company}}">{{cadet.company}}</a></td>
-	       <td><a href = "/personnel/ms-classes/{{cadet.ms_level}}">{{cadet.ms_level}}</a></td>
+	       <td><a href = "/personnel/companies/{{cadet.company.id}}">{{cadet.company}}</a></td>
+	       <td><a href = "/personnel/ms-classes/{{cadet.ms_level.id}}">{{cadet.ms_level}}</a></td>
 	       <td>{{cadet.contracted}}</td>
 	       <td>{{cadet.smp}}</td>
 	       <td>({{cadet.cell_number|slice:":3"}})-{{cadet.cell_number|slice:"3:6"}}-{{cadet.cell_number|slice:"6:10"}}</td>

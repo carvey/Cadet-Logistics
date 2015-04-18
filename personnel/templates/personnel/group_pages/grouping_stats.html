@@ -61,7 +61,7 @@
 			</div>
 			<div class='panel-body top_list'>
 				<ul>
-                    {% for score, cadet in top_scores %}
+                    {% for score, cadet in top_scores.items %}
 {#                        <li>{{ cadet.get_name }}: {{ score }}</li>#}
                           {% if cadet|is_list %}
                             <li> {{ score }}:
@@ -90,7 +90,7 @@
 			<div class='panel-body top_list'>
                 {% if user|super_permissions %}
 				<ul>
-                    {% for gpa, cadet in top_gpas %}
+                    {% for gpa, cadet in top_gpas.items %}
                         {% if cadet|is_list %}
                             <li> {{ gpa }}:
                                 {% for c in cadet %}

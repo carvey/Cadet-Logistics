@@ -335,23 +335,6 @@ class Cadet(Users):
         else:
             return 0
 
-    @staticmethod
-    def get_top_gpa_cadets(cadets, num=3):
-        from pt.models import PtTest
-        gpas = {}
-        for cadet in cadets:
-            if cadet.gpa in gpas:
-                #if this value is already a list (more than 2 cadets with score score already), then append the cadet
-                if isinstance(gpas[cadet.gpa], list):
-                    gpas[cadet.gpa].append(cadet)
-                #if this is the first occurrence of repeated scores, then make a list out of the two cadets
-                else:
-                    gpas[cadet.gpa] = [gpas[cadet.gpa], cadet]
-            #no repeated scores, so just insert the score and cadet as a default key,value pair
-            else:
-                gpas.update({cadet.gpa: cadet})
-        return reversed(sorted(PtTest.order_scores_dict(gpas, 5).items()))
-
     def set_squad(self, squad, commit=False):
         self.squad = squad
         self.platoon = squad.platoon

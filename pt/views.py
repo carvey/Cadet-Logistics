@@ -18,45 +18,34 @@ import json
 class TestProfiletView(View):
     template_name = 'pt/pt_tests/test_profile.html'
 
-    #each tab after stats (the first one) uses ajax to load
     def get(self, request, test_id, tab='stats'):
-        context = {}
         test = PtTest.filtered_tests.get(id=test_id)
-        #pagewide context
-        context.update(
-            {'test': test, 'tab': tab}
-        )
+        top_scores = test.get_n_highest_scores(n=10)
 
-        if tab == 'stats':
-            top_scores = test.get_n_highest_scores(n=10)
+        #this filter expression will be passed to the get_n_hightest_scores method to further filter scores
+        filter_expression = {'cadet__contracted': False}
+        top_non_contracted_scores = test.get_n_highest_scores(filter_expression=filter_expression, n=10)
 
-            #this filter expression will be passed to the get_n_hightest_scores method to further filter scores
-            filter_expression = {'cadet__contracted': False}
-            top_non_contracted_scores = test.get_n_highest_scores(filter_expression=filter_expression, n=10)
+        top_squads = test.get_n_highest_squads()
+        top_platoons = test.get_n_highest_platoons()
 
-            context.update({'top_scores': top_scores,
-                            'top_non_contracted_scores': top_non_contracted_scores
-            })
+        filter_expression = {'pt_test': test}
 
-            top_squads = test.get_n_highest_squads()
-            top_platoons = test.get_n_highest_platoons()
+        cadets = Cadet.objects.all()
+        scores = PtScore.objects.filter(pt_test=test)
 
-            filter_expression = {'pt_test': test}
-            context.update(get_complete_average_scores_dict(filter_expression))
-            context.update({'top_squads': top_squads, 'top_platoons': top_platoons})
+        context = {
+            'scores': scores,
+            'cadets': cadets,
+            'test': test,
+            'tab': tab,
+            'top_squads': top_squads,
+            'top_platoons': top_platoons,
+            'top_scores': top_scores,
+            'top_non_contracted_scores': top_non_contracted_scores
+        }
 
-            return render(request, self.template_name, context)
-
-        elif tab == 'listing':
-            template_name = 'pt/pt_tests/test_profile_listing.html'
-            cadets = Cadet.objects.all()
-            scores = PtScore.objects.filter(pt_test=test)
-            context.update({
-                'scores': scores,
-                'cadets': cadets,
-            })
-            return render(request, template_name, context)
-
+        context.update(get_complete_average_scores_dict(filter_expression))
         return render(request, self.template_name, context)
 
 

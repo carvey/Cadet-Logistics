@@ -1,4 +1,5 @@
 {% extends 'datatables/tabbed_datatable.html' %}
+{% load pt_filters %}
 
 {% block table_title %}
 	{% with scores|first as first_score %} {{first_score.pt_test}} {% endwith %}
@@ -10,7 +11,7 @@
 	<th>Sit-ups</th>
 	<th>Two Mile Time</th>
 	<th>Score</th>
-    <th>Passing</th>
+    <th>Pass/Fail</th>
     <th>Company</th>
     <th>MS Level</th>
 {% endblock %}
@@ -23,7 +24,7 @@
 				<td>{{score.situps}}</td>
 				<td>{{score.get_run_time_str}}</td> <!-- Not sorting properly. May have to do with creating in pop script -->
 				<td>{{score.score}}</td>
-                <td>{{ score.passing }}</td>
+                <td>{{ score.passing|pass_fail }}</td>
                 <td>{{ score.cadet.company }}</td>
                 <td>{{ score.cadet.ms_level }}</td>
 		</tr>

@@ -60,11 +60,9 @@ class ScoreCalculatorForm(ScoreForm):
     def __init__(self, *args, **kwargs):
         super(ScoreCalculatorForm, self).__init__(*args, **kwargs)
         fields = OrderedDict()
-        fields.update({
-            'age': self.fields['age'],
-            'gender': self.fields['gender'],
-            'pushups': self.fields['pushups'],
-            'situps': self.fields['situps'],
-            'two_mile': self.fields['two_mile']
-        })
+        fields.update({'gender': self.fields['gender']})
+        fields.update({'age': self.fields['age']})
+        fields.update({'pushups': self.fields['pushups']})
+        fields.update({'situps': self.fields['situps']})
+        fields.update({'two_mile': self.fields['two_mile']})
         self.fields = fields

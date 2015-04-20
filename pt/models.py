@@ -2,6 +2,7 @@ import ast, collections
 import datetime
 
 from itertools import cycle
+from dateutil.relativedelta import relativedelta
 
 from django.db import models
 from personnel.models import Cadet, MsLevel, Squad, Platoon
@@ -203,6 +204,16 @@ class PtScore(models.Model):
     def __unicode__(self):
         format_date = self.pt_test.date.strftime('%d %b, %Y')
         return 'PT Score %s for cadet: %s' % (format_date, self.cadet)
+
+    @staticmethod
+    def assemble_minimal_instance(age, gender, raw_situps, raw_pushups, run_time):
+        birth_date = datetime.datetime.now() - relativedelta(years=int(age))
+        cadet = Cadet(gender=gender, birth_date=birth_date)
+        raw_pushups = int(raw_pushups)
+        raw_situps = int(raw_situps)
+        run_time = str(run_time)
+        instance = PtScore(cadet=cadet, pushups=raw_pushups, situps=raw_situps, two_mile=run_time)
+        return instance
 
 
     @staticmethod

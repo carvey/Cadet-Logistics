@@ -16,7 +16,7 @@ class FilteredTestManager(models.Manager):
         """
         query = super(FilteredTestManager, self).get_queryset()
         today = datetime.date.today()
-        query = query.filter(date__lt=today)
+        query = query.filter(date__lte=today)
         return query
 
 

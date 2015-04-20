@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block page_header %}
+PT Score Calculator
+{% endblock %}
+
+{% block page_scripts %}
+    <script src="{% static 'js/boostrap/bootstrap_form_control.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+
+    <style>
+        .forms {
+            padding: 10px 0px;
+        }
+        .panel-title {
+            font-weight: bold;
+        }
+    </style>
+
+    <div class="col-md-12">
+        <div class="modal-dialog" style="margin-bottom:0">
+            <div class="modal-content">
+            <div class="panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Score Calculator</h3>
+                </div>
+                <div class="panel-body">
+                    {{ form.as_p }}
+
+                    <hr>
+                    <div style="float: left">
+                        Score: <span id="score">0</span>
+                    </div>
+                    <input style="float: right" id="clear_form" class="btn btn-sm btn-success" type="button" value="Clear Form" />
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <br>
+
+
+
+    <script>
+        $(document).ready(function() {
+
+            $("input").change(function() {
+
+                var age = $("#id_age").val();
+                var gender = $("#id_gender").val();
+                var situps = $("#id_situps").val();
+                var pushups = $("#id_pushups").val();
+                var two_mile = $("#id_two_mile").val();
+                var score_node = $("#score");
+
+                if (age && gender)
+                {
+
+                    if (!situps) situps = 0;
+                    if (!pushups) pushups = 0;
+                    if (!two_mile) two_mile = "00:00";
+
+                    var query_string = "/pt/tests/input-scores/" + gender + "/" + age + "/" + situps + "/" + pushups + "/" + two_mile + "/";
+                    $.get(query_string, {}, function(data) {
+                        score_node.html(data.score);
+                        var passing = Boolean(data.passing);
+                        if (!passing)
+                        {
+                            score_node.parent().css('backgroundColor', '#7A0000');
+                            score_node.parent().css('color', 'white');
+                        }
+                        else
+                        {
+                            score_node.parent().css('backgroundColor', 'white');
+                            score_node.parent().css('color', 'black');
+                        }
+                    });
+                }
+            });
+
+            $("#clear_form").on('click', function()
+            {
+                var age = $("#id_age");
+                var situps = $("#id_situps");
+                var pushups = $("#id_pushups");
+                var two_mile = $("#id_two_mile");
+
+                age.val('');
+                situps.val('');
+                pushups.val('');
+                two_mile.val('');
+                $("#score").text('0');
+                $("#score").parent().css('backgroundColor', 'white');
+                $("#score").parent().css('color', 'black');
+            });
+        });
+    </script>
+
+
+{% endblock %}

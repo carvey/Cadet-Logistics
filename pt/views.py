@@ -19,7 +19,8 @@ class TestProfiletView(View):
     template_name = 'pt/pt_tests/test_profile.html'
 
     def get(self, request, test_id, tab='stats'):
-        test = PtTest.filtered_tests.get(id=test_id)
+        #TODO changed FilteredTests to objects for the time being. Need to change this back possibly?
+        test = PtTest.objects.get(id=test_id)
         top_scores = test.get_n_highest_scores(n=10)
 
         #this filter expression will be passed to the get_n_hightest_scores method to further filter scores
@@ -145,13 +146,16 @@ class InputTestScores(View):
         return filtered_cadets
 
 
-def calculate_score(request, cadet_id, situps, pushups, two_mile):
+def calculate_score(request, situps, pushups, two_mile, cadet_id=None, gender=None, age=None):
     """
     A view to be used with ajax to calculate pt scores as they are being entered
     :param request:
     :return:
     """
-    instance = PtScore.assemble_instance(cadet_id=cadet_id, raw_situps=situps, raw_pushups=pushups, run_time=two_mile)
+    if age and gender:
+        instance = PtScore.assemble_minimal_instance(age, gender, situps, pushups, two_mile)
+    else:
+        instance = PtScore.assemble_instance(cadet_id=cadet_id, raw_situps=situps, raw_pushups=pushups, run_time=two_mile)
     score = PtScore.calculate_score(instance)
     return HttpResponse(json.dumps(score), content_type='application/json')
 
@@ -289,4 +293,15 @@ class PTInfo(View):
 
     def get(self, request):
         context = {}
+        return render(request, self.template, context)
+
+
+class PTCalculator(View):
+    template = 'pt/input_pages/calculator.html'
+
+    def get(self, request):
+        form = ScoreCalculatorForm()
+        context = {
+            'form': form
+        }
         return render(request, self.template, context)

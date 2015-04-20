@@ -40,7 +40,7 @@
                     <tbody>
                            {% for test in future_tests %}
                                <tr>
-                                    <td>{{ test }}</td>
+                                    <td><a href="{% url 'pt-test-profile' test.id %}">{{ test }}</a></td>
                                     <td>
                                         {% for level in test.ms_levels.all %}
                                             {% if not forloop.last %}

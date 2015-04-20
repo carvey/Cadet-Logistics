@@ -1,8 +1,10 @@
 from django import forms
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 
-from pt.models import PtTest, PtScore
+from pt.models import PtTest, PtScore, GENDER_CHOICES
 from personnel.models import Cadet
+
+from collections import OrderedDict
 
 
 class TestForm(forms.ModelForm):
@@ -47,3 +49,22 @@ class ScoreForm(forms.Form):
             self.add_error('two_mile', self.invalid_run_time)
 
         return self.cleaned_data.get('two_mile')
+
+
+class ScoreCalculatorForm(ScoreForm):
+    cadet = None
+    cadet_id = None
+    age = forms.IntegerField(initial=None, widget=forms.NumberInput(attrs={'placeholder': 0}))
+    gender = forms.ChoiceField(choices=GENDER_CHOICES)
+
+    def __init__(self, *args, **kwargs):
+        super(ScoreCalculatorForm, self).__init__(*args, **kwargs)
+        fields = OrderedDict()
+        fields.update({
+            'age': self.fields['age'],
+            'gender': self.fields['gender'],
+            'pushups': self.fields['pushups'],
+            'situps': self.fields['situps'],
+            'two_mile': self.fields['two_mile']
+        })
+        self.fields = fields

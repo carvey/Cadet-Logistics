@@ -368,7 +368,7 @@ class PtScore(models.Model):
             avg_score = PtScore.get_avg_total_score(scores)
             update_merge_dict(avg_scores, avg_score, cadet)
         avg_scores = collections.OrderedDict(reversed(sorted(avg_scores.items(), key=lambda t: t[1])))
-        return order_dict(avg_scores, 5)
+        return order_dict(avg_scores, n)
 
     @staticmethod
     def get_worst_cadets(cadets, n=5):

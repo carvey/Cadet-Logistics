@@ -233,7 +233,23 @@ class StatisticsView(View):
 
         cadets = Cadet.objects.all()
         top_cadets = PtScore.get_top_cadets(cadets)
-        worst_cadets = PtScore.get_worst_cadets(cadets)
+        # worst_cadets = PtScore.get_worst_cadets(cadets)
+
+        batallion_averages = {}
+        score_sum = 0
+        pushup_sum = 0
+        situp_sum = 0
+        scores = PtScore.objects.all()
+        for score in scores:
+            score_sum += score.score
+            pushup_sum += score.pushups_score
+            situp_sum += score.situps_score
+        scores_len = len(scores)
+        batallion_averages.update({
+            'score': score_sum / float(scores_len),
+            'pushups': pushup_sum / float(scores_len),
+            'situps': situp_sum / float(scores_len)
+        })
 
         context = {
             'tab': tab,
@@ -243,7 +259,8 @@ class StatisticsView(View):
             'situp_test_scores': situps,
             'run_test_scores': run,
             'top_cadets': top_cadets,
-            'lowest_cadets': worst_cadets,
+            'batallion_averages': batallion_averages
+            # 'lowest_cadets': worst_cadets,
         }
 
         context.update(

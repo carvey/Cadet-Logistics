@@ -9,6 +9,7 @@ urlpatterns = patterns('',
         
         url(r'^tests/?$', TestListingView.as_view(), name='pt-tests-listing'),
         url(r'^tests/add', AddTest.as_view(), name='add_pt_test'),
+        url(r'tests/delete/(?P<test_id>\d+)/$', DeleteTest.as_view(), name='delete_pt_test'),
         url(r'^tests/edit/(?P<test_id>\d+)/$', EditTest.as_view(), name='edit_pt_test'),
 
         url(r'^tests/input-scores/(?P<test_id>\d+)/$', InputTestScores.as_view(), name='input_test_scores'),

@@ -69,7 +69,7 @@ class EditTest(View):
     template = 'pt/pt_tests/test_form.html'
 
     def post(self, request, test_id):
-        test = PtTest.future_tests.get(id=test_id)
+        test = PtTest.objects.get(id=test_id)
         form = TestForm(request.POST, instance=test)
         context = {}
         if form.is_valid():
@@ -80,10 +80,20 @@ class EditTest(View):
             return render(request, self.template, context)
 
     def get(self, request, test_id):
-        test = PtTest.future_tests.get(id=test_id)
+        test = PtTest.objects.get(id=test_id)
         form = TestForm(instance=test)
         context = {'test_form': form, 'edit': True}
         return render(request, self.template, context)
+
+
+class DeleteTest(View):
+
+    # TODO this should be changed to post
+    def get(self, request, test_id):
+        test = PtTest.objects.get(id=test_id)
+        test.ptscore_set.all().delete()
+        test.delete()
+        return HttpResponseRedirect(reverse('pt-tests-listing'))
 
 
 # TODO: Would be nice to have suggesstions on misspelled cadet names for the error message. Fuzzywuzzy on github might be good for this

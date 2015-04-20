@@ -88,8 +88,12 @@ class PtTest(models.Model):
 
         return rate
 
-    def getNumberOfScores(self):
-        return len(PtScore.objects.filter(pt_test=self))
+    def get_scores_count(self):
+        """
+        Returns the number of PtScores associated with this test
+        :return: an int of the pt scores associated with this test
+        """
+        return len(self.ptscore_set.all())
 
     def getHighestScore(self):
         scores = PtScore.objects.filter(pt_test=self)

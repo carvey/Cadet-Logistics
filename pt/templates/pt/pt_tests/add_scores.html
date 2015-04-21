@@ -133,17 +133,12 @@
                 onSelect: function(suggestion)
                 {
                     cadets[suggestion.value] = suggestion.data;
-                    copy_id($(this).parent(), suggestion);
+                    //copy the selected cadets id into the hidden cadet_id field
+                    parent.find(".cadet_id").val(suggestion.data);
                 }
             });
 
             handle_ajax();
-
-            function copy_id(parent, suggestion)
-            {
-                parent.find(".cadet_id").val(suggestion.data);
-            }
-
 
             function handle_ajax() {
                 $("input:not(input[placeholder='Cadet'])").change(function() {

@@ -23,10 +23,6 @@ class ScoreConfirmationTests(TestCase):
         self.cadet.save()
         self.test.save()
 
-    # def get_birthdate(self, age):
-    #     today = datetime.date.today()
-    #     today.year - self.birth_date.year - ((today.month, today.day) < (self.birth_date.month, self.birth_date.day))
-
     def make_request(self, pu, su, ru, age, gender):
         """
         Should make the request to apftscore.com to check Eagletrack scoring
@@ -78,13 +74,15 @@ class ScoreConfirmationTests(TestCase):
         }
 
     def test_male_19_21(self):
-        score = PtScore(cadet=self.cadet, pt_test=self.test, pushups=71, situps=78, two_mile='13:00')
-        score.save()
-        response_dict = self.make_request(score.pushups, score.situps, score.two_mile,
-                                          score.cadet.get_age(), score.cadet.gender)
+        # score = PtScore(cadet=self.cadet, pt_test=self.test, pushups=71, situps=78, two_mile='13:00')
+        # score.save()
+        for score in PtScore.objects.all():
+            response_dict = self.make_request(score.pushups, score.situps, score.two_mile,
+                                              score.cadet.get_age(), score.cadet.gender)
 
-        self.assertEqual(response_dict['pushups'], score.pushups_score)
-        self.assertEqual(response_dict['situps'], score.situps_score)
-        self.assertEqual(response_dict['run'], score.run_score)
-        self.assertEqual(response_dict['score'], score.score)
-        self.assertEqual(response_dict['passing'], score.passing)
+            self.assertEqual(response_dict['pushups'], score.pushups_score)
+            self.assertEqual(response_dict['situps'], score.situps_score)
+            self.assertEqual(response_dict['run'], score.run_score)
+            self.assertEqual(response_dict['score'], score.score)
+            self.assertEqual(response_dict['passing'], score.passing)
+            print "All scores good for %s" % score

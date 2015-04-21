@@ -9,7 +9,7 @@ from django.core.exceptions import ObjectDoesNotExist, ValidationError
 
 from pt.models import PtTest, PtScore, Grader
 from personnel.models import Company, Cadet, MsLevel
-from pt_utils import get_complete_average_scores_dict, get_avg_scores_by_company
+from pt.pt_utils.utils import get_complete_average_scores_dict, get_avg_scores_by_company
 from pt.forms import *
 
 import json

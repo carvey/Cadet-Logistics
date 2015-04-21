@@ -1,5 +1,7 @@
 from personnel.models import Company
 from pt.models import PtTest, PtScore
+import requests
+from pyquery import PyQuery as pq
 
 def get_complete_average_scores_dict(filter_expression=None):
     """

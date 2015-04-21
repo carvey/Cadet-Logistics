@@ -62,6 +62,12 @@ class PtTest(models.Model):
         format_date = self.date.strftime('%d %b, %Y')
         return '%s PT Test' % format_date
 
+    def can_input_scores(self):
+        today = datetime.date.today()
+        if today >= self.date:
+            return True
+        return False
+
     def formatted_date(self):
         """
         To be used for full calendar event objects

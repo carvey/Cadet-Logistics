@@ -57,7 +57,9 @@
                                             <a class="btn btn-default btn-sm" href="{% url 'edit_pt_test' test.id %}" role="button">Edit Test</a>
                                         </td>
                                         <td>
-                                            <a class="btn btn-default btn-sm" href="{% url 'input_test_scores' test.id %}" role="button">Input Scores</a>
+                                            <form style="display: inline" action="{% url 'input_test_scores' test.id %}" method="get">
+                                            <button class="input_scores btn btn-default btn-sm" {% if not test.can_input_scores %}disabled{% endif %}>Input Scores</button>
+                                            </form>
                                         </td>
                                     {% endif %}
                                </tr>
@@ -130,4 +132,8 @@
     <script src="{% static 'js/plugins/flot/jquery.flot.time.js' %}"></script>
     <script src="{% static 'js/plugins/flot/jquery.flot.tooltip.min.js' %}"></script>
     <script src="{% static 'js/plugins/flot/jquery.flot.pie.js' %}"></script>
+
+    <script>
+
+    </script>
 {% endblock %}

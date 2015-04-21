@@ -16,41 +16,48 @@
         Add PT Test
     {% endif %}
 
-    {% if user|super_permissions %}
+    {% if edit and user|super_permissions %}
+
         <div style="display: inline-block; float: right">
             <a href="#deleteModal" class="btn btn-danger btn-md" data-toggle="modal">Delete This Test</a>
         </div>
-    {% endif %}
 
-    <!-- Search Modal -->
-    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Delete Test: {{ test_form.instance }}</h4>
-                </div>
-                <div class="modal-body" id="search-modal-body" style="font-size: 25px;">
-                    <p>Are you sure you want to delete this test?</p>
-                    <p> All scores and data regarding this test will also be removed.</p>
-                    <hr>
-                    <p>There are <strong>{{ test_form.instance.get_scores_count }}</strong> scores associated with this test that will be deleted</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <a href="{% url 'delete_pt_test' test_form.instance.id %}">
-                        <button type="button" class="btn btn-danger">Delete this test</button>
-                    </a>
+        <!-- Delete Modal -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Delete Test: {{ test_form.instance }}</h4>
+                    </div>
+                    <div class="modal-body" id="search-modal-body" style="font-size: 25px;">
+                        <p>Are you sure you want to delete this test?</p>
+                        <p> All scores and data regarding this test will also be removed.</p>
+                        <hr>
+                        <p>There are <strong>{{ test_form.instance.get_scores_count }}</strong> scores associated with this test that will be deleted</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <a href="{% url 'delete_pt_test' test_form.instance.id %}">
+                            <button type="button" class="btn btn-danger">Delete this test</button>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-
+    {% endif %}
 {% endblock %}
 
 {% block content %}
+
+    <style>
+        .errorlist
+        {
+            color: red;
+        }
+    </style>
 
     <div class="row">
         <div class="col-md-6">
@@ -61,11 +68,14 @@
                 action="{% url 'add_pt_test' %}"
                 {% endif %}
             >
+
                 {% for field in test_form %}
                     {% csrf_token %}
 
                     <div class="row" style="margin: 25px 0;">
-
+                        {% if field.errors %}
+                            {{ field.errors }}
+                        {% endif %}
                         <div class="col-md-2">
                             <div style="display: inline-block; float: left">{{ field.label_tag }}</div>
                         </div>

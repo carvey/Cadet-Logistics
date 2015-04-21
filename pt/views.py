@@ -57,10 +57,15 @@ class AddTest(View):
         test_form = TestForm(request.POST)
         if test_form.is_valid():
             test_form.save()
+        else:
+            return self.get(request, test_form)
         return HttpResponseRedirect(reverse("pt-tests-listing"))
 
-    def get(self, request):
-        test_form = TestForm()
+    def get(self, request, form=None):
+        if form:
+            test_form = form
+        else:
+            test_form = TestForm()
         context = {'test_form': test_form}
         return render(request, self.template, context)
 

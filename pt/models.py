@@ -81,10 +81,10 @@ class PtTest(models.Model):
         :type return: Decimal
         """
         passing = Decimal(PtScore.objects.filter(pt_test=self, passing=True).count())
-        failing = Decimal(PtScore.objects.filter(pt_test=self, passing=False).count())
-        if failing == 0:
-            return 100
-        rate = (passing/failing * 100).quantize(Decimal(10) ** -2)
+        scores = Decimal(self.ptscore_set.all().count())
+        if not scores:
+            return 0
+        rate = (passing/scores * 100).quantize(Decimal(10) ** -2)
 
         return rate
 

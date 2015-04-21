@@ -13,6 +13,7 @@ from pt_utils import get_complete_average_scores_dict, get_avg_scores_by_company
 from pt.forms import *
 
 import json
+from decimal import Decimal
 
 
 class TestProfiletView(View):
@@ -261,9 +262,9 @@ class StatisticsView(View):
             situp_sum += score.situps_score
         scores_len = len(scores)
         batallion_averages.update({
-            'score': score_sum / float(scores_len),
-            'pushups': pushup_sum / float(scores_len),
-            'situps': situp_sum / float(scores_len)
+            'score': (Decimal(score_sum) / Decimal(scores_len)).quantize(Decimal(10) ** -2),
+            'pushups':(Decimal(pushup_sum) / Decimal(scores_len)).quantize(Decimal(10) ** -2),
+            'situps': (Decimal(situp_sum) / Decimal(scores_len)).quantize(Decimal(10) ** -2)
         })
 
         context = {

@@ -8,8 +8,11 @@
 {% block columns%}
 	<th>Last, First Name</th>
 	<th>Pushups</th>
-	<th>Sit-ups</th>
+    <th>Pushup Score</th>
+	<th>Situps</th>
+    <th>Situps Score</th>
 	<th>Two Mile Time</th>
+    <th>Two Mile Score</th>
 	<th>Score</th>
     <th>Pass/Fail</th>
     <th>Company</th>
@@ -20,10 +23,13 @@
 	{% for score in scores %}
 		<tr class="odd gradeX">
 				<td><a href="/personnel/cadets/{{ score.cadet.id }}/pt/">{{score.cadet}}</a></td>
-				<td>{{score.pushups}}</td>
-				<td>{{score.situps}}</td>
-				<td>{{score.get_run_time_str}}</td> <!-- Not sorting properly. May have to do with creating in pop script -->
-				<td>{{score.score}}</td>
+				<td>{{ score.pushups }}</td>
+                <td>{{ score.pushups_score }}</td>
+				<td>{{ score.situps }}</td>
+				<td>{{ score.situps_score }}</td>
+				<td>{{ score.get_run_time_str }}</td> <!-- Not sorting properly. May have to do with creating in pop script -->
+                <td>{{ score.run_score }}</td>
+				<td>{{ score.score }}</td>
                 <td>{{ score.passing|pass_fail }}</td>
                 <td>{{ score.cadet.company }}</td>
                 <td>{{ score.cadet.ms_level }}</td>
@@ -32,5 +38,5 @@
 {% endblock %}
 
 {% block display_column_index %}
-0,1,2,3,4,5
+0,1,3,5,7,8
 {% endblock %}

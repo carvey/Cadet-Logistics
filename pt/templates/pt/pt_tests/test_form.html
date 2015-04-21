@@ -5,7 +5,9 @@
 {% block head %}
     <script src="{% static 'css/less/bootstrap-datepicker/js/bootstrap-datepicker.js' %}"></script>
     <script src="{% static 'js/boostrap/bootstrap_form_control.js' %}"></script>
+    <script src="{% static 'js/jquery_sumoselect.js' %}"></script>
     <link href="{% static 'css/less/bootstrap-datepicker/datepicker.css' %}" rel="stylesheet">
+    <link href="{% static 'css/sumoselect.css' %}" rel="stylesheet">
 
 {% endblock %}
 
@@ -91,6 +93,13 @@
         </div>
     </div>
 
+
+    <script>
+        $("#id_ms_levels").SumoSelect({
+            placeholder: "Participating MS Levels"
+        });
+
+    </script>
 
 
 {% endblock %}

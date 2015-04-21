@@ -22,8 +22,9 @@ class TestForm(forms.ModelForm):
         test_date = self.cleaned_data['date']
         tests = PtTest.objects.filter(date__exact=test_date)
         if tests:
-            self.add_error('date', self.test_already_exists)
-            print self.errors
+            if tests[0].id != self.instance.id:
+                self.add_error('date', self.test_already_exists)
+                print self.errors
 
 class ScoreForm(forms.Form):
     cadet = forms.CharField()

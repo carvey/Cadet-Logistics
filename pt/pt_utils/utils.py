@@ -1,7 +1,6 @@
 from personnel.models import Company
-from pt.models import PtTest, PtScore
-import requests
-from pyquery import PyQuery as pq
+from pt.models import PtScore, Grader
+from pt.constants import *
 
 def get_complete_average_scores_dict(filter_expression=None):
     """
@@ -63,3 +62,77 @@ def get_avg_scores_by_company(company):
         }
     except:
         pass
+
+
+def create_graders():
+    # Male two-mile graders
+    Grader.objects.get_or_create(gender="Male", activity="Two-mile run", age_group="17-21",
+                                           score_table=RUBRIC_MALE_17_21_RUNNING)
+    Grader.objects.get_or_create(gender="Male", activity="Two-mile run", age_group="22-26",
+                                           score_table=RUBRIC_MALE_22_26_RUNNING)
+    Grader.objects.get_or_create(gender="Male", activity="Two-mile run", age_group="27-31",
+                                           score_table=RUBRIC_MALE_27_31_RUNNING)
+    Grader.objects.get_or_create(gender="Male", activity="Two-mile run", age_group="32-36",
+                                           score_table=RUBRIC_MALE_32_36_RUNNING)
+    Grader.objects.get_or_create(gender="Male", activity="Two-mile run", age_group="37-41",
+                                           score_table=RUBRIC_MALE_37_41_RUNNING)
+
+    # Female two-mile graders
+    Grader.objects.get_or_create(gender="Female", activity="Two-mile run", age_group="17-21",
+                                           score_table=RUBRIC_FEMALE_17_21_RUNNING)
+    Grader.objects.get_or_create(gender="Female", activity="Two-mile run", age_group="22-26",
+                                           score_table=RUBRIC_FEMALE_22_26_RUNNING)
+    Grader.objects.get_or_create(gender="Female", activity="Two-mile run", age_group="27-31",
+                                           score_table=RUBRIC_FEMALE_27_31_RUNNING)
+    Grader.objects.get_or_create(gender="Female", activity="Two-mile run", age_group="32-36",
+                                            score_table=RUBRIC_FEMALE_32_36_RUNNING)
+    Grader.objects.get_or_create(gender="Female", activity="Two-mile run", age_group="37-41",
+                                            score_table=RUBRIC_FEMALE_37_41_RUNNING)
+
+    # Male pushups graders
+    Grader.objects.get_or_create(gender="Male", activity="Pushups", age_group="17-21",
+                                 score_table=RUBRIC_MALE_17_21_PUSHUPS)
+    Grader.objects.get_or_create(gender="Male", activity="Pushups", age_group="22-26",
+                                 score_table=RUBRIC_MALE_22_26_PUSHUPS)
+    Grader.objects.get_or_create(gender="Male", activity="Pushups", age_group="27-31",
+                                 score_table=RUBRIC_MALE_27_31_PUSHUPS)
+    Grader.objects.get_or_create(gender="Male", activity="Pushups", age_group="32-36",
+                                 score_table=RUBRIC_MALE_32_36_PUSHUPS)
+    Grader.objects.get_or_create(gender="Male", activity="Pushups", age_group="37-41",
+                                 score_table=RUBRIC_MALE_37_41_PUSHUPS)
+
+    # Female pushups graders
+    Grader.objects.get_or_create(gender="Female", activity="Pushups", age_group="17-21",
+                                 score_table=RUBRIC_FEMALE_17_21_PUSHUPS)
+    Grader.objects.get_or_create(gender="Female", activity="Pushups", age_group="22-26",
+                                 score_table=RUBRIC_FEMALE_22_26_PUSHUPS)
+    Grader.objects.get_or_create(gender="Female", activity="Pushups", age_group="27-31",
+                                 score_table=RUBRIC_FEMALE_27_31_PUSHUPS)
+    Grader.objects.get_or_create(gender="Female", activity="Pushups", age_group="32-36",
+                                 score_table=RUBRIC_FEMALE_32_36_PUSHUPS)
+    Grader.objects.get_or_create(gender="Female", activity="Pushups", age_group="37-41",
+                                 score_table=RUBRIC_FEMALE_37_41_PUSHUPS)
+
+    # Male situps graders
+    Grader.objects.get_or_create(gender="Male", activity="Situps", age_group="17-21",
+                                 score_table=RUBRIC_MALE_17_21_SITUPS)
+    Grader.objects.get_or_create(gender="Male", activity="Situps", age_group="22-26",
+                                 score_table=RUBRIC_MALE_22_26_SITUPS)
+    Grader.objects.get_or_create(gender="Male", activity="Situps", age_group="27-31",
+                                 score_table=RUBRIC_MALE_27_31_SITUPS)
+    Grader.objects.get_or_create(gender="Male", activity="Situps", age_group="32-36",
+                                 score_table=RUBRIC_MALE_32_36_SITUPS)
+    Grader.objects.get_or_create(gender="Male", activity="Situps", age_group="37-41",
+                                 score_table=RUBRIC_MALE_37_41_SITUPS)
+
+    # Female situps graders
+    Grader.objects.get_or_create(gender="Female", activity="Situps", age_group="17-21",
+                                 score_table=RUBRIC_FEMALE_17_21_SITUPS)
+    Grader.objects.get_or_create(gender="Female", activity="Situps", age_group="22-26",
+                                 score_table=RUBRIC_FEMALE_22_26_SITUPS)
+    Grader.objects.get_or_create(gender="Female", activity="Situps", age_group="27-31",
+                                 score_table=RUBRIC_FEMALE_27_31_SITUPS)
+    Grader.objects.get_or_create(gender="Female", activity="Situps", age_group="32-36",
+                                 score_table=RUBRIC_FEMALE_32_36_SITUPS)
+    Grader.objects.get_or_create(gender="Female", activity="Situps", age_group="37-41",
+                                 score_table=RUBRIC_FEMALE_37_41_SITUPS)

@@ -215,6 +215,29 @@ class PtScore(models.Model):
         format_date = self.pt_test.date.strftime('%d %b, %Y')
         return 'PT Score %s for cadet: %s' % (format_date, self.cadet)
 
+    def full_display(self):
+        return """
+        --Score: %s--\n
+        Pushups: %s\n
+        Situps: %s\n
+        Two Mile: %s\n
+        """ % (self.score, self.pushups_score, self.situps_score, self.run_score)
+
+    def scores_diff(self, pushup_score, situp_score, two_mile_score, score, passing):
+        print """
+        Score: %s - %s\n
+        Pushups: %s - %s\n
+        Situps: %s - %s\n
+        Two Mile: %s - %s\n
+        Passing: %s - %s\n
+        """ % (self.score, score, self.pushups_score, pushup_score, self.situps_score, situp_score,
+               self.run_score, two_mile_score, self.passing, passing)
+
+    def scores_match(self, pushup_score, situp_score, two_mile_score, score, passing):
+        if self.score == score and self.pushups_score == pushup_score and self.situps_score == situp_score and self.run_score == two_mile_score and self.passing == passing:
+            return True
+        return False
+
     @staticmethod
     def assemble_minimal_instance(age, gender, raw_situps, raw_pushups, run_time):
         birth_date = datetime.datetime.now() - relativedelta(years=int(age))

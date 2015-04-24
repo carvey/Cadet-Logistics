@@ -293,21 +293,17 @@ def add_squad(number, platoon):
     return squad
 
 def add_cadet(first_name, last_name, age, ms_level, company, squad=None, gender="Male", platoon=None, ms_grade=100,
-               cc=False, fs=False, pc=False, ps=False, sl=False, xo=False):
+               cc=False, fs=False, pc=False, ps=False, sl=False, xo=False, id=None):
 
-    user = User.objects.get_or_create(username=(first_name+last_name).lower(), first_name=first_name, last_name=last_name)[0]
+    if id:
+        user = User.objects.get_or_create(id=age, username=(first_name+last_name).lower(), first_name=first_name, last_name=last_name)[0]
+    else:
+        user = User.objects.get_or_create(username=(first_name+last_name).lower(), first_name=first_name, last_name=last_name)[0]
     user.set_password('pass')
     user.save()
 
-    birth_date = None
-    if age == 18:
-        birth_date = datetime.date(1996, random.randint(1, 11), random.randint(1, 28))
-    elif age == 19:
-        birth_date = datetime.date(1995, random.randint(1, 11), random.randint(1, 28))
-    elif age == 20:
-        birth_date = datetime.date(1994, random.randint(1, 11), random.randint(1, 28))
-    elif age > 20:
-        birth_date = datetime.date(1993, random.randint(1, 11), random.randint(1, 28))
+    today = datetime.date.today()
+    birth_date = today - relativedelta(years=age)
 
     c = Cadet.objects.get_or_create(user=user, birth_date=birth_date, gender=gender, ms_level=ms_level,
                                     company=company, platoon=platoon, squad=squad)[0]

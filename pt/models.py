@@ -10,7 +10,7 @@ from django.core.validators import RegexValidator
 
 from decimal import Decimal
 from pt.managers import FilteredTestManager, FutureTestManager
-from Utils.global_utils import sort_queryset, order_dict, update_merge_dict
+from Utils.global_utils import order_dict, update_merge_dict
 
 male = 'Male'
 female = 'Female'
@@ -247,7 +247,6 @@ class PtScore(models.Model):
         run_time = str(run_time)
         instance = PtScore(cadet=cadet, pushups=raw_pushups, situps=raw_situps, two_mile=run_time)
         return instance
-
 
     @staticmethod
     def assemble_instance(cadet_id, raw_situps, raw_pushups, run_time):
@@ -612,7 +611,11 @@ class PtScore(models.Model):
         """
         score_values = Grader.objects.all()
 
-        cadet_age = self.cadet.get_age()
+        # gets the cadets age adjusted to the date of the pt test
+        # ex: if a score is saved two years after the test, the score should remain the same despite
+        # the cadet being older
+        cadet_age = self.cadet.get_age(self.pt_test.date)
+
         for score_value in score_values:
             value = score_value.age_group.split('-')
             if cadet_age >= int(value[0]) and cadet_age <= int(value[1]):
@@ -674,7 +677,6 @@ class PtScore(models.Model):
             grade = two_mile_grader.get_ordered_dict()[str(score_key)]
 
             return grade
-
 
     class Meta:
         db_table = 'PtScore'

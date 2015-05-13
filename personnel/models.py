@@ -90,9 +90,16 @@ class Users(models.Model):
     def get_name(self):
         return '%s %s' % (self.user.first_name, self.user.last_name)
 
-    def get_age(self):
-        today = datetime.date.today()
-        return today.year - self.birth_date.year - ((today.month, today.day) < (self.birth_date.month, self.birth_date.day))
+    def get_age(self, day=None):
+        """
+        Gets the cadets age from a reference point passed in through the "day" param. If no reference point is
+        specified, the current date is used. This parameter allows a cadets age to be calculated from the date
+         of a pt test, as opposed the current time.
+        :param day: The past or future reference point to get the cadets age from.
+        :return: The age of the cadet
+        """
+        ref_time = day or datetime.date.today()
+        return ref_time.year - self.birth_date.year - ((ref_time.month, ref_time.day) < (self.birth_date.month, self.birth_date.day))
 
     def generate_username(self, email=None):
         """

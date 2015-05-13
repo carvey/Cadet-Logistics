@@ -1,3 +1,5 @@
+import datetime
+
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
@@ -51,6 +53,14 @@ class UserRegistrationForm(forms.ModelForm):
         except ObjectDoesNotExist:
             pass
 
+    def clean_first_name(self):
+        first_name = self.cleaned_data.get('first_name')
+        return first_name.title()
+
+    def clean_last_name(self):
+        last_name = self.cleaned_data.get('last_name')
+        return last_name.title()
+
     def __init__(self, *args, **kwargs):
         super(UserRegistrationForm, self).__init__(*args, **kwargs)
 
@@ -84,9 +94,20 @@ class CadetRegistrationForm(forms.ModelForm):
                    'pt_missed', 'attendance_rate', 'ranger_challenge', 'color_guard', 'school', 'dropped', 'commissioned',
                    'volunteer_hours_completed', 'volunteer_hours_count', 'ms_grade', 'company', 'platoon', 'at_risk']
 
+    def clean_cell_number(self):
+        number = self.cleaned_data.get('cell_number')
+        return "".join(char for char in number if char.isdigit())
+
+    def clean_birth_date(self):
+        raw_date = self.cleaned_data.get('birth_date')
+        date = datetime.datetime.strptime(raw_date, "%Y-%m-%d").date()
+        today = datetime.date.today()
+        if date >= today:
+            raise forms.ValidationError("Your birth date must be before today")
+        return raw_date
+
 
 class EditCadet(forms.ModelForm):
-
 
     class Meta():
         model = Cadet

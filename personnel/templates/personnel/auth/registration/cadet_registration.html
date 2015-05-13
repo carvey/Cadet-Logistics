@@ -27,9 +27,6 @@
         <div class="col-md-4">
             <form action="{% url 'cadet_registration' %}" method="post">
                 {% csrf_token %}
-                {% if user_form.errors or cadet_form.errors %}
-                    <p>{{ cadet_form.errors }}</p>
-                {% endif %}
                 {% csrf_token %}
                 {{ user_form.as_p }}
                 {{ cadet_form.as_p }}

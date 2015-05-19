@@ -269,9 +269,9 @@ class Cadet(Users):
 
     # #
     blood_type = models.CharField(max_length=20, choices=BLOOD_TYPES, blank=False)
-    car_model = models.CharField(max_length=100, blank=False)
-    car_tag = models.CharField(max_length=25, blank=False)
-    comments = models.TextField(max_length=1000, blank=True)
+    car_model = models.CharField(max_length=100, blank=True, null=True)
+    car_tag = models.CharField(max_length=25, blank=True, null=True)
+    comments = models.TextField(max_length=1000, blank=True, null=True)
 
     objects = SearchManager()
 

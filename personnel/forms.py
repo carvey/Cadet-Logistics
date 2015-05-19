@@ -35,23 +35,26 @@ class LoginForm(AuthenticationForm):
 
 class UserRegistrationForm(forms.ModelForm):
 
-    school_email = forms.EmailField()
+    school_email = forms.EmailField(required=True)
     eagletrack_password = forms.CharField(widget=forms.PasswordInput())
     password_confirmation = forms.CharField(widget=forms.PasswordInput())
 
     def clean(self):
         passwd = self.cleaned_data.get('eagletrack_password')
         confirmed_passwd = self.cleaned_data.get('password_confirmation')
+        email = self.cleaned_data.get('school_email')
 
-        if passwd != confirmed_passwd:
-            raise forms.ValidationError('Password do not match')
+        if passwd and confirmed_passwd:
+            if passwd != confirmed_passwd:
+                raise forms.ValidationError('Passwords do not match')
 
-        try:
-            username = self.cleaned_data['school_email'].rpartition('@')[0]
-            user = User.objects.get(username=username)
-            raise forms.ValidationError('That Email has already been used for registration')
-        except ObjectDoesNotExist:
-            pass
+        if email:
+            try:
+                username = email.rpartition('@')[0]
+                user = User.objects.get(username=username)
+                raise forms.ValidationError('That Email has already been used for registration')
+            except ObjectDoesNotExist:
+                pass
 
     def clean_first_name(self):
         first_name = self.cleaned_data.get('first_name')
@@ -83,9 +86,7 @@ class CadreRegistrationForm(forms.ModelForm):
 
 class CadetRegistrationForm(forms.ModelForm):
 
-    cell_number = forms.CharField(widget=forms.TextInput(attrs={'Placeholder': 'EX Format: 1234567890 (No dashes)'}))
-    car_model = forms.CharField(widget=forms.TextInput(attrs={'Placeholder': 'Enter "None" if this is not applicable'}))
-    car_tag = forms.CharField(widget=forms.TextInput(attrs={'Placeholder': 'Enter "None" if this is not applicable'}))
+
     birth_date = forms.CharField(widget=forms.HiddenInput(attrs={'data-date-format': 'YYYY-mm-dd'}))
 
     class Meta():

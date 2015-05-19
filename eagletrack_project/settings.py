@@ -60,7 +60,8 @@ INSTALLED_APPS = (
     'personnel',
     # 'attendance',
     # 'gear',
-    'stronghold'
+    'stronghold',
+    'bootstrapform'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -87,27 +88,27 @@ WSGI_APPLICATION = 'eagletrack_project.wsgi.application'
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 #
 #
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'eagletrack',
-        'USER': 'charles',
-        'PASSWORD': 'shorefish',
-        'HOST': 'eagletrack.cnkdqqk3dlt2.us-west-2.rds.amazonaws.com',
-        'PORT': '3306',
-    }
-}
-#
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',
 #         'NAME': 'eagletrack',
-#         'USER': 'root',
-#        # 'PASSWORD': '',
-#         'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
+#         'USER': 'charles',
+#         'PASSWORD': 'shorefish',
+#         'HOST': 'eagletrack.cnkdqqk3dlt2.us-west-2.rds.amazonaws.com',
 #         'PORT': '3306',
 #     }
 # }
+#
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'eagletrack',
+        'USER': 'root',
+       # 'PASSWORD': '',
+        'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
+        'PORT': '3306',
+    }
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/

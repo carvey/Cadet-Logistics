@@ -24,9 +24,11 @@ Personnel Statistics
 
 {% block page_scripts %}
 	<script src="{% static 'js/plugins/flot/jquery.flot.js' %}"></script>
-    <script src="{% static 'js/plugins/flot/jquery.flot.time.js' %}"></script>
 	<script src="{% static 'js/plugins/flot/jquery.flot.tooltip.min.js' %}"></script>
     <script src="{% static 'js/plugins/flot/jquery.flot.pie.js' %}"></script>
+    <script src="{% static 'js/plugins/flot/jquery.flot.categories.min.js' %}"></script>
+    <script src="{% static 'js/plugins/flot/jquery.flot.orderBars.js' %}"></script>
+
     {% include 'personnel/stat_page/js/flot_cadets.html' %}
     {% include 'personnel/stat_page/js/flot_pie.html' %}
 {% endblock %}

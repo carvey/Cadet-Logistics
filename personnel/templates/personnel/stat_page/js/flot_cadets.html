@@ -1,55 +1,60 @@
-{% load personnel_filters %}
+{% load pt_filters %}
 
 <script>
-	//Flot Line Chart
-	$(document).ready(function() {
-	    var offset = 0;
-	    plot();
+    //Flot Line Chart
+    $(document).ready(function() {
+        var offset = 0;
+        plot();
 
-	    function plot() {
+        function plot() {
 
-            var times = [
-                {% for snap in snapshots %}
-                    [{{ snap.date|timestamp }}, {{ snap.cadets }}],
-                {% endfor %}
-            ];
+            var platoons = [{% for platoon in platoons %}
+                {% if platoon.count %}
+                    ["{{ platoon.company_short_name }}", {{ platoon.count }}],
+                {% endif %}
+            {% endfor %}];
 
-	        var options = {
-	            series: {
-	                lines: {
-	                    show: true
-	                },
-	                points: {
-	                    show: true
-	                }
-	            },
-	            grid: {
-	                hoverable: true //IMPORTANT! this is needed for tooltip to work
-	            },
-	            yaxis: {
-	                min: 0,
-	                max: {{ cadets|length }} + 10
-	            },
-	            xaxis: {
-	            	mode: "time"
-	            },
-	            tooltip: true,
-	            tooltipOpts: {
-	                content: "'%s' of %x.1 is %y.4",
-	                shifts: {
-	                    x: -60,
-	                    y: 25
-	                }
-	            }
-	        };
+            var options = {
+                series: {
+                    bars: {
+                        show: true,
+                        barWidth: 0.3,
+                        stack: false
+                    },
+                    points: {
+                        show: true
+                    }
+                },
+                grid: {
+                    hoverable: true //IMPORTANT! this is needed for tooltip to work
+                },
+                yaxis: {
+                    min: 0,
+                },
+                xaxis: {
+                  mode: "categories",
+                  categories: [{% for platoon in platoons %}"{{ platoon }}", {% endfor %}].sort()
+                },
+                tooltip: true,
+                tooltipOpts: {
+                    content: "'%s' is %y.4",
+                    shifts: {
+                        x: -60,
+                        y: 25
+                    }
+                }
+            };
 
-	        var plotObj = $.plot($("#flot-line-chart"), [
-                {
-	                data: times,
-	                label: "Active Cadets"
-	            },
-                ],
-	            options);
-	    }
-	});
+            var plotObj = $.plot($("#platoon_counts"),
+                    [
+                        {data: platoons, label: "Platoon Counts", bars: {
+                            show: true,
+                            barWidth: 0.5,
+                            order: 0
+                        }},
+
+                    ],
+                options);
+        }
+    });
 </script>

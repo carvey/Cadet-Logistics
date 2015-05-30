@@ -53,27 +53,10 @@
 			<div class='panel-heading'>
 				Batallion Averages
 			</div>
-			<div class='panel-body top_list'>
-{#				<ol>#}
-{#                    {% for score, cadet in lowest_cadets %}#}
-{#                        {% if cadet|is_list %}#}
-{#                            <li> {{ score }}:#}
-{#                                {% for c in cadet %}#}
-{#                                    {% if forloop.last %}#}
-{#                                        <a href="/personnel/cadets/{{ c.id }}">{{ c }}</a>#}
-{#                                    {% else %}#}
-{#                                        <a href="/personnel/cadets/{{ c.id }}">{{ c }};</a>#}
-{#                                    {% endif %}#}
-{#                                {% endfor %}#}
-{#                            </li>#}
-{#                        {% else %}#}
-{#                            <li>{{ score }}: <a href="/personnel/cadets/{{ cadet.id }}">{{ cadet }}</a></li>#}
-{#                        {% endif %}#}
-{#                    {% endfor %}#}
-{#				</ol>#}
-                <p>Average Overall Score: {{ batallion_averages.score }}</p>
-                <p>Average Pushup Score: {{ batallion_averages.pushups }}</p>
-                <p>Average Situp Score: {{ batallion_averages.situps }}</p>
+			<div class='panel-body top_list'  style="font-size: large">
+                <p>Average Overall: {{ batallion_averages.score }}</p>
+                <p>Average Contracted: {{ batallion_averages.contracted }}</p>
+                <p>Average Non-Contracted: {{ batallion_averages.non_contracted }}</p>
 			</div>
 		</div>
 	</div>

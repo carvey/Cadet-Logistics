@@ -249,23 +249,30 @@ class StatisticsView(View):
 
         cadets = Cadet.objects.all()
         top_cadets = PtScore.get_top_cadets(cadets)
-        # worst_cadets = PtScore.get_worst_cadets(cadets)
 
         batallion_averages = {}
         score_sum = 0
-        pushup_sum = 0
-        situp_sum = 0
+        contracted_average = 0
+        non_contracted_average = 0
         scores = PtScore.objects.all()
+        contracted_count = 0
+        non_contracted_count = 0
         for score in scores:
             score_sum += score.score
-            pushup_sum += score.pushups_score
-            situp_sum += score.situps_score
-        scores_len = len(scores)
-        batallion_averages.update({
-            'score': (Decimal(score_sum) / Decimal(scores_len)).quantize(Decimal(10) ** -2),
-            'pushups':(Decimal(pushup_sum) / Decimal(scores_len)).quantize(Decimal(10) ** -2),
-            'situps': (Decimal(situp_sum) / Decimal(scores_len)).quantize(Decimal(10) ** -2)
-        })
+            if score.cadet.contracted:
+                contracted_count += 1
+                contracted_average += score.score
+            else:
+                non_contracted_count += 1
+                non_contracted_average += score.score
+
+        if scores:
+            batallion_averages.update({
+                'score': (Decimal(score_sum) / Decimal(scores.count())).quantize(Decimal(10) ** -2),
+                'contracted':(Decimal(contracted_average) / Decimal(contracted_count)).quantize(Decimal(10) ** -2),
+                'non_contracted': (Decimal(non_contracted_average) / Decimal(non_contracted_count)).quantize(Decimal(10) ** -2)
+            })
+
 
         context = {
             'tab': tab,
@@ -276,7 +283,6 @@ class StatisticsView(View):
             'run_test_scores': run,
             'top_cadets': top_cadets,
             'batallion_averages': batallion_averages
-            # 'lowest_cadets': worst_cadets,
         }
 
         context.update(

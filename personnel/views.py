@@ -71,7 +71,11 @@ class Stats(View):
         current_cadets = cadets.filter(commissioned=False, dropped=False)
         nursing_contracted = cadets.filter(nurse_contracted=True)
 
-        snapshots = SnapShot.objects.all()
+        companys = {}
+        for company in Company.objects.all():
+            companys.update({company: company.platoons.all()})
+
+        platoons = Platoon.objects.all()
 
         demo_dict = {}
         for cadet in current_cadets:
@@ -83,7 +87,8 @@ class Stats(View):
 
         context = {
             'tab': tab,
-            'snapshots': snapshots,
+            'companys': companys,
+            'platoons': platoons,
             'cadets': current_cadets,
             'nursing_contracted': nursing_contracted,
             'demographics': demo_dict,

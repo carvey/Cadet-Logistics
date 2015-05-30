@@ -269,9 +269,9 @@ class Cadet(Users):
 
     # #
     blood_type = models.CharField(max_length=20, choices=BLOOD_TYPES, blank=False)
-    car_model = models.CharField(max_length=100, blank=True, null=True)
-    car_tag = models.CharField(max_length=25, blank=True, null=True)
-    comments = models.TextField(max_length=1000, blank=True, null=True)
+    car_model = models.CharField(max_length=100, blank=True, default="")
+    car_tag = models.CharField(max_length=25, blank=True, default="")
+    comments = models.TextField(max_length=1000, blank=True, default="")
 
     objects = SearchManager()
 
@@ -390,9 +390,11 @@ class Platoon(models.Model, GroupingMixin):
     def short_name(self):
         return str(self.number) + self.number_end_str() + " Platoon"
 
+    def company_short_name(self):
+        return "%s %s%s" % (self.company.name[0], self.number, self.number_end_str())
+
     def get_sub_groupings(self):
         return self.squads.all()
-
 
     def set_platoon_commander(self, cadet):
         """

@@ -87,7 +87,7 @@ class CadreRegistrationForm(forms.ModelForm):
 
 class CadetRegistrationForm(forms.ModelForm):
 
-    birth_date = forms.CharField(widget=forms.HiddenInput(attrs={'data-date-format': 'YYYY-mm-dd'}))
+    birth_date = forms.CharField(widget=DatePicker())
 
     class Meta():
         model = Cadet

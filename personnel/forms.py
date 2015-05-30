@@ -6,6 +6,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate
 from django.core.exceptions import ObjectDoesNotExist
 from personnel.models import Cadet, Company, Squad, Problems, Cadre
+from widgets.date_picker import DatePicker
 
 
 class LoginForm(AuthenticationForm):
@@ -77,7 +78,7 @@ class UserRegistrationForm(forms.ModelForm):
 
 class CadreRegistrationForm(forms.ModelForm):
 
-    birth_date = forms.CharField(widget=forms.HiddenInput(attrs={'data-date-format': 'YYYY-mm-dd'}))
+    birth_date = forms.CharField(widget=DatePicker())
 
     class Meta():
         model = Cadre
@@ -85,7 +86,6 @@ class CadreRegistrationForm(forms.ModelForm):
 
 
 class CadetRegistrationForm(forms.ModelForm):
-
 
     birth_date = forms.CharField(widget=forms.HiddenInput(attrs={'data-date-format': 'YYYY-mm-dd'}))
 

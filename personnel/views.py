@@ -138,7 +138,6 @@ class CadetRegistration(View):
             return HttpResponseRedirect('/')
 
         else:
-
             context = {
                 'user_form': user_form,
                 'cadet_form': cadet_form,

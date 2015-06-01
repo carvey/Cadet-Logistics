@@ -4,10 +4,14 @@ from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from pt.models import PtTest, PtScore, GENDER_CHOICES
 from personnel.models import Cadet
 
+from Utils.widgets.date_picker import DatePicker
+
 from collections import OrderedDict
 
 
 class TestForm(forms.ModelForm):
+
+    date = forms.CharField(widget=DatePicker())
 
     class Meta():
         model = PtTest

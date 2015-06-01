@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load permission_filters %}
+{% load bootstrap %}
 
 {% block head %}
     <script src="{% static 'css/less/bootstrap-datepicker/js/bootstrap-datepicker.js' %}"></script>
@@ -64,38 +65,30 @@
         }
     </style>
 
-    <div class="row">
-        <div class="col-md-6">
-            <form method="post"
-                {% if edit%}
-                action="/pt/tests/edit/{{ test_form.instance.id }}/"
-                {% else %}
-                action="{% url 'add_pt_test' %}"
-                {% endif %}
-            >
-
-                {% for field in test_form %}
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-10">
+                <form method="post" class="form-horizontal"
+                    {% if edit%}
+                    action="/pt/tests/edit/{{ test_form.instance.id }}/"
+                    {% else %}
+                    action="{% url 'add_pt_test' %}"
+                    {% endif %}
+                >
                     {% csrf_token %}
 
-                    <div class="row" style="margin: 25px 0;">
-                        {% if field.errors %}
-                            {{ field.errors }}
-                        {% endif %}
-                        <div class="col-md-2">
-                            <div style="display: inline-block; float: left">{{ field.label_tag }}</div>
-                        </div>
-                        <div class="col-md-6">
-                            <div style="display: inline-block">{{ field }}</div>
-                        </div>
-
+                    {{ test_form|bootstrap_horizontal }}
+                    <div class="form-group">
+                      <div class="col-sm-10 col-sm-offset-2">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                      </div>
                     </div>
-                {% endfor %}
-                <input class="btn btn-sm btn-success" type="submit" value="Submit" />
-            </form>
 
+                </form>
+
+            </div>
         </div>
     </div>
-
 
     <script>
         $("#id_ms_levels").SumoSelect({

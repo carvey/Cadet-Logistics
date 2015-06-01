@@ -1,10 +1,11 @@
 {% extends 'personnel/auth/auth_base.html' %}
 {% load static %}
+{% load bootstrap %}
 
 {% block head %}
     <link href="{% static 'css/less/bootstrap-datepicker/datepicker.css' %}" rel="stylesheet">
     <script src="{% static 'css/less/bootstrap-datepicker/js/bootstrap-datepicker.js' %}"></script>
-    <script src="{% static 'js/boostrap/bootstrap_form_control.js' %}"></script>
+    <script src="{% static 'js/boostrap/registration_form_control.js' %}"></script>
 {% endblock %}
 
 {% block page_header %}
@@ -23,18 +24,21 @@
     }
 
     </style>
-    <div class="row">
-        <div class="col-md-4">
-            <form action="{% url 'cadre_registration' %}" method="post">
-                {% csrf_token %}
-                {% if user_form.errors or cadet_form.errors %}
-                    <p>{{ cadet_form.errors }}</p>
-                {% endif %}
-                {% csrf_token %}
-                {{ user_form.as_p }}
-                {{ cadre_form.as_p }}
-                <input class="btn btn-sm btn-success" type="submit" value="Submit" />
-            </form>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-10">
+                <form class="form-horizontal" action="{% url 'cadre_registration' %}" method="post">
+                    {% csrf_token %}
+                    {{ user_form|bootstrap_horizontal }}
+                    {{ cadre_form|bootstrap_horizontal }}
+                    <div class="form-group">
+                      <div class="col-sm-10 col-sm-offset-2">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                      </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 

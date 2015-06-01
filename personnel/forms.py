@@ -6,7 +6,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate
 from django.core.exceptions import ObjectDoesNotExist
 from personnel.models import Cadet, Company, Squad, Problems, Cadre
-from widgets.date_picker import DatePicker
+from Utils.widgets.date_picker import DatePicker
 
 
 class LoginForm(AuthenticationForm):

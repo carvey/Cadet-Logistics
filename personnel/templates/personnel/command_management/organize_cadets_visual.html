@@ -20,68 +20,9 @@
 
     <style>
 
-    ul#organization_content_area {
-        height: 500px;
-        overflow-x: scroll;
-        overflow-y: hidden;
-        white-space: nowrap;
-    }
-
-    div#organization_content_area {
-        width: auto;
-        overflow-x: auto;
-    }
-
     </style>
 
-    <!--
-    The hierarchy approach might be functional, but still not very pretty. May not be able to get to that point where it doesnt
-    feel messy. If this approach sticks though, I can have a container under each squad where draggable boxes with cadets names
-    would go. The staff boxes would also have droppable containers in them that would allow cadets to be dropped into staff positions.
-    Cadets not assigned to a grouping, including cadets needing to be put aside for a short time, would go in a static (fixed position)
-    container at the bottom of the screen. This could be split into several categories to handle cadets being temporarily taken out,
-    cadets at basic, cadets who have left the program, ect.
-    -->
-    <section id="focal">
-        <div id="organization_content_area">
-            <ul id="org" style="display:none;">
-                <li>
-                Eagle Batallion
-                <ul>
-                {% for company, platoons in chain.items %}
-                    <li>
-                    {{ company }}
-                    <ul>
-                        {% for platoon, squads in platoons.items %}
-                            <li>
-                            {{ platoon }}
-                            <ul>
-                                {% for squad in squads %}
-                                    <li>
-                                    {{ squad }}
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                    </li>
-                {% endfor %}
-            </ul>
-            </li>
-
-            </ul>
-        </div>
-
-    </section>
-
-{% endblock %}
 
 
-{% block page_scripts %}
-
-    <script>
-        {% include 'personnel/command_management/js/ui_control.js' %}
-    </script>
 
 {% endblock %}

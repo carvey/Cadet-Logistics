@@ -12,42 +12,11 @@
 {% block content %}
 
     <style>
-        .errors {
-            color: red;
-        }
 
-        label, select {
-            display: inline-block;
-        }
-
-        label {
-            padding-top: 7px;
-        }
-
-        .form-control {
-            float:right;
-            width: 65%;
-        }
     </style>
 
     <div class="row">
         <div class="col-md-8">
-            {% for company, platoons in chain.items %}
-                <form action="{% url 'organize_staff' %}" method="post">
-                    {% csrf_token %}
-                    <div class="company">
-                        <h3>{{ company }} Company</h3>
-                        {% if form %}
-                            <div class="errors">
-                                {{ form.errors }}
-                            </div>
-                        {% endif %}
-                        {{ platoons.0.as_p }}
-                    <input class="btn btn-sm btn-success" type="submit" value="Submit" />
-                    </div>
-                    <hr>
-                </form>
-            {% endfor %}
 
         </div>
     </div>

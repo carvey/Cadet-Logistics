@@ -377,8 +377,6 @@ class Input(View):
 
         return render(request, self.template, context)
 
-# TODO this is pretty nasty code... thrown together pretty quickly. Can use a rewrite sometime soon
-# needs converting to a formset
 class Organize(View):
     template = 'personnel/command_management/organize_staff.html'
 
@@ -391,32 +389,8 @@ class Organize(View):
         return render(request, self.template, self.context)
 
     def post(self, request):
-        form = CompanyStaffForm(request.POST)
-        if form.is_valid():
-            company = form.cleaned_data['company']
-            commander = form.cleaned_data['commander']
-            commander_new_squad = form.cleaned_data['commander_new_squad']
-            company.company_commander.set_squad(commander_new_squad, commit=True)
-            company.set_commander(commander)
-
-            chain = assemble_staff_hierarchy()
-            self.context['chain'] = chain
-        else:
-            pass
-            # self.context['form'] = form
 
         return render(request, self.template, self.context)
-
-
-def render_dd_js(request):
-    template = 'personnel/command_management/js/command_management.js'
-    chain = assemble_staff_hierarchy()
-
-    context = {
-        'chain': chain
-    }
-
-    return render(request, template, context)
 
 
 class CadreRegistration(View):

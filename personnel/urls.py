@@ -7,7 +7,7 @@ from django.conf.urls import patterns, url
 from personnel.views import Index, Stats, CadetListing, cadet_page, company_listing, \
     CompanyCadetListing, MSlevelListing, MScadetListing, Input, Login, logout, \
     EditCompany, AddCompany, DeleteCompany, GroupingDetail, CadetRegistration, \
-    Organize, render_dd_js, CadreRegistration
+    Organize, CadreRegistration
 
 urlpatterns = patterns('',
                        # site index
@@ -50,5 +50,4 @@ urlpatterns = patterns('',
                        url(r'^input/', Input.as_view(), name='input'),
 
                        url(r'^organize/$', Organize.as_view(), name="organize_staff"),
-                       url(r'organize/dd/$', render_dd_js, name='render_dd_js')
 )

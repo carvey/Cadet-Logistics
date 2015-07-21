@@ -378,19 +378,20 @@ class Input(View):
         return render(request, self.template, context)
 
 class Organize(View):
-    template = 'personnel/command_management/organize_staff.html'
+    template = 'personnel/command_management/organize_cadets.html'
 
-    chain = assemble_staff_hierarchy()
-    context = {
-        'chain': chain
-    }
+    companies = Company.objects.all()
 
     def get(self, request):
-        return render(request, self.template, self.context)
+        cadets = Cadet.objects.all()
 
-    def post(self, request):
+        context = {
+            'tab': self.companies[0].name,
+            'cadets': cadets,
+            'companies': self.companies
+        }
 
-        return render(request, self.template, self.context)
+        return render(request, self.template, context)
 
 
 class CadreRegistration(View):

@@ -160,7 +160,6 @@ class Company(models.Model, GroupingMixin):
     def get_sub_groupings(self):
         return self.platoons.all()
 
-
     def set_first_sergeant(self, cadet):
         """
         This method sets the company First Sergeant position to the cadet passed in as the cadet arg

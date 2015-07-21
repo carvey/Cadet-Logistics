@@ -78,3 +78,10 @@ def is_list(var):
         return True
     else:
         return False
+
+@register.filter(name='fill_squad_columns')
+def fill_squad_columns(squads):
+    if squads:
+        return 12 / len(squads)
+    else:
+        return 0

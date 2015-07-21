@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block page_header %}
+    Organize Cadets
+{% endblock %}
+
+{% block content %}
+
+    <style>
+
+        #cadet_container ul{
+          width:100%;
+          margin-bottom:20px;
+          overflow:hidden;
+        }
+        #cadet_container li{
+          line-height:1.5em;
+          border-bottom:1px solid #ccc;
+          float:left;
+          display:inline;
+        }
+
+        #quad li
+        {
+            width: 20%;
+        }
+    </style>
+
+    <div class="row">
+        <div class="col-md-12">
+            <ul class='nav nav-tabs'>
+
+                {% for company in companies %}
+                    <li {% if tab == company.name  %}class="active"{% endif %}><a href="#{{ company.name }}" data-toggle="tab">{{ company }}</a></li>
+                {% endfor %}
+
+            </ul>
+            <div class="tab-content">
+
+                {% for company in companies %}
+                    <div class='tab-pane fade{% if tab == company.name %} in active{% endif %}' id='{{ company.name }}'>
+                        {% include 'personnel/command_management/organize_cadets_company.html' %}
+                    </div>
+                {% endfor %}
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row" id="cadet_container">
+        <hr>
+        <div class="col-md-12">
+            <ul id="quad">
+                {% for cadet in cadets %}
+                    <li>{{ cadet }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+{% endblock %}

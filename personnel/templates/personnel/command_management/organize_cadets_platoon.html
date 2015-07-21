@@ -1,0 +1,24 @@
+{% load personnel_filters %}
+
+<style>
+
+    #squad_container
+    {
+        text-align: center;
+    }
+    .squad_title
+    {
+        margin: 10px 0 5px 0;
+        font-size: large;
+    }
+</style>
+
+
+{% for squad in platoon.get_sub_groupings %}
+    <div id="squad_container" class="col-sm-{{ platoon.get_sub_groupings|fill_squad_columns }}">
+        <div class="squad_title">{{ squad.short_name }}</div>
+        {% for cadet in squad.get_sub_cadets %}
+            <div>{{ cadet }}</div>
+        {% endfor %}
+    </div>
+{% endfor %}

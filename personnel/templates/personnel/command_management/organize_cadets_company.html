@@ -1,0 +1,25 @@
+{# Company page - has a listing of sub platoons and a tab to edit company staff #}
+
+    <ul class='nav nav-tabs'>
+
+        <li class="active"><a href="#staff{{ company.id }}" data-toggle="tab">Staff</a></li>
+
+        {% for platoon in company.get_sub_groupings %}
+            <li><a href="#platoon{{ platoon.id }}" data-toggle="tab">{{ platoon }}</a></li>
+        {% endfor %}
+
+    </ul>
+
+    <div class="tab-content">
+
+        <div class='tab-pane fade in active' id='staff{{ company.id }}'>
+            {% include 'personnel/command_management/company_staff.html' %}
+        </div>
+
+        {% for platoon in company.get_sub_groupings %}
+            <div class='tab-pane fade' id='platoon{{ platoon.id }}'>
+                {% include 'personnel/command_management/organize_cadets_platoon.html' %}
+            </div>
+        {% endfor %}
+
+    </div>

@@ -173,6 +173,12 @@ def populate():
     add_cadet(first_name="Anne", last_name="Locke", age=18, gender="Female", ms_level=ms1, company=delta, platoon=delta2nd, squad=delta22)
     add_cadet(first_name="Lindsey", last_name="Roehr", age=18, gender="Female", ms_level=ms1, company=delta, platoon=delta2nd, squad=delta22)
     add_cadet(first_name="Stacie", last_name="Bridgers", age=18, gender="Female", ms_level=ms3, company=delta, platoon=delta2nd, squad=delta22)
+
+    add_cadet(first_name="Stephan", last_name="Wright", age=18, ms_level=ms1)
+    add_cadet(first_name="Tony", last_name="Alan", age=18, ms_level=ms1)
+    add_cadet(first_name="Trey", last_name="Simmons", age=18, ms_level=ms1)
+    add_cadet(first_name="Katy", last_name="Redmond", gender="Female", age=18, ms_level=ms1)
+
     print "Done creating cadets"
     print "-----------------------"
 
@@ -184,14 +190,14 @@ def populate():
 
 
     print "Creating pt tests"
-    add_pt_test(date=datetime.date(2014, 6, 1) + datetime.timedelta(days=2), ms_classes=[ms4])
-    add_pt_test(date=datetime.date(2014, 6, 1) + datetime.timedelta(days=5), ms_classes=[ms1, ms2, ms3])
-    add_pt_test(date=datetime.date(2014, 6, 1) + datetime.timedelta(days=7), ms_classes=[ms1, ms2, ms3])
-    add_pt_test(date=datetime.date(2015, 1, 15), ms_classes=[ms1, ms2, ms3])
-    add_pt_test(date=datetime.date(2015, 2, 15), ms_classes=[ms4])
-    add_pt_test(date=datetime.date(2015, 2, 28), ms_classes=[ms1, ms2])
-    add_pt_test(date=datetime.date(2015, 3, 13), ms_classes=[ms4], record=True)
-    add_pt_test(date=datetime.date(2015, 3, 25), ms_classes=[ms1, ms2, ms3], record=True)
+    add_pt_test(date=datetime.date(2015, 6, 1) + datetime.timedelta(days=2), ms_classes=[ms4])
+    add_pt_test(date=datetime.date(2015, 6, 1) + datetime.timedelta(days=5), ms_classes=[ms1, ms2, ms3])
+    add_pt_test(date=datetime.date(2015, 6, 1) + datetime.timedelta(days=7), ms_classes=[ms1, ms2, ms3])
+    add_pt_test(date=datetime.date(2015, 7, 15), ms_classes=[ms1, ms2, ms3])
+    add_pt_test(date=datetime.date(2015, 8, 15), ms_classes=[ms4])
+    add_pt_test(date=datetime.date(2015, 8, 28), ms_classes=[ms1, ms2])
+    add_pt_test(date=datetime.date(2015, 9, 13), ms_classes=[ms4], record=True)
+    add_pt_test(date=datetime.date(2015, 9, 25), ms_classes=[ms1, ms2, ms3], record=True)
     print "Done adding pt tests"
     print "-----------------------"
 
@@ -292,7 +298,7 @@ def add_squad(number, platoon):
     squad = Squad.objects.get_or_create(number=number, platoon=platoon)[0]
     return squad
 
-def add_cadet(first_name, last_name, age, ms_level, company, squad=None, gender="Male", platoon=None, ms_grade=100,
+def add_cadet(first_name, last_name, age, ms_level, company=None, squad=None, gender="Male", platoon=None, ms_grade=100,
                cc=False, fs=False, pc=False, ps=False, sl=False, xo=False, id=None):
 
     if id:

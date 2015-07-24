@@ -383,11 +383,12 @@ class Organize(View):
     companies = Company.objects.all()
 
     def get(self, request):
-        cadets = Cadet.objects.all()
+
+        unassigned_cadets = Cadet.objects.filter(squad=None, platoon=None, company=None)
 
         context = {
             'tab': self.companies[0].name,
-            'cadets': cadets,
+            'unassigned_cadets': unassigned_cadets,
             'companies': self.companies
         }
 

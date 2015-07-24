@@ -2,11 +2,15 @@
 {% load static %}
 
 {% block head %}
-
+<script src="{% static 'js/jquery-ui.min.js' %}"></script>
 {% endblock %}
 
 {% block page_header %}
     Organize Cadets
+
+    <div style="display: inline-block; float: right">
+        <a class="btn btn-success btn-md" onclick="save()" role="button">Save Changes</a>
+    </div>
 {% endblock %}
 
 {% block content %}
@@ -28,6 +32,27 @@
         #quad li
         {
             width: 20%;
+        }
+
+        .unassigned_cadets
+        {
+            cursor: move;
+        }
+
+        .assigned_cadet
+        {
+            cursor: move;
+        }
+
+        .droppable
+        {
+            border: 1px solid #3C3C3C;
+        }
+
+        .droppable_hover
+        {
+            background-color: rgba(66, 157, 146, 0.11);
+            border: 2px solid #3C3C3C;
         }
     </style>
 
@@ -52,15 +77,21 @@
         </div>
     </div>
 
-    <div class="row" id="cadet_container">
+    <div class="row grouping" id="cadet_container">
         <hr>
         <div class="col-md-12">
             <ul id="quad">
-                {% for cadet in cadets %}
-                    <li>{{ cadet }}</li>
+                {% for cadet in unassigned_cadets %}
+                    <li><span class="unassigned_cadets" data-id={{ cadet.id }}>{{ cadet }}</span></li>
                 {% endfor %}
             </ul>
         </div>
     </div>
 
+{% endblock %}
+
+{% block page_scripts %}
+    <script>
+        {% include 'personnel/command_management/js/organization.js' %}
+    </script>
 {% endblock %}

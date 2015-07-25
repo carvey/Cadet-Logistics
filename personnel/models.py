@@ -160,6 +160,12 @@ class Company(models.Model, GroupingMixin):
     def get_sub_groupings(self):
         return self.platoons.all()
 
+    def assign(self, cadet):
+        cadet.company = self
+        cadet.platoon = None
+        cadet.squad = None
+        cadet.save()
+
     def set_first_sergeant(self, cadet):
         """
         This method sets the company First Sergeant position to the cadet passed in as the cadet arg
@@ -395,6 +401,12 @@ class Platoon(models.Model, GroupingMixin):
     def get_sub_groupings(self):
         return self.squads.all()
 
+    def assign(self, cadet):
+        cadet.company = self.company
+        cadet.platoon = self
+        cadet.squad = None
+        cadet.save()
+
     def set_platoon_commander(self, cadet):
         """
         This method removes a cadet from platoon commander, and replaces them with the cadet
@@ -452,11 +464,28 @@ class Squad(models.Model, GroupingMixin):
     def get_sub_groupings(self):
         return None
 
+    def get_squad_members(self):
+        """
+        Used instead of get_sub_cadets for populating the list of cadets in the organization chart
+        minus the squad leader
+        :return:
+        """
+        if self.squad_leader:
+            return self.cadets.exclude(id__exact=self.squad_leader.id)
+
+        return self.get_sub_cadets()
+
     def __unicode__(self):
         return self.get_name()
 
     def short_name(self):
         return "%s%s Squad" % (self.number, self.number_end_str())
+
+    def assign(self, cadet):
+        cadet.company = self.platoon.company
+        cadet.platoon = self.platoon
+        cadet.squad = self
+        cadet.save()
 
     def set_squad_leader(self, cadet):
         """
@@ -467,7 +496,6 @@ class Squad(models.Model, GroupingMixin):
         """
 
         self.squad_leader = cadet
-        cadet.save()
         self.save()
 
     def count(self):

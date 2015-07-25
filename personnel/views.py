@@ -3,6 +3,7 @@ from django.views.generic import View
 from django.views.generic.edit import FormView, DeleteView
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
+from django.http import HttpResponse
 from django.core.urlresolvers import reverse
 from personnel.models import Cadet, Company, MsLevel, Platoon, SnapShot, Demographic, Squad, Problems
 from pt.models import PtScore, PtTest, Grader
@@ -12,6 +13,7 @@ from personnel.forms import LoginForm, EditCadet, EditCadetFull, EditCadetUser, 
     CadetRegistrationForm, UserRegistrationForm, CompanyStaffForm, ProblemForm, CadreRegistrationForm
 from django.contrib.auth.views import logout_then_login
 
+import json
 
 class Login(FormView):
     template_name = 'personnel/auth/login.html'
@@ -393,6 +395,43 @@ class Organize(View):
         }
 
         return render(request, self.template, context)
+
+def save_organization_change_records(request):
+    change_record = json.loads(request.POST.lists()[0][0])
+
+    for record in change_record:
+        cadet = Cadet.objects.get(id=record['cadet_id'])
+
+        # if the cadet is being moved to the unassigned category
+        if record['grouping_type'] is None:
+            cadet.company = None
+            cadet.platoon = None
+            cadet.squad = None
+            cadet.save()
+        # else they are getting moved to a company, platoon, or squad
+        else:
+            grouping = None
+            if record['grouping_type'] == "Squad":
+                grouping = Squad.objects.get(id=record['grouping_id'])
+                # set staff position(s)
+                if record['staff'] == "SL":
+                    grouping.set_squad_leader(cadet)
+
+                # this key should only be sent in the case where the cadet is being removed from SL
+                if record['vacating_group_id']:
+                    # this could be a different squad than the one they are getting dropped into
+                    old_squad = Squad.objects.get(id=record['grouping_id'])
+                    old_squad.set_squad_leader(None)
+
+            elif record['grouping_type'] == "Platoon":
+                grouping = Platoon.objects.get(id=record['grouping_id'])
+
+            elif record['grouping_type'] == "Company":
+                grouping = Company.objects.get(id=record['grouping_id'])
+
+            grouping.assign(cadet)
+
+    return HttpResponse(None, content_type='application/json')
 
 
 class CadreRegistration(View):

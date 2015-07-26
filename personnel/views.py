@@ -402,6 +402,12 @@ def save_organization_change_records(request):
     for record in change_record:
         cadet = Cadet.objects.get(id=record['cadet_id'])
 
+        # this key should only be sent in the case where the cadet is being removed from SL
+        if record['vacating_group_id']:
+            # this could be a different squad than the one they are getting dropped into
+            old_squad = Squad.objects.get(id=record['vacating_group_id'])
+            old_squad.set_squad_leader(None)
+
         # if the cadet is being moved to the unassigned category
         if record['grouping_type'] is None:
             cadet.company = None
@@ -416,12 +422,6 @@ def save_organization_change_records(request):
                 # set staff position(s)
                 if record['staff'] == "SL":
                     grouping.set_squad_leader(cadet)
-
-                # this key should only be sent in the case where the cadet is being removed from SL
-                if record['vacating_group_id']:
-                    # this could be a different squad than the one they are getting dropped into
-                    old_squad = Squad.objects.get(id=record['grouping_id'])
-                    old_squad.set_squad_leader(None)
 
             elif record['grouping_type'] == "Platoon":
                 grouping = Platoon.objects.get(id=record['grouping_id'])

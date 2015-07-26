@@ -27,19 +27,22 @@ function CreateMove(draggable, droppable, unassigned, grouping_type, staff, vaca
     //The cadet is not getting moved to unassigned
     if (!unassigned)
     {
-        if (staff)
-            grouping_id = droppable.parent().data("id");
-        else
-            grouping_id = droppable.data("id");
 
+        grouping_id = $(droppable).data("id");
 
+        if (grouping_id == undefined)
+        {
+            grouping_id = $(droppable).parents(".grouping").data("id");
+        }
+        console.log(staff);
         move_record = new CadetMove(cadet_id, grouping_type, grouping_id, staff, vacating_group_id, vacating_position);
 
     }
     //the cadet is getting moved to the unassigned category
     else
     {
-        move_record = new CadetMove(cadet_id, null, null, null, null, null);
+        console.log("blah 2");
+        move_record = new CadetMove(cadet_id, null, null, null, vacating_group_id, vacating_position);
     }
 
     /*
@@ -97,18 +100,20 @@ $(".squad_container").droppable({
                 appendTo: "body",
                 helper: "clone"
         });
-        cadet.draggable.parent().remove();
+        //console.log(cadet.draggable.parents(".grouping").data("id"));
 
         if (cadet.draggable.data("staff") != undefined)
         {
-            var vacating_group_id = cadet.draggable.data("id");
+            var vacating_group_id = cadet.draggable.parents(".grouping").data("id");
             var vacating_position = cadet.draggable.data("staff");
 
             CreateMove(cadet.draggable, $(this), false, "Squad", null, vacating_group_id, vacating_position);
 
         }
+        else
+            CreateMove(cadet.draggable, $(this), false, "Squad", null, null, null);
 
-        CreateMove(cadet.draggable, $(this), false, "Squad", null, null, null);
+        cadet.draggable.parent().remove();
 
     }
 });
@@ -128,9 +133,19 @@ $("#cadet_container").droppable({
                 appendTo: "body",
                 helper: "clone"
         });
-        cadet.draggable.parent().remove();
 
-        CreateMove(cadet.draggable, $(this), true, null, null, null, null);
+        if (cadet.draggable.data("staff") != undefined)
+        {
+            var vacating_group_id = cadet.draggable.parents(".grouping").data("id");
+            var vacating_position = cadet.draggable.data("staff");
+            console.log(vacating_group_id);
+            CreateMove(cadet.draggable, $(this), true, "Squad", null, vacating_group_id, vacating_position);
+
+        }
+        else
+         CreateMove(cadet.draggable, $(this), true, null, null, null, null);
+
+        cadet.draggable.parent().remove();
 
     }
 });
@@ -155,9 +170,19 @@ $(".squad_leader_container").droppable({
                 appendTo: "body",
                 helper: "clone"
         });
-        cadet.draggable.parent().remove();
 
-        CreateMove(cadet.draggable, $(this), false, "Squad", "SL", null, null);
+        if (cadet.draggable.data("staff") != undefined)
+        {
+            var vacating_group_id = cadet.draggable.parents(".grouping").data("id");
+            var vacating_position = cadet.draggable.data("staff");
+
+            CreateMove(cadet.draggable, $(this), false, "Squad", "SL", vacating_group_id, vacating_position);
+
+        }
+        else
+            CreateMove(cadet.draggable, $(this), false, "Squad", "SL", null, null);
+
+        cadet.draggable.parent().remove();
     }
 });
 

@@ -7,7 +7,7 @@ from django.conf.urls import patterns, url
 from personnel.views import Index, Stats, CadetListing, cadet_page, company_listing, \
     CompanyCadetListing, MSlevelListing, MScadetListing, Input, Login, logout, \
     EditCompany, AddCompany, DeleteCompany, GroupingDetail, CadetRegistration, \
-    Organize, CadreRegistration, save_organization_change_records
+    organize, CadreRegistration, save_organization_change_records
 
 urlpatterns = patterns('',
                        # site index
@@ -49,6 +49,6 @@ urlpatterns = patterns('',
                        #Dedicated input pages
                        url(r'^input/', Input.as_view(), name='input'),
 
-                       url(r'^organize/$', Organize.as_view(), name="organize_staff"),
+                       url(r'^organize/$', organize, name="organize_staff"),
                        url(r'^organize/save/$', save_organization_change_records, name="organize_staff_save"),
 )

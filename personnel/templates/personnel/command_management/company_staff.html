@@ -1,3 +1,70 @@
 
+<style>
+    .grouping-flex{
+    display:flex;
+    margin-top: 10px;
+    font-size: large;
+    }
+    .fixed{
+        width: 200px;
+    }
+    .company_staff_position {
+        width: 200px;
+    }
+</style>
 
-Staff - {{ company }}
+<div class="col-sm-6 grouping" data-id={{ company.id }}>
+    <div class="grouping-flex">
+        <div class="fixed">Company Commander:</div>
+        <div class="company_staff_position" data-staff="CO">
+            <span>
+            {% if company.company_commander %}
+                <span class='assigned_cadet staff' data-id="{{ company.company_commander.id }}" data-staff="CO">
+                        <span style="font-size: large">
+                            {{ company.company_commander }}
+                        </span>
+                        <span style="font-size: small">
+                            {{ company.company_commander.ms_level.name }}
+                        </span>
+                </span>
+            {% endif %}
+            </span>
+        </div>
+    </div>
+
+    <div class="grouping-flex">
+        <div class="fixed">Executive Officer:</div>
+        <div class="company_staff_position" data-staff="XO">
+            <span>
+            {% if company.executive_officer %}
+                <span class='assigned_cadet staff' data-id="{{ company.executive_officer.id }}" data-staff="XO">
+                        <span style="font-size: large">
+                            {{ company.executive_officer }}
+                        </span>
+                        <span style="font-size: small">
+                            {{ company.executive_officer.ms_level.name }}
+                        </span>
+                </span>
+            {% endif %}
+            </span>
+        </div>
+    </div>
+
+    <div class="grouping-flex">
+        <div class="fixed">First Sergeant:</div>
+        <div class="company_staff_position" data-staff="FS">
+            <span>
+                {% if company.first_sergeant %}
+                    <span class='assigned_cadet staff' data-id="{{ company.first_sergeant.id }}" data-staff="FS">
+                            <span style="font-size: large">
+                                {{ company.first_sergeant }}
+                            </span>
+                            <span style="font-size: small">
+                                {{ company.first_sergeant.ms_level.name }}
+                            </span>
+                    </span>
+                {% endif %}
+            </span>
+        </div>
+    </div>
+</div>

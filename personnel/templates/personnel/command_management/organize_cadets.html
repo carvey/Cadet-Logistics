@@ -9,7 +9,25 @@
     Organize Cadets
 
     <div style="display: inline-block; float: right">
-        <a class="btn btn-success btn-md" onclick="save()" role="button">Save Changes</a>
+{#        <a class="btn btn-success btn-md" onclick="save()" role="button">Save Changes</a>#}
+        <button class="btn btn-success" data-toggle="modal" data-target="#confirm-delete">
+            Save Changes
+        </button>
+
+        <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body" style="font-size: large">
+                        Be aware that any changes made here will immediately go into effect, changing all necessary rosters and reports.
+                        Are you sure you wish to continue?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <a class="btn btn-success btn-ok" onclick="save()" data-dismiss="modal">Save</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}
 
@@ -17,6 +35,10 @@
 
     <style>
 
+        #cadet_container
+        {
+            margin-top: 15px;
+        }
         #cadet_container ul{
           width:100%;
           margin-bottom:20px;
@@ -27,7 +49,7 @@
           border-bottom:1px solid #ccc;
           float:left;
           display:inline;
-            margin-bottom: 5px;
+          margin-bottom: 5px;
         }
 
         #quad li

@@ -379,22 +379,38 @@ class Input(View):
 
         return render(request, self.template, context)
 
-class Organize(View):
+# class Organize(View):
+#     template = 'personnel/command_management/organize_cadets.html'
+#
+#     companies = Company.objects.all()
+#
+#     def get(self, request):
+#
+#         unassigned_cadets = Cadet.objects.filter(squad=None, platoon=None, company=None)
+#
+#         context = {
+#             'tab': self.companies[0].name,
+#             'unassigned_cadets': unassigned_cadets,
+#             'companies': self.companies
+#         }
+#
+#         return render(request, self.template, context)
+
+def organize(request):
+
     template = 'personnel/command_management/organize_cadets.html'
 
     companies = Company.objects.all()
 
-    def get(self, request):
+    unassigned_cadets = Cadet.objects.filter(squad=None, platoon=None, company=None)
 
-        unassigned_cadets = Cadet.objects.filter(squad=None, platoon=None, company=None)
+    context = {
+        'tab': companies[0].name,
+        'unassigned_cadets': unassigned_cadets,
+        'companies': companies
+    }
 
-        context = {
-            'tab': self.companies[0].name,
-            'unassigned_cadets': unassigned_cadets,
-            'companies': self.companies
-        }
-
-        return render(request, self.template, context)
+    return render(request, template, context)
 
 def save_organization_change_records(request):
     change_record = json.loads(request.POST.lists()[0][0])
@@ -404,9 +420,19 @@ def save_organization_change_records(request):
 
         # this key should only be sent in the case where the cadet is being removed from SL
         if record['vacating_group_id']:
-            # this could be a different squad than the one they are getting dropped into
-            old_squad = Squad.objects.get(id=record['vacating_group_id'])
-            old_squad.set_squad_leader(None)
+            if record['vacating_position'] == "SL":
+                # this could be a different squad than the one they are getting dropped into
+                old_squad = Squad.objects.get(id=record['vacating_group_id'])
+                old_squad.set_squad_leader(None)
+            elif record['vacating_position'] == "CO":
+                old_company = Company.objects.get(id=record['vacating_group_id'])
+                old_company.set_commander(None)
+            elif record['vacating_position'] == "XO":
+                old_company = Company.objects.get(id=record['vacating_group_id'])
+                old_company.set_executive_officer(None)
+            elif record['vacating_position'] == "FS":
+                old_company = Company.objects.get(id=record['vacating_group_id'])
+                old_company.set_first_sergeant(None)
 
         # if the cadet is being moved to the unassigned category
         if record['grouping_type'] is None:
@@ -428,6 +454,12 @@ def save_organization_change_records(request):
 
             elif record['grouping_type'] == "Company":
                 grouping = Company.objects.get(id=record['grouping_id'])
+                if record['staff'] == "CO":
+                    grouping.set_commander(cadet)
+                if record['staff'] == "XO":
+                    grouping.set_executive_officer(cadet)
+                if record['staff'] == "FS":
+                    grouping.set_first_sergeant(cadet)
 
             grouping.assign(cadet)
 

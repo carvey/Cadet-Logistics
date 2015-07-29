@@ -407,7 +407,7 @@ class Platoon(models.Model, GroupingMixin):
         cadet.squad = None
         cadet.save()
 
-    def set_platoon_commander(self, cadet):
+    def set_platoon_leader(self, cadet):
         """
         This method removes a cadet from platoon commander, and replaces them with the cadet
         passed in as a parameter.

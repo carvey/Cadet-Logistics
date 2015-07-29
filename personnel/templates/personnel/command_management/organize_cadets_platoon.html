@@ -18,7 +18,66 @@
         min-width: 35%;
         display: inline-block;
     }
+
+    .grouping-flex{
+    display:flex;
+    margin-top: 10px;
+    font-size: large;
+    }
+
+    .fixed{
+        width: 200px;
+    }
+
+    .platoon_staff_position {
+        width: 200px;
+    }
+
+    .platoon_staff_container
+    {
+        margin-bottom: 15px;
+    }
+
 </style>
+
+<div class="platoon_staff_container grouping" data-id="{{ platoon.id }}">
+    <div class="grouping-flex">
+        <div class="fixed">Platoon Commander:</div>
+        <div class="platoon_staff_position" data-staff="PL">
+            <span>
+            {% if platoon.platoon_commander %}
+                <span class='assigned_cadet staff' data-id="{{ company.company_commander.id }}" data-staff="PL">
+                        <span style="font-size: large">
+                            {{ platoon.platoon_commander }}
+                        </span>
+                        <span style="font-size: small">
+                            {{ platoon.platoon_commander.ms_level.name }}
+                        </span>
+                </span>
+            {% endif %}
+            </span>
+        </div>
+        </div>
+
+        <div class="grouping-flex">
+        <div class="fixed">Platoon Sergeant:</div>
+        <div class="platoon_staff_position" data-staff="PS">
+            <span>
+            {% if platoon.platoon_sergeant %}
+                <span class='assigned_cadet staff' data-id="{{ company.executive_officer.id }}" data-staff="PS">
+                        <span style="font-size: large">
+                            {{ platoon.platoon_sergeant }}
+                        </span>
+                        <span style="font-size: small">
+                            {{ platoon.platoon_sergeant.ms_level.name }}
+                        </span>
+                </span>
+            {% endif %}
+            </span>
+        </div>
+        </div>
+</div>
+
 
 {% for squad in platoon.get_sub_groupings %}
     <div class="col-sm-{{ platoon.get_sub_groupings|fill_squad_columns }}">

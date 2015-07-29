@@ -379,22 +379,6 @@ class Input(View):
 
         return render(request, self.template, context)
 
-# class Organize(View):
-#     template = 'personnel/command_management/organize_cadets.html'
-#
-#     companies = Company.objects.all()
-#
-#     def get(self, request):
-#
-#         unassigned_cadets = Cadet.objects.filter(squad=None, platoon=None, company=None)
-#
-#         context = {
-#             'tab': self.companies[0].name,
-#             'unassigned_cadets': unassigned_cadets,
-#             'companies': self.companies
-#         }
-#
-#         return render(request, self.template, context)
 
 def organize(request):
 
@@ -424,6 +408,15 @@ def save_organization_change_records(request):
                 # this could be a different squad than the one they are getting dropped into
                 old_squad = Squad.objects.get(id=record['vacating_group_id'])
                 old_squad.set_squad_leader(None)
+
+            elif record['vacating_position'] == "PL":
+                old_platoon = Platoon.objects.get(id=record['vacating_group_id'])
+                old_platoon.set_platoon_leader(None)
+
+            elif record['vacating_position'] == "PS":
+                old_platoon = Platoon.objects.get(id=record['vacating_group_id'])
+                old_platoon.set_platoon_sergeant(None)
+
             elif record['vacating_position'] == "CO":
                 old_company = Company.objects.get(id=record['vacating_group_id'])
                 old_company.set_commander(None)
@@ -442,9 +435,12 @@ def save_organization_change_records(request):
             cadet.save()
         # else they are getting moved to a company, platoon, or squad
         else:
+            # depending on the grouping type, get the correct instance to assign the cadet to
+            # if the move record contains a staff position, set that cadet to the appropriate position
             grouping = None
             if record['grouping_type'] == "Squad":
                 grouping = Squad.objects.get(id=record['grouping_id'])
+
                 # set staff position(s)
                 if record['staff'] == "SL":
                     grouping.set_squad_leader(cadet)
@@ -452,13 +448,19 @@ def save_organization_change_records(request):
             elif record['grouping_type'] == "Platoon":
                 grouping = Platoon.objects.get(id=record['grouping_id'])
 
+                if record['staff'] == "PL":
+                    grouping.set_platoon_leader(cadet)
+                elif record['staff'] == "PS":
+                    grouping.set_platoon_sergeant(cadet)
+
             elif record['grouping_type'] == "Company":
                 grouping = Company.objects.get(id=record['grouping_id'])
+
                 if record['staff'] == "CO":
                     grouping.set_commander(cadet)
-                if record['staff'] == "XO":
+                elif record['staff'] == "XO":
                     grouping.set_executive_officer(cadet)
-                if record['staff'] == "FS":
+                elif record['staff'] == "FS":
                     grouping.set_first_sergeant(cadet)
 
             grouping.assign(cadet)

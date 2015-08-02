@@ -157,7 +157,7 @@
                     if (!two_mile) two_mile = "00:00";
 
                     var query_string = "/pt/tests/input-scores/" + id + "/" + situps + "/" + pushups + "/" + two_mile + "/";
-                    $.get(query_string, {}, function(data) {
+                    $.get(query_string, {test_id: {{test.id}} }, function(data) {
                         score_node.html(data.score);
                         var passing = Boolean(data.passing);
                         if (!passing)

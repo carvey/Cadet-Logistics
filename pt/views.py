@@ -171,7 +171,8 @@ def calculate_score(request, situps, pushups, two_mile, cadet_id=None, gender=No
     if age and gender:
         instance = PtScore.assemble_minimal_instance(age, gender, situps, pushups, two_mile)
     else:
-        instance = PtScore.assemble_instance(cadet_id=cadet_id, raw_situps=situps, raw_pushups=pushups, run_time=two_mile)
+        test_id = request.GET['test_id']
+        instance = PtScore.assemble_instance(cadet_id=cadet_id, test_id=test_id, raw_situps=situps, raw_pushups=pushups, run_time=two_mile)
     score = PtScore.calculate_score(instance)
     return HttpResponse(json.dumps(score), content_type='application/json')
 
@@ -273,7 +274,6 @@ class StatisticsView(View):
                 'non_contracted': (Decimal(non_contracted_average) / Decimal(non_contracted_count)).quantize(Decimal(10) ** -2)
             })
 
-
         context = {
             'tab': tab,
             'data': avg_pt_scores,
@@ -298,11 +298,9 @@ class CadetsListingView(View):
         cadets = Cadet.objects.all()
         all_scores = PtScore.objects.all()
 
-
         score_dict = {}
         for cadet in cadets:
             scores = all_scores.filter(cadet=cadet)
-
 
             avg_pushup_scores = PtScore.get_avg_pushup_score(scores)
             avg_pushups = PtScore.get_avg_pushups(scores)

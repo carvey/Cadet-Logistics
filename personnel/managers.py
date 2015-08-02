@@ -3,7 +3,16 @@ from django.db import models
 from django.db.models import Q
 
 
-class SearchManager(models.Manager):
+class DefaultManager(models.Manager):
+
+    def get_queryset(self):
+        query = super(DefaultManager, self).get_queryset()
+        return query.exclude(approved=False)
+
+    def get_unapproved(self):
+        query = super(DefaultManager, self).get_queryset()
+        return query.filter(approved=False)
+
     def search(self, search_terms, model='Cadet'):
         terms = [term.strip() for term in search_terms.split()]
         q_objects = []

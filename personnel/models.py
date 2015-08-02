@@ -9,7 +9,7 @@ from collections import OrderedDict
 from django.contrib.auth.models import AbstractUser, User
 from django.core.urlresolvers import reverse
 
-from personnel.managers import SearchManager
+from personnel.managers import DefaultManager
 from mixins import GroupingMixin
 
 
@@ -135,7 +135,7 @@ class Users(models.Model):
 
 class Company(models.Model, GroupingMixin):
     """Company is the model for the companies in the batallion"""
-    objects = SearchManager()
+    objects = DefaultManager()
 
     name = models.CharField(max_length=10, default="", help_text="Enter Name of the new company here")
     company_commander = models.OneToOneField('Cadet', db_index=False, related_name='company_commander',
@@ -278,7 +278,9 @@ class Cadet(Users):
     car_tag = models.CharField(max_length=25, blank=True, default="")
     comments = models.TextField(max_length=1000, blank=True, default="")
 
-    objects = SearchManager()
+    approved = models.BooleanField(default=True)
+
+    objects = DefaultManager()
 
     #TODO this explanation could probably find a better home...
     """
@@ -518,7 +520,7 @@ class MsLevel(models.Model, GroupingMixin):
     """
     Model to represent each MS Level
     """
-    objects = SearchManager()
+    objects = DefaultManager()
 
     name = models.CharField(max_length=3, choices=MS_LEVEL_CHOICES, blank=False)
 

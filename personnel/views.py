@@ -529,3 +529,14 @@ class ProblemListing(View):
     def get(self, request):
         problems = Problems.objects.all()
         return render(request, 'personnel/report_problem/problem_listing.html', {'problems': problems})
+
+
+class RegistrationConfirmation(View):
+    template = 'personnel/auth/registration/registration_confirmation.html'
+
+    def get(self, request):
+
+        cadets = Cadet.objects.filter(approved=False)
+
+        context = {}
+        return render(request, self.template, context)

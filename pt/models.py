@@ -245,11 +245,12 @@ class PtScore(models.Model):
         raw_pushups = int(raw_pushups)
         raw_situps = int(raw_situps)
         run_time = str(run_time)
-        instance = PtScore(cadet=cadet, pushups=raw_pushups, situps=raw_situps, two_mile=run_time)
+        test = PtTest(date=datetime.date.today())
+        instance = PtScore(cadet=cadet, pt_test=test, pushups=raw_pushups, situps=raw_situps, two_mile=run_time)
         return instance
 
     @staticmethod
-    def assemble_instance(cadet_id, raw_situps, raw_pushups, run_time):
+    def assemble_instance(cadet_id, test_id, raw_situps, raw_pushups, run_time):
         """
         Used to assemble a cadet instance based on raw scores and a cadet id.
         This method is used instead of the plain PtScore(...) syntax to get the cadet object
@@ -264,7 +265,8 @@ class PtScore(models.Model):
         raw_pushups = int(raw_pushups)
         raw_situps = int(raw_situps)
         run_time = str(run_time)
-        instance = PtScore(cadet=cadet, pushups=raw_pushups, situps=raw_situps, two_mile=run_time)
+        test = PtTest.objects.get(id=test_id)
+        instance = PtScore(cadet=cadet, pt_test=test, pushups=raw_pushups, situps=raw_situps, two_mile=run_time)
         return instance
 
     @staticmethod

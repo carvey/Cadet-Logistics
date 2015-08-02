@@ -6,6 +6,7 @@
     {
         text-align: center;
         list-style: none;
+        margin: 0 15px 0 15px;
     }
     .squad_title
     {
@@ -36,6 +37,20 @@
     .platoon_staff_container
     {
         margin-bottom: 15px;
+    }
+
+    .flex-container
+    {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .flex-item
+    {
+        flex: 1;
+        max-width: 302px;
+        flex-basis: 302px;
+{#        margin:#}
     }
 
 </style>
@@ -78,38 +93,40 @@
         </div>
 </div>
 
-
-{% for squad in platoon.get_sub_groupings %}
-    <div class="col-sm-{{ platoon.get_sub_groupings|fill_squad_columns }}">
-        <ul class="squad_container grouping" data-id="{{ squad.id }}">
-            <div class="squad_title">{{ squad.short_name }}</div>
-            <div class="squad_leader_container">
-                <span style="float: left">SL:
-                    {# surrounded with an extra span so the SL: span won't get deleted on drop #}
-                    <span>
-                        {% if squad.squad_leader %}
-                            <span class='assigned_cadet staff' data-id="{{ squad.squad_leader.id }}" data-staff="SL">
-                                    <span style="font-size: large">
-                                        {{ squad.squad_leader }}
-                                    </span>
-                                    <span style="font-size: small">
-                                        {{ squad.squad_leader.ms_level.name }}
-                                    </span>
-                            </span>
-                        {% endif %}
-                    </span>
-                </span>
-            </div>
-            {% for cadet in squad.get_squad_members %}
-                <li>
-                    <span class='assigned_cadet' data-id="{{ cadet.id }}">
-                        <span style="font-size: large">
-                            {{ cadet }}
+<div class="flex-container">
+    {% for squad in platoon.get_sub_groupings %}
+        <div class="flex-item">
+            <ul class="squad_container grouping" data-id="{{ squad.id }}">
+                <div class="squad_title">{{ squad.short_name }}</div>
+                <div class="squad_leader_container">
+                    <span style="float: left">SL:
+                        {# surrounded with an extra span so the SL: span won't get deleted on drop #}
+                        <span>
+                            {% if squad.squad_leader %}
+                                <span class='assigned_cadet staff' data-id="{{ squad.squad_leader.id }}" data-staff="SL">
+                                        <span style="font-size: large">
+                                            {{ squad.squad_leader }}
+                                        </span>
+                                        <span style="font-size: small">
+                                            {{ squad.squad_leader.ms_level.name }}
+                                        </span>
+                                </span>
+                            {% endif %}
                         </span>
-                        <span style="font-size: small">{{ cadet.ms_level.name }}</span>
                     </span>
-                </li>
-            {% endfor %}
-        </ul>
-    </div>
-{% endfor %}
+                </div>
+                {% for cadet in squad.get_squad_members %}
+                    <li>
+                        <span class='assigned_cadet' data-id="{{ cadet.id }}">
+                            <span style="font-size: large">
+                                {{ cadet }}
+                            </span>
+                            <span style="font-size: small">{{ cadet.ms_level.name }}</span>
+                        </span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endfor %}
+</div>
+

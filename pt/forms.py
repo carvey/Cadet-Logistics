@@ -23,7 +23,7 @@ class TestForm(forms.ModelForm):
     )
 
     def clean(self):
-        test_date = self.cleaned_data['date']
+        test_date = self.cleaned_data.get('date', '')
         tests = PtTest.objects.filter(date__exact=test_date)
         if tests:
             if tests[0].id != self.instance.id:

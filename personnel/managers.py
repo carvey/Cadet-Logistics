@@ -5,14 +5,6 @@ from django.db.models import Q
 
 class DefaultManager(models.Manager):
 
-    def get_queryset(self):
-        query = super(DefaultManager, self).get_queryset()
-        return query.exclude(approved=False)
-
-    def get_unapproved(self):
-        query = super(DefaultManager, self).get_queryset()
-        return query.filter(approved=False)
-
     def search(self, search_terms, model='Cadet'):
         terms = [term.strip() for term in search_terms.split()]
         q_objects = []
@@ -33,3 +25,14 @@ class DefaultManager(models.Manager):
 
         # Use operator's or_ to string together all of your Q objects.
         return qs.filter(reduce(operator.or_, q_objects))
+
+
+class CadetManager(DefaultManager):
+
+    def get_queryset(self):
+        query = super(CadetManager, self).get_queryset()
+        return query.filter(approved=True)
+
+    def get_unapproved(self):
+        query = super(CadetManager, self).get_queryset()
+        return query.filter(approved=False)

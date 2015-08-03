@@ -2,8 +2,85 @@
 
 {% block page_header %}
     Registration Confirmation
+
+    <div style="display: inline-block; float: right">
+        <button class="btn btn-success" data-toggle="modal" data-target="#confirm-delete">
+            Save Changes
+        </button>
+
+        <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body" style="font-size: large">
+                        Be aware that any changes made here will immediately go into effect, approving the checked cadets for access into EagleTrack.
+                        Are you sure you wish to continue?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <a class="btn btn-success btn-ok" onclick="save()" data-dismiss="modal">Save</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block content %}
 
+    <style>
+        .cadet_container
+        {
+            display: flex;
+            justify-content: flex-start;
+
+        }
+
+        .flex-item
+        {
+            flex: 1;
+            flex-shrink: 0;
+
+        }
+
+        .cadet_label
+        {
+            font-size: large;
+            min-width: 200px;
+        }
+
+        .cadet_checkbox
+        {
+            max-width: 5%;
+        }
+
+
+
+    </style>
+
+    <div id="instructions_container">
+        For those cadets who should be registered within Eagletrack, check the box beside their name
+        to approve them within the system. After they have been approved, their name will show up on all other parts
+        of the site. Until they have been approved, this page is the only place where their name will appear.
+
+        Also be aware that after they have been approved from this page, they will need to be given an assignment location
+        on the <a href="{% url 'organize_staff' %}">Chain of Command Organization</a> Page.
+        <hr>
+    </div>
+    <div id="form_container">
+        {% for cadet in cadets %}
+            <div class="cadet_container" data-id={{ cadet.id }}>
+                <label class="cadet_label">{{ cadet }}: </label>
+                <input class="cadet_checkbox flex-item" type="checkbox"/>
+            </div>
+        {% endfor %}
+    </div>
+
+
+{% endblock %}
+
+{% block page_scripts %}
+    <script>
+        {% include 'personnel/command_management/js/csrf_override.js' %}
+        {% include 'personnel/auth/registration/js/registration_confirmation.js' %}
+    </script>
 {% endblock %}

@@ -1,17 +1,18 @@
-from django.shortcuts import render, HttpResponseRedirect, Http404
+from django.shortcuts import render, HttpResponseRedirect, Http404, redirect
 from django.views.generic import View
 from django.views.generic.edit import FormView, DeleteView
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.http import HttpResponse
+from django.forms.models import modelformset_factory
 from django.core.urlresolvers import reverse
-from personnel.models import Cadet, Company, MsLevel, Platoon, SnapShot, Demographic, Squad, Problems
-from pt.models import PtScore, PtTest, Grader
-from personnel_utils import grouping_data, assemble_staff_hierarchy
-from django.contrib.auth.decorators import login_required
+from personnel.models import Cadet, Company, MsLevel, Platoon, Squad, Problems
+from pt.models import PtScore, PtTest
+from personnel_utils import grouping_data
 from personnel.forms import LoginForm, EditCadet, EditCadetFull, EditCadetUser, AddCompanyForm, EditCompanyForm,\
-    CadetRegistrationForm, UserRegistrationForm, CompanyStaffForm, ProblemForm, CadreRegistrationForm
+    CadetRegistrationForm, UserRegistrationForm, ProblemForm, CadreRegistrationForm
 from django.contrib.auth.views import logout_then_login
+
 
 import json
 
@@ -536,7 +537,20 @@ class RegistrationConfirmation(View):
 
     def get(self, request):
 
-        cadets = Cadet.objects.filter(approved=False)
+        cadets = Cadet.objects.get_unapproved()
 
-        context = {}
+        context = {
+            'cadets': cadets,
+        }
         return render(request, self.template, context)
+
+
+def registration_confirmation_save(request):
+    approval_record = json.loads(request.POST.lists()[0][0])
+
+    for cadet_id in approval_record:
+        cadet = Cadet.objects.get_unapproved().get(id=cadet_id)
+        cadet.approved = True
+        cadet.save()
+
+    return redirect(reverse('registered_cadets'))

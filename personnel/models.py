@@ -1,15 +1,9 @@
-# from dateutil.relativedelta import relativedelta
 import datetime
-import operator
-from django.core.validators import MaxValueValidator, MinValueValidator, validate_email
 from django.db import models
 from django.db.models import Q
-from django.contrib.auth.hashers import make_password
-from collections import OrderedDict
-from django.contrib.auth.models import AbstractUser, User
-from django.core.urlresolvers import reverse
+from django.contrib.auth.models import User
 
-from personnel.managers import DefaultManager
+from personnel.managers import DefaultManager, CadetManager
 from mixins import GroupingMixin
 
 
@@ -280,7 +274,7 @@ class Cadet(Users):
 
     approved = models.BooleanField(default=True)
 
-    objects = DefaultManager()
+    objects = CadetManager()
 
     #TODO this explanation could probably find a better home...
     """

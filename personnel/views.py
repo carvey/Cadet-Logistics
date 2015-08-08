@@ -324,7 +324,7 @@ class MScadetListing(View):
 
     def get(self, request, ms_class_id):
         ms_class = MsLevel.objects.get(id=ms_class_id)
-        cadets = Cadet.objects.filter(ms_level=ms_class)
+        cadets = Cadet.objects.filter(_ms_level=ms_class)
         return render(request, self.template_name, {'ms_class': ms_class, 'cadets': cadets})
 
 

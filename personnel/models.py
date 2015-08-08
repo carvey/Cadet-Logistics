@@ -216,7 +216,6 @@ class Cadet(Users):
     Cadet is the model for cadets in the batallion.
     This model extends the Users abstract model. Each cadet should ideally be assigned to a company, platoon, and squad
     """
-
     """
     This is a dict of related_name's (keys) of all the current possible staff positions a cadet can have, as well their
     more readable name (values). Register the related_names in this list for the Cadet model helper methods to iterate through
@@ -232,7 +231,7 @@ class Cadet(Users):
     company = models.ForeignKey(Company, blank=True, null=True, related_name="cadets")
     platoon = models.ForeignKey('Platoon', blank=True, null=True, related_name="cadets")
     squad = models.ForeignKey('Squad', blank=True, null=True, related_name="cadets")
-    ms_level = models.ForeignKey('MsLevel', blank=False, null=False, related_name="cadets")
+    _ms_level = models.ForeignKey('MsLevel', blank=False, null=False, related_name="cadets")
 
     commission_date = models.ForeignKey('Commission', blank=False, null=False, related_name="commission_date")
 
@@ -271,14 +270,23 @@ class Cadet(Users):
 
     objects = CadetManager()
 
-    def get_ms_level(self):
+    @property
+    def ms_level(self):
+        """
+        This property should determine what a cadets MS level should be based on their commission date, and
+        if necessary correct it to the proper MS level. This could be an expensive operation at times, but it
+        does prevent any sort of manual updating of MS levels
+        """
         graduation = self.commission_date.date
         today = datetime.date.today()
         ms_number = abs((graduation.year - 5) - today.year)
-        ms_level = self.ms_level
-        if ms_number != self.ms_level.name:
+        ms_level = self._ms_level
+        ms_level_number = int(ms_level.name.replace('MS', ''))
+        if ms_number != ms_level_number:
             try:
-                ms_level = MsLevel.objects.get(name=ms_number)
+                ms_level = MsLevel.objects.get(name="MS%s" % ms_number)
+                self._ms_level = ms_level
+                self.save()
             except:
                 ms_level = MsLevel(name='MS')
         return ms_level

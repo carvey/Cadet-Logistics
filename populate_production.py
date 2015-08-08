@@ -70,6 +70,7 @@ def populate():
     ms2 = add_mslevel(name="MS2")
     ms3 = add_mslevel(name="MS3")
     ms4 = add_mslevel(name="MS4")
+    ms4 = add_mslevel(name="MS5")
     print "done adding ms levels"
     print "-----------------------"
 

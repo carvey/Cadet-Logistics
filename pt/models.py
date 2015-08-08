@@ -172,7 +172,7 @@ class PtTest(models.Model):
 
     def get_optimal_cadet_count(self):
         ms_classes = [ms for ms in self.ms_levels.all()]
-        return Cadet.objects.filter(ms_level__in=ms_classes).count()
+        return Cadet.objects.filter(_ms_level__in=ms_classes).count()
 
     def get_actual_cadet_count(self):
         return self.ptscore_set.all().count()

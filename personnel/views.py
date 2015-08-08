@@ -132,6 +132,7 @@ class CadetRegistration(View):
             email = user_form.cleaned_data['school_email']
             first_name = user_form.cleaned_data['first_name']
             last_name = user_form.cleaned_data['last_name']
+            commission_date = cadet_form['commission_date']
 
             cadet = cadet_form.save(commit=False)
 
@@ -391,6 +392,7 @@ def organize(request):
 
     unassigned_cadets = Cadet.objects.filter(squad=None, platoon=None, company=None)
 
+    #TODO need to not use batallion staff as first tab to ensure that a tab gets gotten even when no companies
     context = {
         'tab': companies[0].name,
         'unassigned_cadets': unassigned_cadets,

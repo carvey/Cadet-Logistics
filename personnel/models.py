@@ -16,11 +16,13 @@ ONE = 'one'
 TWO = 'two'
 THREE = 'three'
 FOUR = 'four'
+FIVE = 'five'
 MS_LEVEL_CHOICES = (
     (ONE, 'MS1'),
     (TWO, 'MS2'),
     (THREE, 'MS3'),
     (FOUR, 'MS4'),
+    (FIVE, 'MS5')
 )
 male = 'Male'
 female = 'Female'
@@ -269,11 +271,17 @@ class Cadet(Users):
 
     objects = CadetManager()
 
-    @property
-    def _ms_level(self):
+    def get_ms_level(self):
         graduation = self.commission_date.date
         today = datetime.date.today()
-        return abs((graduation.year - 5) - today.year)
+        ms_number = abs((graduation.year - 5) - today.year)
+        ms_level = self.ms_level
+        if ms_number != self.ms_level.name:
+            try:
+                ms_level = MsLevel.objects.get(name=ms_number)
+            except:
+                ms_level = MsLevel(name='MS')
+        return ms_level
 
     #TODO this explanation could probably find a better home...
     """

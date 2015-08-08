@@ -20,8 +20,6 @@ class DatePicker(Widget):
             <input id="id_date" type='hidden' name='date'>
 
             <script>
-                var date = new Date();
-                var thisYear = date.getFullYear();
 
                 $("#date").datepicker({
                     format: "yyyy-mm-dd",
@@ -47,6 +45,15 @@ class DatePicker(Widget):
 class BirthDatePicker(Widget):
     def render(self, name, value, attrs=None):
 
+        update_date = ""
+        if value:
+            update_date = """
+            $('#date').datepicker('update', '%s');
+            $("#id_date").val(
+                        $("#date").datepicker('getFormattedDate')
+                    );
+            """ % value
+
         html = """
 
             <div id='date' 'data-date-format': 'YYYY-mm-dd'></div>
@@ -58,8 +65,10 @@ class BirthDatePicker(Widget):
 
                 $("#date").datepicker({
                     format: "yyyy-mm-dd",
-
+                    defaultViewDate: {year: thisYear - 18}
                 });
+
+                %s
 
 
                 $("#date").on('changeDate', function(event) {
@@ -69,6 +78,6 @@ class BirthDatePicker(Widget):
 
                 });
             </script>
-        """
+        """ % update_date
 
         return mark_safe(html)

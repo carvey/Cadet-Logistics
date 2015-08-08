@@ -134,7 +134,7 @@
                 {
                     cadets[suggestion.value] = suggestion.data;
                     //copy the selected cadets id into the hidden cadet_id field
-                    parent.find(".cadet_id").val(suggestion.data);
+                    $(this).parent().find(".cadet_id").val(suggestion.data);
                 }
             });
 

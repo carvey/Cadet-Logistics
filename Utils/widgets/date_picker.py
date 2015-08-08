@@ -42,3 +42,33 @@ class DatePicker(Widget):
         """ % update_date
 
         return mark_safe(html)
+
+
+class BirthDatePicker(Widget):
+    def render(self, name, value, attrs=None):
+
+        html = """
+
+            <div id='date' 'data-date-format': 'YYYY-mm-dd'></div>
+            <input id="id_birth_date" type='hidden' name='birth_date'>
+
+            <script>
+                var date = new Date();
+                var thisYear = date.getFullYear();
+
+                $("#date").datepicker({
+                    format: "yyyy-mm-dd",
+
+                });
+
+
+                $("#date").on('changeDate', function(event) {
+                    $("#id_birth_date").val(
+                        $("#date").datepicker('getFormattedDate')
+                    );
+
+                });
+            </script>
+        """
+
+        return mark_safe(html)

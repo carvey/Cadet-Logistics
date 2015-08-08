@@ -67,6 +67,18 @@ def populate():
     print "done creating platoons"
     print "-----------------------"
 
+    print "Creating Commissioning dates"
+    may_commission = datetime.date(2015, 5, 18)
+    december_commission = datetime.date(2015, 12, 18)
+
+    add_commission(may_commission)
+    add_commission(december_commission)
+    add_commission(may_commission + datetime.timedelta(days=365))
+    add_commission(december_commission + datetime.timedelta(days=365))
+    add_commission(may_commission + datetime.timedelta(days=365))
+    add_commission(december_commission + datetime.timedelta(days=365))
+    print "-----------------------"
+
     print "adding ms levels"
     # adding ms levels
     ms1 = add_mslevel(name="MS1")
@@ -279,6 +291,8 @@ def populate():
     print "-----------------------"
 
 
+def add_commission(date):
+    return Commission.objects.get_or_create(date=date)[0]
 
 def add_company(name, co=None, fs=None):
     company = Company.objects.get_or_create(name=name, company_commander=co, first_sergeant=fs)[0]
@@ -307,8 +321,18 @@ def add_cadet(first_name, last_name, age, ms_level, company=None, squad=None, ge
     today = datetime.date.today()
     birth_date = today - relativedelta(years=age)
 
+    cd = None
+    if ms_level.name == "MS1":
+        cd = Commission.objects.all()[3]
+    elif ms_level.name == "MS2":
+        cd = Commission.objects.all()[2]
+    elif ms_level.name == "MS3":
+        cd = Commission.objects.all()[1]
+    elif ms_level.name == "MS4":
+        cd = Commission.objects.all()[0]
+
     c = Cadet.objects.get_or_create(user=user, birth_date=birth_date, gender=gender, ms_level=ms_level,
-                                    company=company, platoon=platoon, squad=squad)[0]
+                                    commission_date=cd, company=company, platoon=platoon, squad=squad)[0]
 
     if cc:
         company.set_commander(c)

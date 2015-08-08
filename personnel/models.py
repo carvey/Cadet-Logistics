@@ -2,6 +2,9 @@ import datetime
 from django.db import models
 from django.db.models import Q
 from django.contrib.auth.models import User
+from django.utils.functional import lazy
+
+from dateutil import rrule
 
 from personnel.managers import DefaultManager, CadetManager
 from mixins import GroupingMixin
@@ -114,18 +117,6 @@ class Users(models.Model):
 
     class Meta:
         abstract = True
-
-
-# class Grouping(models.Model):
-#
-#     def blah(self):
-#         raise NotImplementedError
-#
-#     class Meta:
-#         abstract = True
-
-
-
 
 class Company(models.Model, GroupingMixin):
     """Company is the model for the companies in the batallion"""
@@ -241,6 +232,8 @@ class Cadet(Users):
     squad = models.ForeignKey('Squad', blank=True, null=True, related_name="cadets")
     ms_level = models.ForeignKey('MsLevel', blank=False, null=False, related_name="cadets")
 
+    commission_date = models.ForeignKey('Commission', blank=False, null=False, related_name="commission_date")
+
     gpa = models.DecimalField(default=4.0, max_digits=3, decimal_places=2, blank=True, null=True)
     ms_grade = models.IntegerField(default=100, blank=True, null=True)
     # #
@@ -275,6 +268,12 @@ class Cadet(Users):
     approved = models.BooleanField(default=True)
 
     objects = CadetManager()
+
+    @property
+    def _ms_level(self):
+        graduation = self.commission_date.date
+        today = datetime.date.today()
+        return abs((graduation.year - 5) - today.year)
 
     #TODO this explanation could probably find a better home...
     """
@@ -355,7 +354,6 @@ class Cadet(Users):
 
     class Meta:
         db_table = 'Cadet'
-
 
 class Cadre(Users):
     """The Cadre class is the model for cadre in the batallion. It extends the Users model"""
@@ -509,6 +507,11 @@ class Squad(models.Model, GroupingMixin):
             "cadet": self.squad_leader
         }
 
+class Commission(models.Model):
+    date = models.DateField()
+
+    def __unicode__(self):
+        return self.date.strftime("%B %Y")
 
 class MsLevel(models.Model, GroupingMixin):
     """

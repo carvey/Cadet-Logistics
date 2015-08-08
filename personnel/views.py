@@ -29,7 +29,10 @@ class Login(FormView):
     def form_valid(self, form):
         user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
         if not user:
-            return HttpResponseRedirect('/login')
+            return HttpResponseRedirect('/personnel/login')
+        if hasattr(user, 'cadet'):
+            if not user.cadet.approved:
+                return HttpResponseRedirect('/personnel/login')
         login(self.request, user)
         if self.request.POST.get('next') != 'None':
             return HttpResponseRedirect(self.request.POST.get('next'))
@@ -131,12 +134,11 @@ class CadetRegistration(View):
             last_name = user_form.cleaned_data['last_name']
 
             cadet = cadet_form.save(commit=False)
-            squad = cadet_form.cleaned_data.get('squad')
 
             username = cadet.generate_username(email)
             user = User.objects.create_user(username, email, password, first_name=first_name, last_name=last_name)
             cadet.user = user
-            cadet.set_squad(squad)
+            cadet.approved = False
             cadet.save()
             return HttpResponseRedirect('/')
 
@@ -554,3 +556,15 @@ def registration_confirmation_save(request):
         cadet.save()
 
     return redirect(reverse('registered_cadets'))
+
+class CadetMigrations(View):
+    template = "personnel/migration_pages/cadet_migrations.html"
+
+    def get(self, request):
+
+        context = {}
+        return render(request, self.template, context)
+
+def cadet_migrations_save(request):
+
+    pass

@@ -8,7 +8,7 @@ from personnel.views import Index, Stats, CadetListing, cadet_page, company_list
     CompanyCadetListing, MSlevelListing, MScadetListing, Input, Login, logout, \
     EditCompany, AddCompany, DeleteCompany, GroupingDetail, CadetRegistration, \
     organize, CadreRegistration, save_organization_change_records, RegistrationConfirmation, \
-    registration_confirmation_save
+    registration_confirmation_save, CadetMigrations, cadet_migrations_save
 
 urlpatterns = patterns('',
                        # site index
@@ -54,5 +54,8 @@ urlpatterns = patterns('',
                        url(r'^organize/save/$', save_organization_change_records, name="organize_staff_save"),
 
                        url(r'registered/$', RegistrationConfirmation.as_view(), name='registered_cadets'),
-                       url(r'registered/save/$', registration_confirmation_save, name='registered_cadets_save')
+                       url(r'registered/save/$', registration_confirmation_save, name='registered_cadets_save'),
+
+                       url(r'cadet-migrations/$', CadetMigrations.as_view(), name="cadet_migrations"),
+                       url(r'cadet-migrations/save/$', cadet_migrations_save, name="cadet_migrations"),
 )

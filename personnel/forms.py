@@ -6,7 +6,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate
 from django.core.exceptions import ObjectDoesNotExist
 from personnel.models import Cadet, Company, Squad, Problems, Cadre
-from Utils.widgets.date_picker import DatePicker
+from Utils.widgets.date_picker import DatePicker, BirthDatePicker
 
 
 class LoginForm(AuthenticationForm):
@@ -87,13 +87,14 @@ class CadreRegistrationForm(forms.ModelForm):
 
 class CadetRegistrationForm(forms.ModelForm):
 
-    birth_date = forms.CharField(widget=DatePicker())
+    birth_date = forms.CharField(widget=BirthDatePicker())
 
     class Meta():
         model = Cadet
         exclude = ['user', 'comments', 'profile_reason', 'events_missed', 'class_events_missed', 'lab_events_missed',
                    'pt_missed', 'attendance_rate', 'ranger_challenge', 'color_guard', 'school', 'dropped', 'commissioned',
-                   'volunteer_hours_completed', 'volunteer_hours_count', 'ms_grade', 'company', 'platoon', 'at_risk']
+                   'volunteer_hours_completed', 'volunteer_hours_count', 'ms_grade', 'company', 'platoon',
+                   'squad', 'at_risk', 'approved']
 
     def clean_cell_number(self):
         number = self.cleaned_data.get('cell_number')
@@ -112,7 +113,7 @@ class EditCadet(forms.ModelForm):
 
     class Meta():
         model = Cadet
-        fields = ['eagle_id', 'cell_number', 'blood_type', 'car_model', 'car_tag', 'ms_level']
+        fields = ['eagle_id', 'cell_number', 'blood_type', 'car_model', 'car_tag', 'commission_date']
 
 
 class EditCadetFull(forms.ModelForm):

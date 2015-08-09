@@ -22,14 +22,14 @@
                     <!-- The title of the datatable -->
                     {% block table_title %}DataTable{% endblock %}
 
-                    <div class="{% block datatable-header-class %}right-panel-header {% endblock %}"
+                    <div class="right-panel-header"
                          style="float: right;">
                     </div>
                 </div>
                 <!-- /.panel-heading -->
                 <div class="panel-body">
                     <div class="table-responsive">
-                        <table class="table table-striped table-bordered table-hover" id="datatables-instance">
+                        <table class="table table-striped table-bordered table-hover datatables-instance">
                             <thead>
                             <tr>
                                 <!-- This block determines the columns in the datatable -->
@@ -99,6 +99,32 @@
                 }
             });
         }
+
+        var dt = $('.datatables-instance').dataTable({});
+
+        //setup search bars under all columns (before any are hidden)
+        setup_column_search();
+
+        //the method to handle adding the per column filtering
+        function setup_column_search() {
+            $('.datatables-instance tfoot td').each( function () {
+                var title = $('.datatables-instance tfoot td').eq( $(this).index() ).text();
+                $(this).html( '<input type="text" class="form-control" style="width:100%" placeholder="Search '+title+'" />' );
+            });
+
+            var table = dt.api();
+
+            table.columns().eq( 0 ).each( function ( colIdx ) {
+                $( 'input', table.column( colIdx ).footer() ).on( 'keyup change', function () {
+                    table
+                        .column( colIdx )
+                        .search( this.value )
+                        .draw();
+                } );
+            } );
+        }
+
+
         {% include 'datatables/init_script.js' %}
     });
 

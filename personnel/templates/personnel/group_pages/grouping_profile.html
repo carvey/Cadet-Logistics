@@ -17,6 +17,8 @@
         {% if sub_cadets %}
             <li {% if tab == "cadetlisting" %}class="active"{% endif %}><a href="#cadetlisting" data-toggle="tab">Cadet Listing</a></li>
         {% endif %}
+
+        <li {% if tab == "attendance" %}class="active"{% endif %}><a href="#attendance" data-toggle="tab">Attendance Form</a></li>
 	</ul>
 	
 	<div class="tab-content">
@@ -36,6 +38,10 @@
 			    {% include 'personnel/group_pages/grouping_cadet_listing.html' %}
 		    </div>
         {% endif %}
+
+        <div class='tab-pane fade{% if tab == "attendance" %} in active{% endif %}' id='attendance'>
+            {% include 'personnel/group_pages/grouping_attendance.html' %}
+        </div>
 
 		</div>
 	</div>

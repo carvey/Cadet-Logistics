@@ -154,7 +154,7 @@ class InputTestScores(View):
     @staticmethod
     def get_cadets(test):
         test_levels = [x for x in test.ms_levels.all()]
-        filtered_cadets = Cadet.objects.filter(ms_level__in=test_levels)
+        filtered_cadets = Cadet.objects.filter(_ms_level__in=test_levels)
         # commenting filtered auto-suggestions out until a better way to pass cadet id's in the form can be worked out
         # scores = test.ptscore_set.all()
         # scores = [score.cadet.id for score in scores]

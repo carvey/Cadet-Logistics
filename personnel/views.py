@@ -363,7 +363,7 @@ class Search(View):
     template = 'search/search_popup.html'
 
     def get(self, request, query_string):
-        cadet_results = Cadet.objects.search(query_string, 'Cadet')
+        cadet_results = Cadet.searchable.search(query_string, 'Cadet')
         company_results = Company.objects.search(query_string, 'Company')
         ms_level_results = MsLevel.objects.search(query_string, 'MS')
         context = {
@@ -391,24 +391,28 @@ def organize(request):
     companies = Company.objects.all()
 
     unassigned_cadets = Cadet.objects.filter(squad=None, platoon=None, company=None)
+    inactive_cadets = Cadet.objects.get_inactive()
+    commissioned_cadets = Cadet.objects.get_commissioned()
 
     #TODO need to not use batallion staff as first tab to ensure that a tab gets gotten even when no companies
     context = {
         'tab': companies[0].name,
         'unassigned_cadets': unassigned_cadets,
+        'inactive_cadets': inactive_cadets,
+        'commissioned_cadets': commissioned_cadets,
         'companies': companies
     }
 
     return render(request, template, context)
 
 def save_organization_change_records(request):
-    change_record = json.loads(request.POST.lists()[0][0])
+    change_records = json.loads(request.POST.lists()[0][0])
 
-    for record in change_record:
+    for record in change_records:
         cadet = Cadet.objects.get(id=record['cadet_id'])
 
-        # this key should only be sent in the case where the cadet is being removed from SL
         if record['vacating_group_id']:
+            # this key should only be sent in the case where the cadet is being removed from SL
             if record['vacating_position'] == "SL":
                 # this could be a different squad than the one they are getting dropped into
                 old_squad = Squad.objects.get(id=record['vacating_group_id'])
@@ -425,9 +429,11 @@ def save_organization_change_records(request):
             elif record['vacating_position'] == "CO":
                 old_company = Company.objects.get(id=record['vacating_group_id'])
                 old_company.set_commander(None)
+
             elif record['vacating_position'] == "XO":
                 old_company = Company.objects.get(id=record['vacating_group_id'])
                 old_company.set_executive_officer(None)
+
             elif record['vacating_position'] == "FS":
                 old_company = Company.objects.get(id=record['vacating_group_id'])
                 old_company.set_first_sergeant(None)
@@ -437,6 +443,14 @@ def save_organization_change_records(request):
             cadet.company = None
             cadet.platoon = None
             cadet.squad = None
+
+            if record['commissioned']:
+                cadet.commissioned = True
+
+            if record['inactive']:
+                cadet.user.is_active = False
+                cadet.user.save()
+
             cadet.save()
         # else they are getting moved to a company, platoon, or squad
         else:

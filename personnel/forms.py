@@ -121,7 +121,7 @@ class EditCadetFull(forms.ModelForm):
     class Meta():
         model = Cadet
         exclude = ['objects', 'user', 'events_missed', 'class_events_missed',
-                   'lab_events_missed', 'pt_missed', 'attendance_rate', 'school']
+                   'lab_events_missed', 'pt_missed', 'attendance_rate', 'school', 'approved']
 
 
 class EditCadetUser(forms.ModelForm):
@@ -129,7 +129,7 @@ class EditCadetUser(forms.ModelForm):
     class Meta():
         model = User
         exclude = ['date_joined', 'last_login', 'superuser_status', 'password', 'groups', 'user_permissions',
-                   'is_staff', 'is_active', 'is_superuser']
+                   'is_staff', 'is_superuser']
 
 
 class AddCompanyForm(forms.ModelForm):

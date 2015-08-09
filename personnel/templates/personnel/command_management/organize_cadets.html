@@ -36,24 +36,25 @@
 
         #cadet_container
         {
-            margin-top: 15px;
+{#            margin-top: 15px;#}
         }
         #cadet_container ul{
           width:100%;
-          margin-bottom:20px;
           overflow:hidden;
         }
+
         #cadet_container li{
+
+        }
+
+        .quad li
+        {
+          width: 20%;
           line-height:1.5em;
           border-bottom:1px solid #ccc;
           float:left;
           display:inline;
-          margin-bottom: 5px;
-        }
-
-        #quad li
-        {
-            width: 20%;
+          margin: 10px 0 5px 0;
         }
 
         .unassigned_cadets
@@ -77,6 +78,7 @@
             background-color: rgba(66, 157, 146, 0.11);
             border: 2px solid #3C3C3C;
         }
+
     </style>
 
     <div class="row">
@@ -101,25 +103,87 @@
         </div>
     </div>
 
-    <div class="row grouping" id="cadet_container">
+
+
+    {# TODO make nav-tabs droppable. EX: a cadet should be able to get moved from unasigned to inactive by dropping their name on the inactive tab #}
+    <div class="row" id="cadet_container">
         <hr>
         <div class="col-md-12">
-            <ul id="quad">
-                {% for cadet in unassigned_cadets %}
-                    <li>
-                        <span class="unassigned_cadets" data-id={{ cadet.id }}>
-                            <span style="font-size: large;">
-                                {{ cadet }}
-                            </span>
-                            <span style="font-size: small">
-                                {{ cadet.ms_level.name }}
-                            </span>
-                        </span>
-                    </li>
-                {% endfor %}
-            </ul>
+
+              <ul class="nav nav-tabs">
+                <li class="active"><a href="#unassigned" data-toggle="tab">Unassigned</a></li>
+                <li><a href="#inactive" data-toggle="tab">Inactive</a></li>
+                <li><a href="#commissioned" data-toggle="tab">Commissioned</a></li>
+              </ul>
+              <div class="tab-content">
+                <div class="tab-pane fade in active grouping" id="unassigned">
+                    <ul class="quad">
+                        {% for cadet in unassigned_cadets %}
+                            <li>
+                                <span class="unassigned_cadets" data-id={{ cadet.id }}>
+                                    <span style="font-size: large;">
+                                        {{ cadet }}
+                                    </span>
+                                    <span style="font-size: small">
+                                        {{ cadet.ms_level.name }}
+                                    </span>
+                                </span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+
+                <div class="tab-pane fade in" id="inactive">
+                  <div class="tab-pane fade in active">
+                    <ul class="quad">
+                        {% for cadet in inactive_cadets %}
+                            <li>
+                                <span class="inactive_cadets" data-id={{ cadet.id }}>
+                                    <span style="font-size: large;">
+                                        {{ cadet }}
+                                    </span>
+                                    <span style="font-size: small">
+                                        {{ cadet.ms_level.name }}
+                                    </span>
+                                </span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="tab-pane fade in" id="commissioned">
+                  <div class="tab-pane fade in active">
+                    <ul class="quad">
+                        {% for cadet in commissioned_cadets %}
+                            <li>
+                                <span class="commissioned_cadets" data-id={{ cadet.id }}>
+                                    <span style="font-size: large;">
+                                        {{ cadet }}
+                                    </span>
+                                    <span style="font-size: small">
+                                        {{ cadet.ms_level.name }}
+                                    </span>
+                                </span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                  </div>
+                </div>
+
+
+              </div>
+
+
+
         </div>
     </div>
+
+
+
+
+
 
 {% endblock %}
 

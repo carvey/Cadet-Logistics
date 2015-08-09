@@ -224,6 +224,9 @@ class Cadet(Users):
                        'platoon_commander': 'Platoon Commander', 'platoon_sergeant': 'Platoon Sergeant',
                        'squad_leader': 'Squad Leader'}
 
+    objects = CadetManager()
+    searchable = DefaultManager()
+
     eagle_id = models.PositiveIntegerField(default=0, blank=False, null=False)
     school = models.ForeignKey(School, blank=True, null=True)
 
@@ -268,7 +271,6 @@ class Cadet(Users):
 
     approved = models.BooleanField(default=True)
 
-    objects = CadetManager()
 
     @property
     def ms_level(self):

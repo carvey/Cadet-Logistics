@@ -3,7 +3,7 @@
 var moves = [];
 
 //CadetMove is acting like a class here, and an array of these instances will be sent to the server for changes to be made
-function CadetMove(cadet_id, grouping_type, grouping_id, staff, vacating_group_id, vacating_position)
+function CadetMove(cadet_id, grouping_type, grouping_id, staff, vacating_group_id, vacating_position, commissioned, inactive)
 {
     this.cadet_id = cadet_id; //id of the cadet being moved
     this.grouping_type = grouping_type; //the type of grouping the cadet is being dropped in
@@ -11,6 +11,8 @@ function CadetMove(cadet_id, grouping_type, grouping_id, staff, vacating_group_i
     this.staff = staff; //if the cadet is getting put in a staff position
     this.vacating_group_id = vacating_group_id; //the id of the group to be used if a cadet is leaving a staff position
     this.vacating_position = vacating_position; //the staff position a cadet is leaving
+    this.commissioned = commissioned;
+    this.inactive = inactive;
 
 }
 
@@ -18,7 +20,7 @@ function CadetMove(cadet_id, grouping_type, grouping_id, staff, vacating_group_i
 //Unassigned is a bool to more quickly determine if a cadet has been dropped
 // in the unassigned category
 //This class serves as a constructor for CadetMove objects.
-function CreateMove(draggable, droppable, unassigned, grouping_type, staff, vacating_group_id, vacating_position)
+function CreateMove(draggable, droppable, unassigned, grouping_type, staff, vacating_group_id, vacating_position, commissioned, inactive)
 {
 
     var cadet_id = draggable.data("id");
@@ -35,13 +37,13 @@ function CreateMove(draggable, droppable, unassigned, grouping_type, staff, vaca
             grouping_id = $(droppable).parents(".grouping").data("id");
         }
         console.log(staff);
-        move_record = new CadetMove(cadet_id, grouping_type, grouping_id, staff, vacating_group_id, vacating_position);
+        move_record = new CadetMove(cadet_id, grouping_type, grouping_id, staff, vacating_group_id, vacating_position, commissioned, inactive);
 
     }
     //the cadet is getting moved to the unassigned category
     else
     {
-        move_record = new CadetMove(cadet_id, null, null, null, vacating_group_id, vacating_position);
+        move_record = new CadetMove(cadet_id, null, null, null, vacating_group_id, vacating_position, commissioned, inactive);
     }
 
     /*
@@ -63,6 +65,8 @@ function CreateMove(draggable, droppable, unassigned, grouping_type, staff, vaca
                el.vacating_group_id = vacating_group_id;
                el.vacating_position = vacating_position;
            }
+           el.commissioned = commissioned;
+           el.inactive = inactive;
        }
         return match;
     });
@@ -111,42 +115,11 @@ $(".squad_container").droppable({
             var vacating_group_id = cadet.draggable.parents(".grouping").data("id");
             var vacating_position = cadet.draggable.data("staff");
 
-            CreateMove(cadet.draggable, $(this), false, "Squad", null, vacating_group_id, vacating_position);
+            CreateMove(cadet.draggable, $(this), false, "Squad", null, vacating_group_id, vacating_position, false, false);
 
         }
         else
-            CreateMove(cadet.draggable, $(this), false, "Squad", null, null, null);
-
-        cadet.draggable.parent().remove();
-
-    }
-});
-
-$("#cadet_container").droppable({
-    activeClass: "droppable",
-    hoverClass: "droppable_hover",
-    accept: ".assigned_cadet",
-    drop: function(event, cadet)
-    {
-        var new_cadet_li = $( "<li></li>" ).appendTo( "#quad" );
-        cadet.draggable.clone()
-            .removeClass("assigned_cadet")
-            .addClass("unassigned_cadets")
-            .appendTo(new_cadet_li)
-            .draggable({
-                appendTo: "body",
-                helper: "clone"
-        });
-
-        if (cadet.draggable.data("staff") != undefined)
-        {
-            var vacating_group_id = cadet.draggable.parents(".grouping").data("id");
-            var vacating_position = cadet.draggable.data("staff");
-            CreateMove(cadet.draggable, $(this), true, "Squad", null, vacating_group_id, vacating_position);
-
-        }
-        else
-         CreateMove(cadet.draggable, $(this), true, null, null, null, null);
+            CreateMove(cadet.draggable, $(this), false, "Squad", null, null, null, false, false);
 
         cadet.draggable.parent().remove();
 
@@ -178,11 +151,11 @@ $(".squad_leader_container").droppable({
             var vacating_group_id = cadet.draggable.parents(".grouping").data("id");
             var vacating_position = cadet.draggable.data("staff");
 
-            CreateMove(cadet.draggable, $(this), false, "Squad", "SL", vacating_group_id, vacating_position);
+            CreateMove(cadet.draggable, $(this), false, "Squad", "SL", vacating_group_id, vacating_position, false, false);
 
         }
         else
-            CreateMove(cadet.draggable, $(this), false, "Squad", "SL", null, null);
+            CreateMove(cadet.draggable, $(this), false, "Squad", "SL", null, null, false, false);
 
         cadet.draggable.parent().remove();
     }
@@ -216,11 +189,11 @@ $(".company_staff_position").droppable({
             var vacating_group_id = cadet.draggable.parents(".grouping").data("id");
             var vacating_position = cadet.draggable.data("staff");
 
-            CreateMove(cadet.draggable, $(this), false, "Company", new_position, vacating_group_id, vacating_position);
+            CreateMove(cadet.draggable, $(this), false, "Company", new_position, vacating_group_id, vacating_position, false, false);
 
         }
         else
-            CreateMove(cadet.draggable, $(this), false, "Company", new_position, null, null);
+            CreateMove(cadet.draggable, $(this), false, "Company", new_position, null, null, false, false);
 
         cadet.draggable.parent().remove();
     }
@@ -258,15 +231,109 @@ $(".platoon_staff_position").droppable({
             var vacating_group_id = cadet.draggable.parents(".grouping").data("id");
             var vacating_position = cadet.draggable.data("staff");
 
-            CreateMove(cadet.draggable, $(this), false, "Platoon", new_position, vacating_group_id, vacating_position);
+            CreateMove(cadet.draggable, $(this), false, "Platoon", new_position, vacating_group_id, vacating_position, false, false);
 
         }
         else
-            CreateMove(cadet.draggable, $(this), false, "Platoon", new_position, null, null);
+            CreateMove(cadet.draggable, $(this), false, "Platoon", new_position, null, null, false, false);
 
         cadet.draggable.parent().remove();
     }
 
+});
+
+$("#unassigned").droppable({
+    activeClass: "droppable",
+    hoverClass: "droppable_hover",
+    accept: ".assigned_cadet",
+    drop: function(event, cadet)
+    {
+        var new_cadet_li = $( "<li></li>" ).appendTo( $(this).find(".quad") );
+        cadet.draggable.clone()
+            .removeClass("assigned_cadet")
+            .addClass("unassigned_cadets")
+            .appendTo(new_cadet_li)
+            .draggable({
+                appendTo: "body",
+                helper: "clone"
+        });
+
+        if (cadet.draggable.data("staff") != undefined)
+        {
+            var vacating_group_id = cadet.draggable.parents(".grouping").data("id");
+            var vacating_position = cadet.draggable.data("staff");
+            CreateMove(cadet.draggable, $(this), true, "Squad", null, vacating_group_id, vacating_position, false, false);
+
+        }
+        else
+         CreateMove(cadet.draggable, $(this), true, null, null, null, null, false, false);
+
+        cadet.draggable.parent().remove();
+
+    }
+});
+
+
+$("#inactive").droppable({
+    activeClass: "droppable",
+    hoverClass: "droppable_hover",
+    accept: ".assigned_cadet",
+    drop: function(event, cadet)
+    {
+        var new_cadet_li = $( "<li></li>" ).appendTo( $(this).find(".quad") );
+        cadet.draggable.clone()
+            .removeClass("assigned_cadet")
+            .addClass("unassigned_cadets")
+            .appendTo(new_cadet_li)
+            .draggable({
+                appendTo: "body",
+                helper: "clone"
+        });
+
+        if (cadet.draggable.data("staff") != undefined)
+        {
+            var vacating_group_id = cadet.draggable.parents(".grouping").data("id");
+            var vacating_position = cadet.draggable.data("staff");
+            CreateMove(cadet.draggable, $(this), true, "Squad", null, vacating_group_id, vacating_position, false, true);
+
+        }
+        else
+         CreateMove(cadet.draggable, $(this), true, null, null, null, null, false, true);
+
+        cadet.draggable.parent().remove();
+
+    }
+});
+
+$("#commissioned").droppable({
+    activeClass: "droppable",
+    hoverClass: "droppable_hover",
+    accept: ".assigned_cadet",
+    drop: function(event, cadet)
+    {
+        var new_cadet_li = $( "<li></li>" ).appendTo( $(this).find(".quad") );
+        cadet.draggable.clone()
+            .removeClass("assigned_cadet")
+            .addClass("unassigned_cadets")
+            .appendTo(new_cadet_li)
+            .draggable({
+                appendTo: "body",
+                helper: "clone"
+        });
+
+        if (cadet.draggable.data("staff") != undefined)
+        {
+            var vacating_group_id = cadet.draggable.parents(".grouping").data("id");
+            var vacating_position = cadet.draggable.data("staff");
+            CreateMove(cadet.draggable, $(this), true, "Squad", null, vacating_group_id, vacating_position, true, false);
+
+        }
+        else
+         CreateMove(cadet.draggable, $(this), true, null, null, null, null, true, false);
+
+        cadet.draggable.parent().remove();
+
+    }
 });
 
 

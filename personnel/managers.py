@@ -31,8 +31,19 @@ class CadetManager(DefaultManager):
 
     def get_queryset(self):
         query = super(CadetManager, self).get_queryset()
-        return query.filter(approved=True)
+        return query.filter(approved=True)\
+                    .filter(user__is_active=True)\
+                    .filter(commissioned=False)
 
     def get_unapproved(self):
         query = super(CadetManager, self).get_queryset()
         return query.filter(approved=False)
+
+    def get_inactive(self):
+        query = super(CadetManager, self).get_queryset()
+        return query.filter(user__is_active=False)
+
+    def get_commissioned(self):
+        query = super(CadetManager, self).get_queryset()
+        return query.filter(commissioned=True)
+

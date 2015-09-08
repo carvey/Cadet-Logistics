@@ -271,7 +271,6 @@ class Cadet(Users):
 
     approved = models.BooleanField(default=True)
 
-
     @property
     def ms_level(self):
         """

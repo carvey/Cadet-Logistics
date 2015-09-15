@@ -31,6 +31,14 @@ class LoginForm(AuthenticationForm):
                     self.error_messages['inactive'],
                     code='inactive',
                 )
+            try:
+                user = User.objects.get(username=username)
+                if hasattr(user, 'cadet'):
+                    if not user.cadet.approved:
+                        raise forms.ValidationError('This Account is still awaiting cadre approval.')
+            except ObjectDoesNotExist:
+                pass
+
         return self.cleaned_data
 
 

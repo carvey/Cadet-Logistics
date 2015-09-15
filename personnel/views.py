@@ -4,7 +4,6 @@ from django.views.generic.edit import FormView, DeleteView
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.http import HttpResponse
-from django.forms.models import modelformset_factory
 from django.core.urlresolvers import reverse
 from personnel.models import Cadet, Company, MsLevel, Platoon, Squad, Problems
 from pt.models import PtScore, PtTest
@@ -13,31 +12,52 @@ from personnel.forms import LoginForm, EditCadet, EditCadetFull, EditCadetUser, 
     CadetRegistrationForm, UserRegistrationForm, ProblemForm, CadreRegistrationForm
 from django.contrib.auth.views import logout_then_login
 
-
 import json
 
-class Login(FormView):
+# class Login(FormView):
+#     template_name = 'personnel/auth/login.html'
+#     form_class = LoginForm
+#     success_url = '/'
+#
+#     def get(self, request, *args, **kwargs):
+#         form_class = self.get_form_class()
+#         form = self.get_form(form_class)
+#         return self.render_to_response(self.get_context_data(form=form, next=self.request.GET.get('next')))
+#
+#     def form_valid(self, form):
+#         user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
+#         if not user:
+#             return HttpResponseRedirect('/personnel/login')
+#         if hasattr(user, 'cadet'):
+#             if not user.cadet.approved:
+#                 return HttpResponseRedirect('/personnel/login')
+#         login(self.request, user)
+#         if self.request.POST.get('next') != 'None':
+#             return HttpResponseRedirect(self.request.POST.get('next'))
+#         else:
+#             return super(Login, self).form_valid(form)
+
+
+def login_user(request):
     template_name = 'personnel/auth/login.html'
-    form_class = LoginForm
-    success_url = '/'
 
-    def get(self, request, *args, **kwargs):
-        form_class = self.get_form_class()
-        form = self.get_form(form_class)
-        return self.render_to_response(self.get_context_data(form=form, next=self.request.GET.get('next')))
+    if request.method == 'GET':
+        form = LoginForm()
+        context = {
+            'form': form
+        }
+        return render(request, template_name, context)
 
-    def form_valid(self, form):
-        user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
-        if not user:
-            return HttpResponseRedirect('/personnel/login')
-        if hasattr(user, 'cadet'):
-            if not user.cadet.approved:
-                return HttpResponseRedirect('/personnel/login')
-        login(self.request, user)
-        if self.request.POST.get('next') != 'None':
-            return HttpResponseRedirect(self.request.POST.get('next'))
+    elif request.method == "POST":
+        form = LoginForm(data=request.POST or None)
+        if form.is_valid():
+            user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
+            if not user:
+                return render(request, template_name, {'form': form})
+            login(request, user)
+            return HttpResponseRedirect('/')
         else:
-            return super(Login, self).form_valid(form)
+            return render(request, template_name, {'form': form})
 
 
 def logout(request):

@@ -5,7 +5,7 @@ Created on Apr 27, 2014
 '''
 from django.conf.urls import patterns, url
 from personnel.views import Index, Stats, CadetListing, cadet_page, company_listing, \
-    CompanyCadetListing, MSlevelListing, MScadetListing, Input, Login, logout, \
+    CompanyCadetListing, MSlevelListing, MScadetListing, Input, login_user, logout, \
     EditCompany, AddCompany, DeleteCompany, GroupingDetail, CadetRegistration, \
     organize, CadreRegistration, save_organization_change_records, RegistrationConfirmation, \
     registration_confirmation_save, CadetMigrations, cadet_migrations_save
@@ -15,7 +15,7 @@ urlpatterns = patterns('',
                        url(r'^$', Index.as_view(), name='index'),
 
                        #auth pages
-                       url(r'^login/', Login.as_view(), name='login'),
+                       url(r'^login/', login_user, name='login'),
                        url(r'^logout/', logout, name='logout'),
 
                        #General personnel stat page

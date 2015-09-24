@@ -16,7 +16,7 @@ urlpatterns = patterns('',
     url(r'^thanks/$', Thanks.as_view(), name='thanks'),
     url(r'^problems-listing/$', ProblemListing.as_view(), name='problems_listing'),
 
-    url(r'^api/', include(personnel_api)),
+    url(r'^api/', include(personnel_api), name='api'),
 )
 if settings.DEBUG:
     urlpatterns += patterns (

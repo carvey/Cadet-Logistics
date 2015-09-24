@@ -14,3 +14,4 @@ class CadetSerializer(ModelSerializer):
 
     class Meta:
         model = Cadet
+        fields = ('user', 'gpa', 'contracted', 'volunteer_hours_count', 'cell_number', 'on_profile', 'at_risk')

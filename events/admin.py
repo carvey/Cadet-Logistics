@@ -1,5 +1,5 @@
 from django.contrib import admin
-from attendance.models import Attended, Event
+from Event.models import Attended, Event
 
 class AttendedAdmin(admin.ModelAdmin):
     pass

@@ -429,7 +429,7 @@ def save_organization_change_records(request):
     change_records = json.loads(request.POST.lists()[0][0])
 
     for record in change_records:
-        cadet = Cadet.objects.get(id=record['cadet_id'])
+        cadet = Cadet.objects.unfiltered().get(id=record['cadet_id'])
 
         if record['vacating_group_id']:
             # this key should only be sent in the case where the cadet is being removed from SL
@@ -501,6 +501,11 @@ def save_organization_change_records(request):
                     grouping.set_executive_officer(cadet)
                 elif record['staff'] == "FS":
                     grouping.set_first_sergeant(cadet)
+
+            # since the cadet is getting moved to an active category, ensure that they are not considered inactive
+            cadet.commissioned = False
+            cadet.user.is_active = True
+            cadet.user.save()
 
             grouping.assign(cadet)
 

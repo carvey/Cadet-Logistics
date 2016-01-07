@@ -89,6 +89,18 @@ $(".assigned_cadet").draggable({
     helper: "clone"
 });
 
+$(".inactive_cadets").draggable({
+        appendTo: "body",
+        helper: "clone"
+    }
+);
+
+$(".commissioned_cadets").draggable({
+        appendTo: "body",
+        helper: "clone"
+    }
+);
+
 $(".squad_container").droppable({
     activeClass: "droppable",
     hoverClass: "droppable_hover",

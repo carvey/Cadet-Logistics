@@ -47,3 +47,6 @@ class CadetManager(DefaultManager):
         query = super(CadetManager, self).get_queryset()
         return query.filter(commissioned=True)
 
+    def unfiltered(self):
+        return super(CadetManager, self).get_queryset()
+

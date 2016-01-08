@@ -36,7 +36,6 @@ function CreateMove(draggable, droppable, unassigned, grouping_type, staff, vaca
         {
             grouping_id = $(droppable).parents(".grouping").data("id");
         }
-        console.log(staff);
         move_record = new CadetMove(cadet_id, grouping_type, grouping_id, staff, vacating_group_id, vacating_position, commissioned, inactive);
 
     }
@@ -354,7 +353,11 @@ $("#commissioned").droppable({
 function save()
 {
     var data = JSON.stringify(moves);
-    $.post("/personnel/organize/save/", data);
+
+    $.post("/personnel/organize/save/", data, function(data) {
+        window.location.replace('/personnel/organize/');
+    });
+
 }
 
 $('#confirm-delete').on('show.bs.modal', function(e) {

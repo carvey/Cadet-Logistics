@@ -436,27 +436,34 @@ def save_organization_change_records(request):
             if record['vacating_position'] == "SL":
                 # this could be a different squad than the one they are getting dropped into
                 old_squad = Squad.objects.get(id=record['vacating_group_id'])
-                old_squad.set_squad_leader(None)
+                # the position should be emptied, but only as long as it hasn't already been replaced
+                if not old_squad.squad_leader or old_squad.squad_leader == cadet:
+                    old_squad.set_squad_leader(None)
 
             elif record['vacating_position'] == "PL":
                 old_platoon = Platoon.objects.get(id=record['vacating_group_id'])
-                old_platoon.set_platoon_leader(None)
+                if not old_platoon.platoon_commander or old_platoon.platoon_commander == cadet:
+                    old_platoon.set_platoon_leader(None)
 
             elif record['vacating_position'] == "PS":
                 old_platoon = Platoon.objects.get(id=record['vacating_group_id'])
-                old_platoon.set_platoon_sergeant(None)
+                if not old_platoon.platoon_sergeant or old_platoon.platoon_sergeant == cadet:
+                    old_platoon.set_platoon_sergeant(None)
 
             elif record['vacating_position'] == "CO":
                 old_company = Company.objects.get(id=record['vacating_group_id'])
-                old_company.set_commander(None)
+                if not old_company.company_commander or old_company.company_commander == cadet:
+                    old_company.set_commander(None)
 
             elif record['vacating_position'] == "XO":
                 old_company = Company.objects.get(id=record['vacating_group_id'])
-                old_company.set_executive_officer(None)
+                if not old_company.executive_officer or old_company.executive_officer == cadet:
+                    old_company.set_executive_officer(None)
 
             elif record['vacating_position'] == "FS":
                 old_company = Company.objects.get(id=record['vacating_group_id'])
-                old_company.set_first_sergeant(None)
+                if not old_company.first_sergeant or old_company.first_sergeant == cadet:
+                    old_company.set_first_sergeant(None)
 
         # if the cadet is being moved to the unassigned category
         if record['grouping_type'] is None:
@@ -509,7 +516,7 @@ def save_organization_change_records(request):
 
             grouping.assign(cadet)
 
-    return HttpResponse(None, content_type='application/json')
+    return HttpResponse(json.dumps({'valid': True}), content_type='application/json')
 
 
 class CadreRegistration(View):

@@ -62,7 +62,7 @@
         <div class="platoon_staff_position" data-staff="PL">
             <span>
             {% if platoon.platoon_commander %}
-                <span class='assigned_cadet staff' data-id="{{ company.company_commander.id }}" data-staff="PL">
+                <span class='assigned_cadet staff' data-id="{{ platoon.platoon_commander.id }}" data-staff="PL">
                         <span style="font-size: large">
                             {{ platoon.platoon_commander }}
                         </span>
@@ -80,7 +80,7 @@
         <div class="platoon_staff_position" data-staff="PS">
             <span>
             {% if platoon.platoon_sergeant %}
-                <span class='assigned_cadet staff' data-id="{{ company.executive_officer.id }}" data-staff="PS">
+                <span class='assigned_cadet staff' data-id="{{ platoon.platoon_sergeant.id }}" data-staff="PS">
                         <span style="font-size: large">
                             {{ platoon.platoon_sergeant }}
                         </span>

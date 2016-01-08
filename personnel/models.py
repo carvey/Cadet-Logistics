@@ -426,7 +426,6 @@ class Platoon(models.Model, GroupingMixin):
         :return:
         """
         self.platoon_commander = cadet
-        cadet.save()
         self.save()
 
     def set_platoon_sergeant(self, cadet):
@@ -437,7 +436,6 @@ class Platoon(models.Model, GroupingMixin):
         :return:
         """
         self.platoon_sergeant = cadet
-        cadet.save()
         self.save()
 
     def count(self):

@@ -27,11 +27,11 @@ def grouping_data(cadets):
     top_cumalitive_scores = top_cumulative_scores(cadets)
 
     ms_levels = {}
-    for cadet in cadets:
-        if cadet.ms_level in ms_levels:
-            ms_levels[cadet.ms_level] += 1
+    for cadet in cadets.exclude(_ms_level=None):
+        if str(cadet.ms_level) in ms_levels:
+            ms_levels[str(cadet.ms_level)] += 1
         else:
-            ms_levels[cadet.ms_level] = 0
+            ms_levels[str(cadet.ms_level)] = 0
 
     scores_by_test = {}
     tests = PtTest.filtered_tests.all()

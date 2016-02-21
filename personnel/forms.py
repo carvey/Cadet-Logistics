@@ -90,7 +90,7 @@ class CadreRegistrationForm(forms.ModelForm):
 
     class Meta():
         model = Cadre
-        exclude = ['user']
+        exclude = ['user', 'demographic']
 
 
 class CadetRegistrationForm(forms.ModelForm):

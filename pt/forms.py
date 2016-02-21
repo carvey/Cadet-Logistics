@@ -33,9 +33,12 @@ class TestForm(forms.ModelForm):
 class ScoreForm(forms.Form):
     cadet = forms.CharField()
     cadet_id = forms.CharField(widget=forms.HiddenInput(attrs={'class': 'cadet_id'}), required=False)
-    pushups = forms.IntegerField(initial=None, widget=forms.NumberInput(attrs={'placeholder': 0}))
-    situps = forms.IntegerField(initial=None, widget=forms.NumberInput(attrs={'placeholder': 0}))
-    two_mile = forms.CharField(initial=None, widget=forms.TextInput(attrs={'placeholder': '00:00'}))
+    pushups = forms.IntegerField(initial=None,
+                                 widget=forms.NumberInput(attrs={'placeholder': 0, "style": "width: 125px"}))
+    situps = forms.IntegerField(initial=None,
+                                widget=forms.NumberInput(attrs={'placeholder': 0, "style": "width: 125px"}))
+    two_mile = forms.CharField(initial=None,
+                               widget=forms.TextInput(attrs={'placeholder': '00:00', "style": "width: 125px"}))
 
     invalid_name = ValidationError(
             'Invalid cadet name. Check for spelling and ensure that the cadet has a profile made',

@@ -234,7 +234,7 @@ class Cadet(Users):
     company = models.ForeignKey(Company, blank=True, null=True, related_name="cadets")
     platoon = models.ForeignKey('Platoon', blank=True, null=True, related_name="cadets")
     squad = models.ForeignKey('Squad', blank=True, null=True, related_name="cadets")
-    _ms_level = models.ForeignKey('MsLevel', blank=False, null=False, related_name="cadets")
+    _ms_level = models.ForeignKey('MsLevel', blank=False, null=True, related_name="cadets")
 
     commission_date = models.ForeignKey('Commission', blank=False, null=False, related_name="commission_date")
 

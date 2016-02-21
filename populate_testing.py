@@ -68,8 +68,8 @@ def populate():
     print "-----------------------"
 
     print "Creating Commissioning dates"
-    may_commission = datetime.date(2015, 5, 18)
-    december_commission = datetime.date(2015, 12, 18)
+    may_commission = datetime.date(2016, 5, 18)
+    december_commission = datetime.date(2016, 12, 18)
 
     add_commission(may_commission)
     add_commission(december_commission)
@@ -89,7 +89,7 @@ def populate():
     ms2 = add_mslevel(name="MS2")
     ms3 = add_mslevel(name="MS3")
     ms4 = add_mslevel(name="MS4")
-    ms4 = add_mslevel(name="MS5")
+    ms5 = add_mslevel(name="MS5")
     print "done adding ms levels"
     print "-----------------------"
 

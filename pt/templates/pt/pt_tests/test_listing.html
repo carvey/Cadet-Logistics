@@ -105,9 +105,9 @@
                             <div class="panel-test-list">MS Classes<span class="test-list-value">
                             {% for level in test.ms_levels.all %}
                                 {% if not forloop.last %}
-                                    <span>{{ level }},</span>
+                                    <span>{{ level.name }},</span>
                                 {% else %}
-                                    <span>{{ level }}</span>
+                                    <span>{{ level.name }}</span>
                                 {% endif %}
                             {% endfor %}
                         </span></div>
